@@ -1,0 +1,16 @@
+{
+  "APP_NAME": "Diagnóstico Social",
+  "About": "Sobre",
+  "Hello world !": "Fala aeeewww!",
+  "Home": "Início",
+  "Logged in as": "Olá",
+  "Login": "Entrar",
+  "Logout": "Sair",
+  "Password": "Senha",
+  "Password is required": "O campo senha é obrigatório",
+  "Username": "Usuário",
+  "Username is required": "O campo usuário é obrigatório",
+  "Username or password incorrect.": "Usuário ou senha inválidos.",
+  "Remember me": "Manter conectado",
+  "Version": "Versão"
+}

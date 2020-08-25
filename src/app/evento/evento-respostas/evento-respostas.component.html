@@ -1,0 +1,68 @@
+<div id="ds-evento-respostas-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+  
+        <div class="modal-header">
+          <h5 class="modal-title">Respostas do evento</h5>
+          <a class="alert-link float-right mt-1" data-dismiss="modal"><i class="fa fa-times"></i></a>
+        </div>
+
+        <div class="modal-body" *ngIf="!!evento && !!pergunta">
+
+          <div class="row">
+            <div class="col-md-12 mx-3 ds-titulo-evento-respostas">
+              {{evento.nome}}<br/>
+              <span class="h5">{{pergunta.descricao}}</span>
+            </div>
+
+            <div class="col-md-12">
+              <div class="dropdown-divider my-4 mx-1"></div>
+            </div>
+          </div>
+
+          <div class="loader-bar" [ngClass]="{'loading': carregando}"></div>
+
+          <!-- repeat: -->
+          <div class="row mx-2" *ngFor="let r of respostas">
+
+            <div class="col-md-12">
+              <p>
+                <span class="h5 font-weight-normal">{{r.entrevistado}}</span> <br/>
+                <span class="text-secondary">Entrevistado em {{formatDateTime(r.dataEntrevista)}} por {{r.entrevistador}}</span>
+              </p>
+            </div>
+
+            <div class="col-md-12">
+              <div [hidden]="pergunta.tipoResposta !== 1">
+                <i class="far fa-dot-circle mr-2 text-primary"></i> {{r.opcaoEscolhida}}
+              </div>
+            </div>
+
+            <div class="col-md-12">
+              <div [hidden]="pergunta.tipoResposta !== 2">
+                <i class="fas fa-angle-right mr-2 text-primary"></i> {{r.respostaEmTexto}}
+              </div>
+            </div>
+
+            <div class="col-md-12">
+              <div [hidden]="pergunta.tipoResposta !== 3">
+                <i class="fas fa-angle-right mr-2 text-primary"></i> {{r.respostaEmNumero}}
+              </div>
+            </div>
+
+            <div class="col-md-12 mt-2" [hidden]="!r.observacoes">
+              <b class="mr-2 text-primary">Obs.:</b> {{r.observacoes}}
+            </div>
+
+            <div class="col-md-12">
+              <div class="dropdown-divider my-4 mx-1"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Ok</button>
+        </div>
+      </div>
+    </div>
+  </div>

@@ -1,0 +1,146 @@
+
+<div class="container">
+
+    <div class="row mb-4">
+      <div class="col-md-6">
+        <h3>Usuários</h3>
+      </div>
+      <div class="col-md-6">
+        <button class="btn btn-primary float-right btn-with-icon"
+          (click)="novo()">
+          Novo
+        </button>
+      </div>
+    </div>
+
+    <div class="row mb-2" [hidden]="!erro || carregando" role="alert">
+      <div class="col-md-12">
+        <p class="alert alert-danger">
+            <b>Ops!</b> {{erro}}
+            <a class="alert-link float-right" (click)="erro = ''"><i class="fa fa-times"></i></a>
+        </p>
+      </div>
+    </div>
+
+    <div class="loader-bar" [ngClass]="{'loading': carregando}"></div>
+    <div class="row">
+      <div class="col-md-12 mt-auto">
+        <table class="table table-responsive-sm table-hover" id="ds-usuario-table">
+          <thead>
+            <tr>
+              <th class="text-secondary"><i class="fa fa-hashtag"></i></th>
+              <th>Nome</th>
+              <th>Login</th>
+              <th><a class="float-right text-secondary mr-1" (click)="obterListagem(true)"><i class="fa fa-sync-alt"></i></a></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngIf="carregando">
+              <td colspan="4" class="text-center">
+                <i>Carregando usuários...</i>
+              </td>
+            </tr>
+            <tr *ngFor="let usuario of listagem.conteudo; let i = index;">
+              <td class="table-index text-secondary"><small>{{i+1}}</small></td>
+              <td>{{usuario.nome}}</td>
+              <td>{{usuario.login}}</td>
+              <td>
+                <button class="btn btn-outline-secondary float-right ml-1" (click)="confirmarExclusao(usuario)">Excluir</button>
+                <button class="btn btn-outline-secondary float-right ml-1" (click)="visualizar(usuario)">Visualizar</button>
+              </td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="4">
+                <small class="text-secondary">Exibindo {{listagem.conteudo.length}} de {{listagem.total}}</small>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+    <div class="row wrap-btn-more-data" [hidden]="listagem.conteudo.length >= listagem.total">
+      <div class="col-md-12">
+        <button class="btn btn-outline-secondary" (click)="obterListagem()">
+          <span [hidden]="carregando">Carregar mais resultados</span>
+          <span [hidden]="!carregando"><i class="fas fa-cog fa-spin"></i> Carregando mais resultados...</span>
+        </button>
+      </div>
+    </div>
+
+</div>
+
+<div id="ds-usuario-modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">Novo Usuário
+        </h5>
+        <a class="alert-link float-right mt-1" data-dismiss="modal"><i class="fa fa-times"></i></a>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="salvar()">
+        <div class="modal-body">
+
+          <div class="form-group">
+            <label for="nome">Nome</label>
+            <input class="form-control" type="text" name="nome" formControlName="nome" autofocus/>
+            <small class="text-danger" *ngIf="form.controls.nome.errors?.required && exibirValidacao">Campo obrigatório</small>
+          </div>
+
+          <div class="form-group">
+            <label for="login">Login</label>
+            <input class="form-control" type="text" name="login" formControlName="login"/>
+            <small class="text-danger" *ngIf="form.controls.login.errors?.required && exibirValidacao">Campo obrigatório</small>
+          </div>
+
+          <div class="form-group">
+            <label for="login">E-mail</label>
+            <input class="form-control" type="email" name="email" formControlName="email"/>
+            <small class="text-danger" *ngIf="form.controls.email.errors?.required && exibirValidacao">Campo obrigatório</small>
+            <small class="text-danger" *ngIf="form.controls.email.errors?.email && exibirValidacao">Endereço de e-mail inválido</small>
+          </div>
+
+          <div [formGroup]="formSenha" *ngIf="!usuarioEdicao" class="row">
+            <div class="col-md-6 form-group">
+                <label for="senha">Senha</label>
+                <input class="form-control" type="password" name="senha" formControlName="senha">
+                <small class="text-danger" *ngIf="formSenha.controls.senha.errors?.required && exibirValidacao">Campo obrigatório</small>
+            </div>
+
+            <div class="col-md-6 form-group">
+                <label for="confirmacao">Confirmação</label>
+                <input class="form-control" type="password" name="confirmacao" formControlName="confirmacao">
+                <small class="text-danger" *ngIf="formSenha.controls.confirmacao.errors?.required && exibirValidacao">Campo obrigatório</small>
+                <small class="text-danger" *ngIf="formSenha.errors?.confirmacaoInvalida">Confirmação e senha não conferem</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="loader-bar" [ngClass]="{'loading': salvando}"></div>
+        <div class="modal-footer">
+          <button class="btn btn-primary" type="submit">Salvar</button>
+          <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div id="ds-usuario-modal-exclusao" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-body">
+            Tem certeza que deseja excluir o usuário <b>{{usuarioExclusao ? usuarioExclusao.nome : ''}}</b>?
+          </div>
+
+          <div class="loader-bar" [ngClass]="{'loading': salvando}"></div>
+          <div class="modal-footer">
+            <button class="btn btn-primary" (click)="excluir()">Sim, excluir</button>
+            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" (click)="usuarioExclusao = null">Cancelar</button>
+          </div>
+        </div>
+    </div>
+</div>

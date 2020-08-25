@@ -1,0 +1,22 @@
+
+@import '../../../theme/theme-variables.scss';
+
+.status-entrevista {
+  padding-top: 7px;
+
+  span {
+    padding: 8.5px 12px;
+    background: $gray-100;
+    font-style: italic;
+    border-radius: 2px 5px 5px 2px;
+    border-left: 3px solid $gray-400;
+  }
+  &.concluida {
+    span {
+      border-color: $primary;
+      color: $primary;
+      font-weight: 600;
+      font-style: normal;
+    }
+  }
+}

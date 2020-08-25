@@ -1,0 +1,89 @@
+<div class="container">
+
+    <div class="row mb-4">
+      <div class="col-md-6">
+        <h3>Questionários</h3>
+      </div>
+      <div class="col-md-6">
+        <button class="btn btn-primary float-right btn-with-icon"
+          (click)="novo()">
+          Novo
+        </button>
+      </div>
+    </div>
+
+    <div class="row mb-2" [hidden]="!erroListagem || carregando" role="alert">
+      <div class="col-md-12">
+        <p class="alert alert-danger">
+            <b>Ops!</b> Ocorreu um erro ao buscar questionários.
+            <a class="alert-link float-right" (click)="erroListagem = false"><i class="fa fa-times"></i></a>
+        </p>
+      </div>
+    </div>
+
+    <div class="loader-bar" [ngClass]="{'loading': carregando}"></div>
+    <div class="row">
+      <div class="col-md-12 mt-auto">
+        <table class="table table-responsive-sm table-hover" id="ds-questionario-table">
+          <thead>
+            <tr>
+              <th class="text-secondary"><i class="fa fa-hashtag"></i></th>
+              <th>Nome</th>
+              <th><a class="float-right text-secondary mr-1" (click)="obterListagem(true)"><i class="fa fa-sync-alt"></i></a></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngIf="carregando">
+              <td colspan="4" class="text-center">
+                <i>Carregando questionários...</i>
+              </td>
+            </tr>
+            <tr *ngFor="let questionario of listagem.conteudo; let i = index;">
+              <td class="table-index text-secondary"><small>{{i+1}}</small></td>
+              <td>{{questionario.nome}}</td>
+              <td>
+                <button class="btn btn-outline-secondary float-right ml-1" (click)="confirmarExclusao(questionario)">
+                  Excluir
+                </button>
+                <button class="btn btn-outline-secondary float-right ml-1" (click)="visualizar(questionario)">
+                  Visualizar
+                </button>
+              </td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="4">
+                <small class="text-secondary">Exibindo {{listagem.conteudo.length}} de {{listagem.total}}</small>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+    <div class="row wrap-btn-more-data" [hidden]="listagem.conteudo.length >= listagem.total">
+      <div class="col-md-12">
+        <button class="btn btn-outline-secondary" (click)="obterListagem()">
+          <span [hidden]="carregando">Carregar mais resultados</span>
+          <span [hidden]="!carregando"><i class="fas fa-cog fa-spin"></i> Carregando mais resultados...</span>
+        </button>
+      </div>
+    </div>
+
+</div>
+
+<div id="ds-questionario-modal-exclusao" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-body">
+            Tem certeza que deseja excluir o questionário <b>{{questionarioExclusao ? questionarioExclusao.nome : ''}}</b>?
+          </div>
+
+          <div class="loader-bar" [ngClass]="{'loading': salvando}"></div>
+          <div class="modal-footer">
+            <button class="btn btn-primary" (click)="excluir()">Sim, excluir</button>
+            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" (click)="questionarioExclusao = null">Cancelar</button>
+          </div>
+        </div>
+    </div>
+</div>

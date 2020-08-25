@@ -1,0 +1,16 @@
+@import '../../theme/theme-variables.scss';
+
+.logo {
+  width: 300px;
+}
+
+q {
+  font-style: italic;
+  font-size: 1.2rem;
+  quotes: "« " " »";
+}
+
+.title-home {
+  color: $gray-700;
+  font-weight: 700;
+}

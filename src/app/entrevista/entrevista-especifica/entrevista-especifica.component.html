@@ -1,0 +1,218 @@
+<div class="container">
+
+    <div class="row">
+      <div class="col-md-12">
+        <h3 [hidden]="!entrevista.id">Entrevista com <u>{{entrevista.nome}}</u></h3>
+        <h3 [hidden]="entrevista.id">Nova Entrevista</h3>
+      </div>
+    </div>
+
+    <div class="row mt-2">
+      <div class="col-md-6 col-sm-12 my-2" *ngIf="!!entrevista.id">
+        <div class="status-entrevista" *ngIf="!entrevista.concluida">
+          <span>Entrevista em andamento...</span>
+        </div>
+        <div class="status-entrevista concluida" *ngIf="entrevista.concluida">
+          <span><i class="fa fa-check-circle"></i> &nbsp;Entrevista concluida.</span>
+        </div>
+      </div>
+      <div class="col-md-6 col-sm-12" *ngIf="!!entrevista.id && !entrevista.concluida">
+        <button class="btn btn-outline-secondary float-right" type="button" [disabled]="!form.valid" (click)="concluirEntrevista()">&nbsp;Concluir entrevista</button>
+      </div>
+      <div class="loader-bar" [ngClass]="{'loading': carregando || salvando}"></div>
+    </div>
+
+    <div class="row mt-2">
+
+      <div class="col-lg-5 col-md-12">
+        <form [formGroup]="form">
+
+          <div class="row">
+            <div class="col-md-12 form-group">
+              <label for="nome">Evento</label>
+              <select class="custom-select" name="evento" formControlName="evento" autofocus 
+                (change)="eventoChanged()"
+                [attr.disabled]="!!entrevista.id || questionariosRespondidos.length > 0 ?'':null">
+                <option [ngValue]="evento" *ngFor="let evento of eventos; let i = index;">{{evento.nome}}</option>
+              </select>
+            </div>
+            <div class="col-md-12 form-group">
+              <label for="nome">Nome do entrevistado</label>
+              <input class="form-control" type="text" name="nome" formControlName="nome" (change)="changeNomeEntrevistado()"/>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-12 form-group">
+              <label>Responder questionário</label>
+              <select class="custom-select" name="questionario" formControlName="questionario">
+                <option [ngValue]="questionario" *ngFor="let questionario of questionarios; let i = index;">{{questionario.nome}} – {{qtdQuestionarioPorEnqueteStr(questionario.quantidadePorEnquete)}}</option>
+              </select>
+              <div class="loader-bar" [ngClass]="{'loading': carregandoQuestionarios}"></div>
+            </div>
+            <div class="col-md-12 mb-3">
+              <button type="button" class="btn btn-primary my-2 col-md-12" (click)="responderQuestionario()" [disabled]="!form.valid">Responder</button>
+            </div>
+          </div>
+
+        </form>
+      </div>
+
+      <div class="col-lg-7 col-md-12">
+        <h6>Questionários respondidos:</h6>
+        <table class="table table-responsive-sm table-hover" id="ds-questionarios-respondidos-table">
+          <thead>
+            <tr>
+              <th class="text-secondary"><i class="fa fa-hashtag"></i></th>
+              <th>Questionário</th>
+              <th>Obs.</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngIf="carregando">
+              <td colspan="4" class="text-center">
+                <i>Carregando questionários respondidos...</i>
+              </td>
+            </tr>
+            <tr *ngFor="let qRespondido of questionariosRespondidos; let i = index;">
+              <td class="table-index text-secondary"><small>{{i+1}}</small></td>
+              <td><span title="{{nomeQuestionario(qRespondido.idQuestionario)}}">{{nomeQuestionario(qRespondido.idQuestionario) | truncate}}</span></td>
+              <td><span title="{{qRespondido.observacoes}}">{{(!!qRespondido.observacoes ? qRespondido.observacoes : '-') | truncate}}</span></td>
+              <td>
+                <button class="btn btn-outline-secondary float-right ml-1" (click)="removerQuestionarioRespondido(qRespondido.id)" data-toggle="tooltip" title="Remover">
+                  Excluir
+                </button>
+                <button class="btn btn-outline-secondary float-right ml-1" (click)="editarQuestionario(qRespondido)" title="Editar">
+                  Editar
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+
+</div>
+
+<div id="ds-entrevista-especifica-respostas-modal" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="fas fa-clipboard-list"></i> &nbsp;{{!!questionarioSelecionado ? questionarioSelecionado.nome : ''}}
+        </h5>
+        <a class="alert-link float-right mt-1" (click)="cancelarQuestionario()"><i class="fa fa-times"></i></a>
+      </div>
+
+      <form [formGroup]="formQuestionario">
+        <div class="modal-body">
+
+          <div class="loader-bar" [ngClass]="{'loading': carregandoPerguntas}"></div>
+
+          <div class="row" *ngFor="let pergunta of (!!questionarioSelecionado ? questionarioSelecionado.perguntas : []); let i = index;">
+            <div class="col-md-12" *ngIf="!carregandoPerguntas">
+              <h5 class="title mb-3">{{i+1}}) &nbsp;{{pergunta.descricao}}</h5>
+
+              <fieldset>
+
+                <div *ngIf="pergunta.tipoResposta === 1">
+                  <div *ngFor="let opcao of pergunta.opcoesResposta; let op = index;">
+                    <div class="custom-control custom-radio m-2">
+                      <input type="radio"
+                        id="pergunta-{{pergunta.id}}-opcao-{{opcao.id}}"
+                        formControlName="resposta-pergunta-{{pergunta.id}}"
+                        [attr.name]="pergunta.id"
+                        value="{{opcao.id}}"
+                        class="custom-control-input"/>
+                      <label class="custom-control-label" for="pergunta-{{pergunta.id}}-opcao-{{opcao.id}}">{{opcao.descricao}}</label>
+                    </div>
+                  </div>
+                </div>
+
+                <div *ngIf="pergunta.tipoResposta === 2">
+                  <div class="form-group px-3">
+                    <textarea maxlength="255" class="form-control" rows="2" formControlName="resposta-pergunta-{{pergunta.id}}"></textarea>
+                  </div>
+                </div>
+
+                <div *ngIf="pergunta.tipoResposta === 3">
+                  <div class="form-group px-3">
+                    <input class="form-control" type="number" formControlName="resposta-pergunta-{{pergunta.id}}"/>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-12">
+                    <button class="btn btn-link" (click)="pergunta.exibeObservacoes = !pergunta.exibeObservacoes;">
+                      <small class="text-secondary"><i class="fa" [ngClass]="{'fa-angle-down': !pergunta.exibeObservacoes && !formQuestionario.value['observacoes-pergunta-' + pergunta.id], 'fa-angle-up': !!pergunta.exibeObservacoes || !!formQuestionario.value['observacoes-pergunta-' + pergunta.id]}"></i> Observações</small>
+                    </button>
+                    <div class="form-group px-3" *ngIf="!!pergunta.exibeObservacoes || !!formQuestionario.value['observacoes-pergunta-' + pergunta.id]">
+                      <textarea maxlength="500" class="form-control" rows="2" formControlName="observacoes-pergunta-{{pergunta.id}}"></textarea>
+                    </div>
+                  </div>
+                </div>
+              </fieldset>
+              <div class="dropdown-divider m-4"></div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-12" *ngIf="!carregandoPerguntas">
+              <label for="nome">Observações do questionário</label>
+              <textarea maxlength="500" class="form-control" rows="2" formControlName="observacoes"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="loader-bar" [ngClass]="{'loading': salvandoQuestionario}"></div>
+        <div class="modal-footer">
+          <button class="btn btn-primary" type="button" [disabled]="!formQuestionario.valid" (click)="concluirQuestionario()">Concluir</button>
+          <button type="button" class="btn btn-outline-secondary" (click)="cancelarQuestionario()">Cancelar</button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>
+
+<div id="ds-entrevista-modal-exclusao-questionario-respondido" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-body">
+          <p>Tem certeza que deseja excluir o questionário respondido?</p>
+          <p><b>Todas as respostas serão perdidas.</b></p>
+        </div>
+
+        <div class="loader-bar" [ngClass]="{'loading': excluindoQRespondido}"></div>
+        <div class="modal-footer">
+          <button class="btn btn-primary" (click)="confirmaExclusaoQuestionarioRespondido()">Sim, excluir</button>
+          <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" (click)="questionarioEmEdicao = null">Cancelar</button>
+        </div>
+      </div>
+  </div>
+</div>
+
+<div id="ds-entrevista-modal-conclusao-entrevista" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-md-4 display-2 text-secondary text-center">
+                <i class="far fa-thumbs-up"></i>
+              </div>
+              <div class="col-md-8 pt-3">
+                <p><b>Show {{nomeUsuario}}!</b> Entrevista finalizada.</p>
+                <p>Deseja realizar nova entrevista?</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button class="btn btn-primary" (click)="novaEntrevista()">Sim, mais uma</button>
+            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Agora não</button>
+          </div>
+        </div>
+    </div>
+  </div>

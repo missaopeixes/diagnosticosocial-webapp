@@ -1,0 +1,36 @@
+
+@import '../../../theme/theme-variables.scss';
+
+.diagnostico-pergunta {
+  background: #f8f8f9;
+  border-radius: 5px;
+  padding: 15px;
+  margin: 15px 0;
+  box-shadow: 1px 1px 1px 1px #e3e5e9;
+
+  .wrap-chart {
+    margin-top: -20px;
+  }
+
+  .btn-link {
+    color: $gray-700;
+  }
+}
+
+.wrap-nav-diagnostico-evento {
+
+  .nav-item .nav-link {
+    border: none;
+    border-radius: 0;
+
+    &.active {
+      border-bottom: 3px solid $primary;
+      font-weight: 700;
+      color: $primary;
+    }
+  }
+}
+
+.diagnostico-questionario-titulo {
+  height: 40px;
+}

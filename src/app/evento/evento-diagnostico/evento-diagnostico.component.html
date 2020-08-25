@@ -1,0 +1,160 @@
+<div class="container">
+
+  <div class="row mb-3">
+    <div class="col-md-12">
+      <h3>Diagnóstico <u>{{evento ? evento.nome: ''}}</u></h3>
+    </div>
+    <div class="loader-bar" [ngClass]="{'loading': carregandoEvento}"></div>
+  </div>
+
+  <div class="row mb-2">
+    <div class="col-md-12" [hidden]="!carregando">
+      <p class="display-2 text-center text-secondary">
+        <i class="fas fa-cog fa-spin"></i>
+      </p>
+      <p class="lead text-center"><i>Carregando relatório...</i></p>
+    </div>
+    <div class="col-md-12" [hidden]="carregando">
+      <div counto class="h1"
+        [step]="2"
+        [countTo]="qtdEntrevistas"
+        [countFrom]="0"
+        [duration]="0.2"
+        (countoChange)="qtdEntrevistasInt = $event">
+        <b class="text-primary">{{qtdEntrevistasInt ? qtdEntrevistasInt.toFixed(0) : 0}}</b>
+        <span class="font-weight-light">entrevistas</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="row wrap-nav-diagnostico-evento" [hidden]="carregando">
+    <div class="col-md-12">
+      <ul class="nav nav-tabs">
+        <li class="nav-item" *ngFor="let q of questionarios;">
+          <a class="nav-link"
+            [ngClass]="{active: !!questionario && q.id === questionario.id}"
+            (click)="selecionarQuestionario(q.id)">{{q.nome}}</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="row" *ngIf="!!questionario;">
+    <div class="col-md-12 perguntas">
+      <div class="loader-bar" [ngClass]="{'loading': questionario.carregando}"></div>
+
+      <div class="row diagnostico-questionario-titulo">
+        <div class="col-md-12">
+          <div class="col-md-12 mt-3">
+
+            <span counto
+              [step]="2"
+              [countTo]="questionario.qtdRespondidos"
+              [countFrom]="0"
+              [duration]="0.2"
+              (countoChange)="qtdRespondidosInt = $event">
+              <b>{{qtdRespondidosInt ? qtdRespondidosInt.toFixed(0) : questionario.qtdRespondidos}}</b>
+            </span>
+            questionários respondidos
+          </div>
+        </div>
+      </div>
+
+      <div class="row" *ngFor="let p of questionario.perguntas;let i = index;">
+        <div class="col-md-12">
+          <div class="col-md-12 diagnostico-pergunta">
+
+            <div class="row">
+              <div class="col-md-12">
+                <h5>{{i+1}}) {{p.descricao}}</h5>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12 wrap-diagnostico-pergunta-opcoes" *ngIf="p.tipoResposta === 1">
+                <div class="row">
+
+                  <div class="col-md-7 col-sm-12">
+                    <table class="table table-sm mt-4">
+                      <thead>
+                        <tr>
+                          <th></th>
+                          <th>%</th>
+                          <th>Qtd.</th>
+                          <th>Opção</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let opcao of p.opcoesResposta">
+                          <td>
+                            <i class="far fa-dot-circle text-secondary" [hidden]="opcao.greatest"></i>
+                            <i class="fa fa-trophy text-primary" [hidden]="!opcao.greatest"></i>
+                          </td>
+                          <td>
+                            <b counto
+                              [step]="20"
+                              [countTo]="opcao.value"
+                              [countFrom]="0"
+                              [duration]="0.2"
+                              (countoChange)="opcao.intermediate = $event">
+                              {{opcao.intermediate | percent}}
+                            </b>
+                          </td>
+                          <td>{{opcao.count}}</td>
+                          <td title="{{opcao.name}}">{{opcao.name | truncate:[35]}}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="col-md-5 col-sm-12 wrap-chart">
+                    <ngx-charts-pie-chart
+                      [results]="p.opcoesResposta"
+                      [scheme]="graphOptions.scheme"
+                      [view]="graphOptions.view"
+                      [labels]="graphOptions.labels"
+                      [maxLabelLength]="graphOptions.maxLabelLength"
+                      [tooltipText]="tooltipOpcao"
+                      [legendTitle]="graphOptions.legendTitle"
+                      [legendPosition]="graphOptions.legendPosition"
+                      [gradient]="graphOptions.gradient"
+                      [legend]="graphOptions.showLegend"
+                      [explodeSlices]="graphOptions.explodeSlices">
+                    </ngx-charts-pie-chart>
+                  </div>
+
+                </div>
+              </div>
+
+              <div class="col-md-12" *ngIf="p.tipoResposta === 2">
+                <p class="lead mt-2">
+                  <i>Respostas em texto.</i>
+                </p>
+              </div>
+
+              <div class="col-md-12" *ngIf="p.tipoResposta === 3">
+                <div counto class="h3 m-3"
+                  [step]="2"
+                  [countTo]="p.opcoesResposta[0].mediaRespNumero"
+                  [countFrom]="0"
+                  [duration]="0.2"
+                  (countoChange)="p.mediaRespNumero = $event">
+                  <b class="text-primary">{{p.mediaRespNumero.toFixed(2).toString().replace('.', ',')}}</b>
+                  <span class="font-weight-light">em média</span>
+                </div>
+              </div>
+
+              <div class="col-md-12 px-0">
+                <button class="btn btn-link" (click)="visualizarRespostas(p)">Visualizar respostas</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<app-evento-respostas></app-evento-respostas>

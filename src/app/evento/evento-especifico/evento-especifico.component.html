@@ -1,0 +1,97 @@
+<div id="ds-evento-especifico-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+  
+        <div class="modal-header">
+          <h5 class="modal-title">{{evento.id ? '' : 'Novo'}} Evento
+          </h5>
+          <a class="alert-link float-right mt-1" data-dismiss="modal"><i class="fa fa-times"></i></a>
+        </div>
+  
+        <div class="modal-body">
+
+          <div class="loader-bar" [ngClass]="{'loading': carregando}"></div>
+
+          <form [formGroup]="form" (ngSubmit)="concluir()">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label for="nome">Nome</label>
+                  <input class="form-control" type="text" name="nome" formControlName="nome" autofocus/>
+                  <small class="text-danger" *ngIf="form.controls.nome.errors?.required && form.controls.nome.touched">O nome deve ser informado.</small>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-lg-6 col-md-6 form-group">
+                <label for="questionario">Incluir questionário</label>
+                <select class="custom-select" name="questionario" formControlName="questionario">
+                  <option [ngValue]="questionario" *ngFor="let questionario of questionarios; let i = index;">{{questionario.nome}}</option>
+                </select>
+              </div>
+              <div class="col-lg-4 col-md-3 form-group">
+                <label for="qtdPorEnquete">Qtd. por enquete</label>
+                <select class="custom-select" name="qtdPorEnquete" formControlName="qtdPorEnquete">
+                  <option [ngValue]="opt.qtd" *ngFor="let opt of listaQtdPorEnquete; let i = index;">{{opt.descricao}}</option>
+                </select>
+              </div>
+              <div class="col-lg-2 col-md-3 form-inline">
+                <button type="button" class="btn btn-outline-secondary mt-3 col-md-12" (click)="incluirQuestionario()">Incluir</button>
+              </div>
+            </div>
+          </form>
+
+          <div class="row">
+            <div class="col-md-12">
+              <h6>Questionários</h6>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12 mt-auto">
+              <table class="table table-responsive-sm table-hover table-sm" id="ds-evento-questionarios-table">
+                <thead>
+                  <tr>
+                    <th class="text-secondary"><i class="fa fa-hashtag"></i></th>
+                    <th>Questionário</th>
+                    <th>Qtd. por enquete</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngIf="carregando">
+                    <td colspan="4" class="text-center">
+                      <i>Carregando questionários...</i>
+                    </td>
+                  </tr>
+                  <tr *ngFor="let q of evento.questionarios; let i = index;">
+                    <td class="table-index text-secondary"><small>{{i+1}}</small></td>
+                    <td>{{descricaoQuestionario(q.idQuestionario)}}</td>
+                    <td>{{descricaoQtdPorEnquete(q.quantidadePorEnquete)}}</td>
+                    <td>
+                      <button class="btn btn-outline-secondary float-right ml-1" (click)="removerQuestionario(q)" data-toggle="tooltip" title="Remover">
+                        <i class="fa fa-ban"></i>
+                      </button>
+                      <button class="btn btn-outline-secondary float-right ml-1" (click)="moverQuestionario(q, true)" data-toggle="tooltip" title="Mover para cima">
+                        <i class="fa fa-arrow-up"></i>
+                      </button>
+                      <button class="btn btn-outline-secondary float-right ml-1" (click)="moverQuestionario(q, false)" data-toggle="tooltip" title="Mover para baixo">
+                        <i class="fa fa-arrow-down"></i>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="loader-bar" [ngClass]="{'loading': salvando}"></div>
+        <div class="modal-footer">
+          <button class="btn btn-primary" type="button" [disabled]="!form.valid" (click)="concluir()">{{btnOkLabel}}</button>
+          <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
+        </div>
+      </div>
+    </div>
+  </div>

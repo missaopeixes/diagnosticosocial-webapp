@@ -29,14 +29,9 @@ Back-end - [diagnosticosocial-server](https://github.com/missaopeixes/diagnostic
 npm install
 ```
 
-### Executando localmente
-
-```
-npm run serve:sw
-```
-
-### Executando em desenvolvimento
+### Executando
 
 ```
 npm start
 ```
+Obs.: Confira se o apontamento para o servidor está correto em `src/enviroments/enviroment.prod.ts` (parâmetro **serverUrl**)

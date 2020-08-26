@@ -4,7 +4,7 @@ import env from './.env';
 export const environment = {
   production: true,
   version: env.npm_package_version,
-  serverUrl: 'http://diagnostico-missaoapps-com-br.umbler.net/api/v1', //prod API URL
+  serverUrl: 'http://localhost:3000/api/v1',
   defaultLanguage: 'pt-BR',
   supportedLanguages: [
     'en-US',

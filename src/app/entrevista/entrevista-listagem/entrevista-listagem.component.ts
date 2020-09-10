@@ -10,7 +10,7 @@ import * as _ from 'lodash';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import * as moment from 'moment';
 
-const ITENS_POR_PAGINA = 10;
+const ITENS_POR_PAGINA = 15;
 const ID_MODAL_EXCLUSAO = '#ds-entrevista-modal-exclusao';
 
 @Component({

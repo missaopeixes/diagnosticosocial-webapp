@@ -91,7 +91,7 @@
               </td>
             </tr>
           </tbody>
-          <tbody *ngIf="!carregando">
+          <tbody>
             <tr *ngFor="let entrevista of listagem.conteudo; let i = index;">
               <td class="table-index text-secondary"><small>{{i+1}}</small></td>
               <td title="{{entrevista.evento}}">{{entrevista.evento | truncate:[10]}}</td>
@@ -134,7 +134,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-body">
-            <p><b>Totas as respostas</b> da entrevista serão excluídas.</p>
+            <p><b>Todas as respostas</b> da entrevista serão excluídas.</p>
             <p>Tem certeza que deseja excluir a entrevista com <b>{{entrevistaExclusao ? entrevistaExclusao.nome : ''}}</b>?</p>
           </div>
 

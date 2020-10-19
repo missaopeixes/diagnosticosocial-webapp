@@ -22,6 +22,9 @@ Back-end - [diagnosticosocial-server](https://github.com/missaopeixes/diagnostic
 ### Requisitos
 
 - Nodejs 10+
+- Python 2.7
+  - Pode ser instalado via ``npm`` através do seguinte comando: ``npm install --global windows-build-tools``.
+  - Talvez seja necessário executar ``npm rebuild node-sass`` para funcionar corretamente.
 
 ### Preparando o ambiente local
 

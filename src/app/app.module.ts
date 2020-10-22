@@ -24,6 +24,7 @@ import { EventoModule } from './evento/evento.module';
 import { EntrevistaModule } from './entrevista/entrevista.module';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { PerguntaModule } from './pergunta/pergunta.module';
+import { RecuperacaoModule } from './recuperacao/recuperacao.module';
 
 @NgModule({
   imports: [
@@ -38,6 +39,7 @@ import { PerguntaModule } from './pergunta/pergunta.module';
     CountoModule,
 
     LoginModule,
+    RecuperacaoModule,
     HomeModule,
     AboutModule,
     UsuarioModule,

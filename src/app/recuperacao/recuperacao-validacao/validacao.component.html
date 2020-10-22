@@ -1,0 +1,43 @@
+<div class="login-container bg-light">
+  <div class="login-box">
+    <div class="container">
+      <div class="card col-md-6 mt-3 mx-auto">
+        <div class="card-body" *ngIf="templateValidacao">
+          <h2 *ngIf="!isErroVal" style="text-align: center;">
+            <i class="fas fa-cog fa-spin"></i>
+            Validando as informações...
+          </h2>
+          <h2 *ngIf="isErroVal" class="text-danger" style="text-align: center;">
+            Erro ao validar informações!
+          </h2>
+        </div>
+
+
+        <div class="card-body" *ngIf="templateAlteracao">
+          <h2>Alteração de Senha</h2>
+          <p>
+            Olá, {{usuario.nome}}!<br>Digite abaixo sua nova senha.
+          </p>
+          <form (ngSubmit)="alterar()" [formGroup]="valForm">
+            <input class="form-control" type="password" name="senha" formControlName="senha" placeholder="Senha">
+            <small [hidden]="valForm.controls.senha.valid || valForm.controls.senha.untouched" class="text-danger" translate>
+              A senha é obrigatória!
+            </small><br>
+            <input class="form-control" type="password" name="confirmaSenha" formControlName="confirmaSenha" placeholder="Corfirmar Senha">
+            <small [hidden]="valForm.controls.confirmaSenha.valid || valForm.controls.confirmaSenha.untouched" class="text-danger" translate>
+              A confirmação é obrigatória!
+            </small><br>
+            <button class="btn btn-primary" type="submit" [disabled]="valForm.invalid || isLoading || valForm.value.senha != valForm.value.confirmaSenha">
+              Alterar Senha
+              <i class="fas fa-cog fa-spin" [hidden]="!isLoading"></i>
+            </button>
+          </form>
+        </div>
+      </div>
+      <br><br>
+      <h1 class="text-center">
+        <img src="assets/logo-missao.png"/>
+      </h1>
+    </div>
+  </div>
+</div>

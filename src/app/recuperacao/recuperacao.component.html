@@ -1,0 +1,29 @@
+<div class="login-container bg-light">
+  <div class="login-box">
+    <div class="container">
+      <div class="card col-md-6 mt-3 mx-auto">
+        <div class="card-body">
+          <h2>Recuperação de Senha</h2>
+          <p>
+            Insira aqui o endereço de email da conta que você quer recuperar. Um email será enviado para este endereço. Acesse-o em até uma hora para continuar com o processo de recuperação.
+          </p>
+          <form (ngSubmit)="enviar()" [formGroup]="recForm">
+            <input class="form-control" type="text" name="email" formControlName="email" placeholder="Email">
+            <small [hidden]="recForm.controls.email.valid || recForm.controls.email.untouched" class="text-danger" translate>
+              O email é obrigatório!
+            </small><br>
+            <button class="btn btn-primary" type="submit" [disabled]="recForm.invalid || isLoading">
+              Enviar
+              <i class="fas fa-cog fa-spin" [hidden]="!isLoading"></i>
+            </button>
+            <button class="btn btn-secundary" onclick="window.history.back();" style="margin-left: 0.7rem;">Voltar</button>
+          </form>
+        </div>
+      </div>
+      <br><br>
+      <h1 class="text-center">
+        <img src="assets/logo-missao.png"/>
+      </h1>
+    </div>
+  </div>
+</div>

@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
+import { RecuperacaoComponent } from './recuperacao/recuperacao.component';
+
 const routes: Routes = [
   // Fallback when no prior route is matched
   { path: '**', redirectTo: '', pathMatch: 'full' }

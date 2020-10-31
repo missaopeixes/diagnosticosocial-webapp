@@ -41,10 +41,6 @@ export class ValidacaoComponent implements OnInit {
       .pipe(finalize(() => {
       }))
       .subscribe((response: ResultadoValidacao) => {
-
-        const msg = typeof response.mensagem === 'string' ? response.mensagem : 'Válido.'
-        this._toastrService.success(msg, 'Ok!');
-
         if (response.usuario) {
 
           this.usuario = response.usuario;

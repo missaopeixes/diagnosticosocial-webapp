@@ -9,7 +9,7 @@ import { UsuarioRoutingModule } from './usuario-routing.module';
 import { UsuarioComponent } from './usuario.component';
 import { PerfilComponent } from './perfil/perfil.component';
 import { UsuarioService } from '@app/usuario/usuario.service';
-import { NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModule, NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   imports: [
@@ -17,6 +17,7 @@ import { NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
     ReactiveFormsModule,
     TranslateModule,
     CoreModule,
+    NgbModule,
     SharedModule,
     UsuarioRoutingModule
   ],

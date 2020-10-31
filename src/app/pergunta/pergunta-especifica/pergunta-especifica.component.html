@@ -1,111 +1,110 @@
 <div id="ds-pergunta-especifica-modal" class="modal fade" role="dialog">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-  
-        <div class="modal-header">
-          <h5 class="modal-title">{{pergunta.id ? '' : 'Nova'}} Pergunta
-          </h5>
-          <a class="alert-link float-right mt-1" data-dismiss="modal"><i class="fa fa-times"></i></a>
-        </div>
-  
-        <div class="modal-body">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
 
-          <div class="loader-bar" [ngClass]="{'loading': carregando}"></div>
+      <div class="modal-header">
+        <h5 class="modal-title">{{pergunta.id ? '' : 'Nova'}} Pergunta
+        </h5>
+        <a class="alert-link float-right mt-1" data-dismiss="modal"><i class="fa fa-times"></i></a>
+      </div>
 
-          <form [formGroup]="form" (ngSubmit)="concluir()">
-            <div class="row">
-              <div class="col-md-12">
-                <div class="form-group">
-                  <label for="descricao">Descrição</label>
-                  <input class="form-control" type="text" name="descricao" formControlName="descricao" autofocus/>
-                  <small class="text-danger" *ngIf="form.controls.descricao.errors?.required && form.controls.descricao.touched">A descrição deve ser informada.</small>
-                </div>
+      <div class="modal-body">
+        <div class="loader-bar" [ngClass]="{'loading': carregando}"></div>
+
+        <form [formGroup]="form" (ngSubmit)="concluir()">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label for="descricao">Descrição</label>
+                <input class="form-control" type="text" name="descricao" formControlName="descricao" autofocus/>
+                <small class="text-danger" *ngIf="form.controls.descricao.errors?.required && form.controls.descricao.touched">A descrição deve ser informada.</small>
               </div>
             </div>
-
-            <div class="row">
-              <div class="col-md-12">
-                <div class="form-group">
-                  <label for="tipoResposta">Tipo de resposta</label>
-                  <select class="custom-select" name="tipoResposta" formControlName="tipoResposta" (change)="changeTipoResposta()">
-                    <option value="1">Multipla escolha</option>
-                    <option value="2">Texto</option>
-                    <option value="3">Número</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-
-            
-            <div class="row" *ngIf="exibeOpcoes">
-              <div class="col-lg-10 col-md-9 form-group">
-                <label for="opcaoResposta">Incluir opção de resposta</label>
-                <input type="text" class="form-control"
-                  name="opcaoResposta"
-                  formControlName="opcaoResposta"
-                  (selectItem)="incluirResposta($event.item)"
-                  [ngbTypeahead]="typeaheadOpcoesResposta.search"
-                  [inputFormatter]="typeaheadOpcoesResposta.formatter"
-                  [resultFormatter]="typeaheadOpcoesResposta.formatter"/>
-                <div class="loader-bar" [ngClass]="{'loading': pesquisando}"></div>
-              </div>
-              <div class="col-lg-2 col-md-3 form-inline">
-                <button type="button" class="btn btn-outline-secondary mt-3 col-md-12" (click)="criarResposta()">Incluir</button>
-              </div>
-            </div>
-          </form>
-
-          <div *ngIf="exibeOpcoes">
-
-            <div class="row">
-              <div class="col-md-12">
-                <h6>Opções de resposta:</h6>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-12 mt-auto">
-                <table class="table table-responsive-sm table-hover table-sm" id="ds-pergunta-opcoes-resposta-table">
-                  <thead>
-                    <tr>
-                      <th class="text-secondary"><i class="fa fa-hashtag"></i></th>
-                      <th>Descrição</th>
-                      <th></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr *ngIf="carregando">
-                      <td colspan="4" class="text-center">
-                        <i>Carregando opcoesResposta...</i>
-                      </td>
-                    </tr>
-                    <tr *ngFor="let opcaoResposta of pergunta.opcoesResposta; let i = index;">
-                      <td class="table-index text-secondary"><small>{{i+1}}</small></td>
-                      <td>{{opcaoResposta.descricao}}</td>
-                      <td>
-                        <button class="btn btn-outline-secondary float-right ml-1" (click)="removerResposta(opcaoResposta)" data-toggle="tooltip" title="Remover">
-                          <i class="fa fa-ban"></i>
-                        </button>
-                        <button class="btn btn-outline-secondary float-right ml-1" (click)="moverResposta(opcaoResposta, true)" data-toggle="tooltip" title="Mover para cima">
-                          <i class="fa fa-arrow-up"></i>
-                        </button>
-                        <button class="btn btn-outline-secondary float-right ml-1" (click)="moverResposta(opcaoResposta, false)" data-toggle="tooltip" title="Mover para baixo">
-                          <i class="fa fa-arrow-down"></i>
-                        </button>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
           </div>
-        </div>
 
-        <div class="loader-bar" [ngClass]="{'loading': salvando}"></div>
-        <div class="modal-footer">
-          <button class="btn btn-primary" type="button" [disabled]="!form.valid" (click)="concluir()">{{btnOkLabel}}</button>
-          <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label for="tipoResposta">Tipo de resposta</label>
+                <select class="custom-select" name="tipoResposta" formControlName="tipoResposta" (change)="changeTipoResposta()">
+                  <option value="1">Multipla escolha</option>
+                  <option value="2">Texto</option>
+                  <option value="3">Número</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          
+          <div class="row" *ngIf="exibeOpcoes">
+            <div class="col-lg-10 col-md-9 form-group">
+              <label for="opcaoResposta">Incluir opção de resposta</label>
+              <input type="text" class="form-control"
+                name="opcaoResposta"
+                formControlName="opcaoResposta"
+                (selectItem)="incluirResposta($event.item)"
+                [ngbTypeahead]="typeaheadOpcoesResposta.search"
+                [inputFormatter]="typeaheadOpcoesResposta.formatter"
+                [resultFormatter]="typeaheadOpcoesResposta.formatter"/>
+              <div class="loader-bar" [ngClass]="{'loading': pesquisando}"></div>
+            </div>
+            <div class="col-lg-2 col-md-3 form-inline">
+              <button type="button" class="btn btn-outline-secondary mt-3 col-md-12" (click)="criarResposta()">Incluir</button>
+            </div>
+          </div>
+        </form>
+
+        <div *ngIf="exibeOpcoes">
+
+          <div class="row">
+            <div class="col-md-12">
+              <h6>Opções de resposta:</h6>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12 mt-auto">
+              <table class="table table-responsive-sm table-hover table-sm" id="ds-pergunta-opcoes-resposta-table">
+                <thead>
+                  <tr>
+                    <th class="text-secondary"><i class="fa fa-hashtag"></i></th>
+                    <th>Descrição</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngIf="carregando">
+                    <td colspan="4" class="text-center">
+                      <i>Carregando opcoesResposta...</i>
+                    </td>
+                  </tr>
+                  <tr *ngFor="let opcaoResposta of pergunta.opcoesResposta; let i = index;">
+                    <td class="table-index text-secondary"><small>{{i+1}}</small></td>
+                    <td>{{opcaoResposta.descricao}}</td>
+                    <td>
+                      <button class="btn btn-outline-secondary float-right ml-1" (click)="removerResposta(opcaoResposta)" data-toggle="tooltip" title="Remover">
+                        <i class="fa fa-ban"></i>
+                      </button>
+                      <button class="btn btn-outline-secondary float-right ml-1" (click)="moverResposta(opcaoResposta, true)" data-toggle="tooltip" title="Mover para cima">
+                        <i class="fa fa-arrow-up"></i>
+                      </button>
+                      <button class="btn btn-outline-secondary float-right ml-1" (click)="moverResposta(opcaoResposta, false)" data-toggle="tooltip" title="Mover para baixo">
+                        <i class="fa fa-arrow-down"></i>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
         </div>
+      </div>
+
+      <div class="loader-bar" [ngClass]="{'loading': salvando}"></div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" type="button" [disabled]="!form.valid" (click)="concluir()">{{btnOkLabel}}</button>
+        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
       </div>
     </div>
   </div>
+</div>

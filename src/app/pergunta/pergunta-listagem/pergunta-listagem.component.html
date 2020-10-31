@@ -22,19 +22,29 @@
     </div>
     <div class="row" *ngIf="!!exibeFiltro">
       <div class="col-md-12 mb-4">
-        <!-- <form [formGroup]="formFiltro" (submit)="obterListagem(true)">
+        <form [formGroup]="formFiltro" (submit)="obterListagem(true)">
           <div class="row">
-            <div class="col-lg-6 col-lg-offset-5">
+            <div class="col-lg-5 col-lg-offset-5">
               <div class="form-group">
                 <label for="filtroEvento" class="sr-only">Descrição</label>
                 <input type="text" class="form-control" id="filtroEvento" formControlName="descricao" placeholder="Descrição da pergunta">
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+              <div class="form-group pt-2 pl-4">
+                <input type="checkbox"
+                      id="filtroUtilizadas"
+                      formControlName="utilizadas"
+                      name="filtroUtilizadas"
+                      class="custom-control-input"/>
+                <label class="custom-control-label" for="filtroUtilizadas">Utilizadas em Questionários</label>
               </div>
             </div>
             <div class="col-lg-1 col-md-6">
               <button type="submit" class="btn btn-default col-md-12">Filtrar</button>
             </div>
           </div>
-        </form> -->
+        </form>
       </div>
     </div>
 
@@ -102,20 +112,21 @@
       </div>
     </div>
 
-</div>
-
-<!-- <div id="ds-entrevista-modal-exclusao" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-body">
-            <p>Tem certeza que deseja excluir a pergunta com <b>{{entrevistaExclusao ? entrevistaExclusao.nome : ''}}</b>?</p>
-          </div>
-
-          <div class="loader-bar" [ngClass]="{'loading': salvando}"></div>
-          <div class="modal-footer">
-            <button class="btn btn-primary" (click)="excluir()">Sim, excluir</button>
-            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" (click)="entrevistaExclusao = null">Cancelar</button>
-          </div>
+    <div id="ds-pergunta-modal-exclusao" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-body">
+                <p>Tem certeza que deseja excluir a pergunta <b>{{perguntaExclusao ? perguntaExclusao.descricao : ''}}</b>?</p>
+              </div>
+              <div class="loader-bar" [ngClass]="{'loading': salvando}"></div>
+              <div class="modal-footer">
+                <button class="btn btn-primary" (click)="excluir()">Sim, excluir</button>
+                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" (click)="perguntaExclusao = null">Cancelar</button>
+              </div>
+            </div>
         </div>
     </div>
-</div> -->
+
+</div>
+
+<app-pergunta-especifica (concluido)="perguntaConcluida($event)"></app-pergunta-especifica>

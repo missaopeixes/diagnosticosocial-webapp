@@ -38,7 +38,7 @@ export class EntrevistaListagemComponent implements OnInit {
 
   ngOnInit() {
     this.listagem = new Listagem<Entrevista>();
-    this.exibeFiltro = false;
+    this.exibeFiltro = true;
 
     this.formFiltro = this._formBuilder.group({
       evento: [''],

@@ -4,7 +4,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CoreModule } from '@app/core';
 import { SharedModule } from '@app/shared';
-import { NgbModal, NgbActiveModal, NgbTypeaheadModule, NgbTypeahead } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModule, NgbModal, NgbActiveModal, NgbTypeaheadModule, NgbTypeahead } from '@ng-bootstrap/ng-bootstrap';
 
 import { FormsModule } from '@angular/forms';
 
@@ -30,6 +30,7 @@ import { EventoRespostasHelper } from './evento-respostas/evento-respostas.helpe
     TranslateModule,
     CoreModule,
     SharedModule,
+    NgbModule,
     NgbTypeaheadModule,
     QuestionarioModule,
     EventoRoutingModule,

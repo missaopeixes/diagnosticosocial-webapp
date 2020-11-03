@@ -6,7 +6,13 @@ import { Pergunta, IPergunta } from '@app/pergunta/pergunta';
 import { OpcaoResposta } from '@app/opcaoResposta/opcaoResposta';
 
 const routes = {
-  listar: (pagina: number, itensPorPagina?: number) => `/perguntas/?${ListagemHelper.paginacao.queryParams(pagina, itensPorPagina)}`,
+  listar: (pagina: number, itensPorPagina?: number, filtroDescricao?: string, filtroUtilizadas?: boolean) => {
+    let filtros = `&filtroUtilizadas=${!!filtroUtilizadas}`;
+    if (!!filtroDescricao) {
+      filtros = filtros.concat(`&filtroDescricao=${filtroDescricao}`);
+    }
+    return `/perguntas/?${ListagemHelper.paginacao.queryParams(pagina, itensPorPagina)}${filtros}`;
+  },
   criar: () => `/perguntas/`,
   pergunta: (id: number) => `/perguntas/${id}`,
   pesquisar: (termo: string) => `/perguntas/pesquisa/?termo=${termo}`,
@@ -19,8 +25,8 @@ export class PerguntaService {
 
   constructor(private _httpClient: HttpClient) { }
 
-  obterPorPagina(pagina: number, itensPorPagina?: number) : Observable<Listagem<Pergunta>> {
-    return this._httpClient.get<Listagem<Pergunta>>(routes.listar(pagina, itensPorPagina));
+  obterPorPagina(pagina: number, itensPorPagina?: number, filtroDescricao?: string, filtroUtilizadas?: boolean) : Observable<Listagem<Pergunta>> {
+    return this._httpClient.get<Listagem<Pergunta>>(routes.listar(pagina, itensPorPagina, filtroDescricao, filtroUtilizadas));
   }
 
   obter(id: number) : Observable<IPergunta> {
@@ -33,6 +39,10 @@ export class PerguntaService {
 
   atualizar(pergunta: Pergunta) : Observable<IPergunta> {
     return this._httpClient.put<IPergunta>(routes.pergunta(pergunta.id), pergunta);
+  }
+
+  excluir(pergunta: Pergunta) : Observable<IPergunta> {
+    return this._httpClient.delete<IPergunta>(routes.pergunta(pergunta.id));
   }
 
   pesquisar(termo: string) : Observable<Pergunta[]> {

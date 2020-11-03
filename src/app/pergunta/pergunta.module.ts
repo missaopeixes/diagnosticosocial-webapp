@@ -4,7 +4,9 @@ import { PerguntaService } from '@app/pergunta/pergunta.service';
 import { RespostaService } from '@app/opcaoResposta/opcaoResposta.service';
 import { PerguntaRoutingModule } from '@app/pergunta/pergunta-routing.module';
 import { PerguntaListagemComponent } from '@app/pergunta/pergunta-listagem/pergunta-listagem.component';
-import { NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { PerguntaEspecificaComponent } from '@app/pergunta/pergunta-especifica/pergunta-especifica.component';
+
+import { NgbModule, NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { CoreModule } from '@app/core';
@@ -17,12 +19,17 @@ import { SharedModule } from '@app/shared';
     ReactiveFormsModule,
     TranslateModule,
     CoreModule,
+    NgbModule,
     SharedModule,
 
     PerguntaRoutingModule
   ],
   declarations: [
-    PerguntaListagemComponent
+    PerguntaListagemComponent,
+    PerguntaEspecificaComponent
+  ],
+  exports: [
+    PerguntaEspecificaComponent
   ],
   providers: [
     PerguntaService,

@@ -4,13 +4,15 @@ import { Pergunta, TipoResposta } from '../../pergunta/pergunta';
 import { ToastrService } from 'ngx-toastr';
 import { ModalService } from '../../shared/modal/modal.service';
 import { PerguntaService } from '../../pergunta/pergunta.service';
+import { PerguntaEspecificaHelper } from '@app/pergunta/pergunta-especifica/pergunta-especifica.helper';
+
 import { finalize } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import * as _ from 'lodash';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import * as moment from 'moment';
 
-const ITENS_POR_PAGINA = 10;
+const ITENS_POR_PAGINA = 15;
 const ID_MODAL_EXCLUSAO = '#ds-pergunta-modal-exclusao';
 
 @Component({
@@ -30,6 +32,7 @@ export class PerguntaListagemComponent implements OnInit {
 
   constructor(
     private _perguntaService: PerguntaService,
+    private _perguntaEspecificaHelper: PerguntaEspecificaHelper,
     private _toastrService: ToastrService,
     private _router: Router,
     private _formBuilder: FormBuilder,
@@ -41,8 +44,10 @@ export class PerguntaListagemComponent implements OnInit {
     this.exibeFiltro = true;
 
     this.formFiltro = this._formBuilder.group({
-      descricao: ['']
+      descricao: [''],
+      utilizadas: ['']
     });
+    this.formFiltro.controls['utilizadas'].setValue(false);
 
     this.obterListagem();
   }
@@ -54,17 +59,17 @@ export class PerguntaListagemComponent implements OnInit {
     else {
       this.listagem.pagina++;
     }
-
+    console.log("descricao: ", this.formFiltro.value.descricao, "utilizadas: ", this.formFiltro.value.utilizadas);
     this.carregando = true;
     this._perguntaService.obterPorPagina(this.listagem.pagina,
-      ITENS_POR_PAGINA)
+      ITENS_POR_PAGINA,
+      this.formFiltro.value.descricao,
+      this.formFiltro.value.utilizadas)
     .pipe(finalize(() =>
       this.carregando = false
     ))
     .subscribe((listagem: Listagem<Pergunta>) => {
-      console.log('resultado', listagem);
       return refresh ? this.listagem.atualizar(listagem) : this.listagem.incrementar(listagem);
-      
     },
       () => this.erroListagem = true
     );
@@ -76,30 +81,57 @@ export class PerguntaListagemComponent implements OnInit {
   }
 
   excluir() {
-    console.log('TODO!');
-    // this.salvando = true;
-    // this._perguntaService.excluir(this.perguntaExclusao.id)
-    // .then(() => {
-    //   _.remove(this.listagem.conteudo, (obj) => {
-    //     return obj.id === this.perguntaExclusao.id;
-    //   })
-    //   this.listagem.total--;
-    //   this._toastrService.success('Pergunta excluida com sucesso.', 'Ok');
-    //   this.salvando = false;
-    //   this._modalService.close(ID_MODAL_EXCLUSAO);
-    // })
-    // .catch(({error}) => {
-    //   this._toastrService.error(error, 'Ops!');
-    //   this.salvando = false;
-    // });
-  }
+    this.salvando = true;
+    this._perguntaService.excluir(this.perguntaExclusao)
+    .pipe(finalize(() =>
+      this.salvando = false
+    ))
+    .subscribe((resultado) => {
+      _.remove(this.listagem.conteudo, (obj) => {
+        return obj.id === this.perguntaExclusao.id;
+      });
+      this.listagem.total--;
+
+      const msg = typeof resultado === 'string' ? resultado : 'Pergunta excluída com sucesso.'
+      this._toastrService.success(msg, 'Ok!');
+      
+      this.salvando = false;
+      this._modalService.close(ID_MODAL_EXCLUSAO);
+    },
+    (error) => {
+      this.salvando = false;
+      const msg = typeof error.error === 'string' ? error.error : 'Ocorreu um erro ao excluir a pergunta.'
+      this._toastrService.error(msg, 'Ops!');
+      this._modalService.close(ID_MODAL_EXCLUSAO);
+    }
+  );
+}
 
   novo() {
     this._router.navigate(['/perguntas/novo']);
   }
 
   visualizar(pergunta: Pergunta) {
-    this._router.navigate([`/perguntas/${pergunta.id}`]);
+
+    if (!pergunta.id) {
+      return;
+    }
+
+    this._perguntaEspecificaHelper.abrir({
+      pergunta: pergunta,
+      completeFn: (obj: Pergunta) => {
+        pergunta = obj;
+      }
+    });
+  }
+
+  perguntaConcluida(pergunta: Pergunta) {
+    if (!pergunta.id) {
+      return;
+    }
+    else {
+      this.obterListagem(true);
+    }
   }
 
   formatDate(utc: string) {

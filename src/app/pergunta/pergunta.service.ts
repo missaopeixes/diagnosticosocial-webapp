@@ -6,8 +6,8 @@ import { Pergunta, IPergunta } from '@app/pergunta/pergunta';
 import { OpcaoResposta } from '@app/opcaoResposta/opcaoResposta';
 
 const routes = {
-  listar: (pagina: number, itensPorPagina?: number, filtroDescricao?: string, filtroUtilizadas?: boolean) => {
-    let filtros = `&filtroUtilizadas=${!!filtroUtilizadas}`;
+  listar: (pagina: number, itensPorPagina?: number, filtroDescricao?: string, filtroNaoUtilizadas?: boolean) => {
+    let filtros = `&filtroNaoUtilizadas=${!!filtroNaoUtilizadas}`;
     if (!!filtroDescricao) {
       filtros = filtros.concat(`&filtroDescricao=${filtroDescricao}`);
     }
@@ -25,8 +25,8 @@ export class PerguntaService {
 
   constructor(private _httpClient: HttpClient) { }
 
-  obterPorPagina(pagina: number, itensPorPagina?: number, filtroDescricao?: string, filtroUtilizadas?: boolean) : Observable<Listagem<Pergunta>> {
-    return this._httpClient.get<Listagem<Pergunta>>(routes.listar(pagina, itensPorPagina, filtroDescricao, filtroUtilizadas));
+  obterPorPagina(pagina: number, itensPorPagina?: number, filtroDescricao?: string, filtroNaoUtilizadas?: boolean) : Observable<Listagem<Pergunta>> {
+    return this._httpClient.get<Listagem<Pergunta>>(routes.listar(pagina, itensPorPagina, filtroDescricao, filtroNaoUtilizadas));
   }
 
   obter(id: number) : Observable<IPergunta> {

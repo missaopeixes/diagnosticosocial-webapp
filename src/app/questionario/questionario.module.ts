@@ -4,17 +4,17 @@ import { TranslateModule } from '@ngx-translate/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CoreModule } from '@app/core';
 import { SharedModule } from '@app/shared';
-import { NgbModal, NgbActiveModal, NgbTypeaheadModule, NgbTypeahead } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModule, NgbModal, NgbActiveModal, NgbTypeaheadModule, NgbTypeahead } from '@ng-bootstrap/ng-bootstrap';
 
 import { FormsModule } from '@angular/forms';
 
 import { QuestionarioListagemComponent } from './questionario-listagem/questionario-listagem.component';
-import { QuestionarioRoutingModule } from './questionario-routing.module';
-import { QuestionarioService } from './questionario.service';
 import { QuestionarioEspecificoComponent } from './questionario-especifico/questionario-especifico.component';
 import { PerguntaModule } from '@app/pergunta/pergunta.module';
+
+import { QuestionarioRoutingModule } from './questionario-routing.module';
+import { QuestionarioService } from './questionario.service';
 import { PerguntaService } from '@app/pergunta/pergunta.service';
-import { PerguntaEspecificaComponent } from '@app/pergunta/pergunta-especifica/pergunta-especifica.component';
 
 @NgModule({
   imports: [
@@ -24,6 +24,7 @@ import { PerguntaEspecificaComponent } from '@app/pergunta/pergunta-especifica/p
     TranslateModule,
     CoreModule,
     SharedModule,
+    NgbModule,
     NgbTypeaheadModule,
     PerguntaModule,
 
@@ -31,8 +32,7 @@ import { PerguntaEspecificaComponent } from '@app/pergunta/pergunta-especifica/p
   ],
   declarations: [
     QuestionarioListagemComponent,
-    QuestionarioEspecificoComponent,
-    PerguntaEspecificaComponent
+    QuestionarioEspecificoComponent
   ],
   providers: [
     NgbModal,

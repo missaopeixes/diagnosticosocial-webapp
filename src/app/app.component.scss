@@ -160,3 +160,11 @@ $height-loader-bar: 2px;
   100%{box-shadow: none}
 }
 // ============================================
+
+.modal .modal-dialog{
+  max-height: 90vh;
+}
+.modal .modal-body{
+  overflow-y: auto;
+  max-height: calc(100vh - 193px);
+}

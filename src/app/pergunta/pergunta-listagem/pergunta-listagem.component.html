@@ -24,20 +24,20 @@
       <div class="col-md-12 mb-4">
         <form [formGroup]="formFiltro" (submit)="obterListagem(true)">
           <div class="row">
-            <div class="col-lg-5 col-lg-offset-5">
+            <div class="col-lg-4 col-lg-offset-5">
               <div class="form-group">
                 <label for="filtroEvento" class="sr-only">Descrição</label>
                 <input type="text" class="form-control" id="filtroEvento" formControlName="descricao" placeholder="Descrição da pergunta">
               </div>
             </div>
-            <div class="col-lg-3 col-md-6">
+            <div class="col-lg-4 col-md-6">
               <div class="form-group pt-2 pl-4">
                 <input type="checkbox"
-                      id="filtroUtilizadas"
+                      id="filtroNaoUtilizadas"
                       formControlName="utilizadas"
-                      name="filtroUtilizadas"
+                      name="filtroNaoUtilizadas"
                       class="custom-control-input"/>
-                <label class="custom-control-label" for="filtroUtilizadas">Utilizadas em Questionários</label>
+                <label class="custom-control-label" for="filtroNaoUtilizadas">Não utilizadas em questionários</label>
               </div>
             </div>
             <div class="col-lg-1 col-md-6">

@@ -5,6 +5,7 @@ export interface IUsuario {
   login: string;
   email: string;
   senha?: string;
+  administrador: boolean;
 
   createdAt?: Date;
   updatedAt?: Date;
@@ -16,6 +17,8 @@ export class Usuario implements IUsuario {
   login: string;
   email: string;
   senha?: string;
+  administrador: boolean;
+
   createdAt?: Date;
   updatedAt?: Date;
 
@@ -23,6 +26,7 @@ export class Usuario implements IUsuario {
     this.nome = '';
     this.login = '';
     this.email = '';
+    this.administrador = false;
 
     Object.assign(this, obj);
   }

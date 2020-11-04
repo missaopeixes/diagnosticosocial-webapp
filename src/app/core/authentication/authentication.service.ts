@@ -99,7 +99,9 @@ export class AuthenticationService {
       storage.setItem(CREDENTIALS_KEY, JSON.stringify(credenciais));
     } else {
       sessionStorage.removeItem(CREDENTIALS_KEY);
+      sessionStorage.removeItem('adm');
       localStorage.removeItem(CREDENTIALS_KEY);
+      localStorage.removeItem('adm');
     }
   }
 

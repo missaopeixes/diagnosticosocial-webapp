@@ -67,8 +67,10 @@ export class UsuarioComponent implements OnInit {
       nome: ['', Validators.required],
       login: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
+      administrador: [''],
       formSenha: !edicao ? this.formSenha : null
     });
+    this.form.controls['administrador'].setValue(false);
     this.exibirValidacao = false;
   }
 
@@ -111,7 +113,8 @@ export class UsuarioComponent implements OnInit {
       nome: this.form.value.nome,
       login: this.form.value.login,
       email: this.form.value.email,
-      senha: this.form.value.formSenha.senha
+      senha: this.form.value.formSenha.senha,
+      administrador: this.form.value.administrador
     });
 
     this.salvando = true;
@@ -133,7 +136,8 @@ export class UsuarioComponent implements OnInit {
       id: this.usuarioEdicao.id,
       nome: this.form.value.nome,
       login: this.form.value.login,
-      email: this.form.value.email
+      email: this.form.value.email,
+      administrador: this.form.value.administrador
     });
 
     this.salvando = true;
@@ -188,5 +192,4 @@ export class UsuarioComponent implements OnInit {
       this.salvando = false;
     });
   }
-
 }

@@ -1,10 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { UsuarioService } from '@app/usuario/usuario.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 import { finalize } from 'rxjs/operators';
 
 import { environment } from '@env/environment';
 import { Logger, I18nService, AuthenticationService } from '@app/core';
+import { Usuario } from '@app/usuario/usuario';
 
 const log = new Logger('Login');
 
@@ -23,7 +26,9 @@ export class LoginComponent implements OnInit {
   constructor(private router: Router,
               private formBuilder: FormBuilder,
               private i18nService: I18nService,
-              private authenticationService: AuthenticationService) {
+              private authenticationService: AuthenticationService,
+              private _usuarioService: UsuarioService,
+              private _toastrService: ToastrService) {
     this.createForm();
   }
 
@@ -36,14 +41,24 @@ export class LoginComponent implements OnInit {
       finalize(() => {
         this.loginForm.markAsPristine();
         this.isLoading = false;
-      })
-    )
-    .subscribe((credenciais) => {
-      log.debug(`${credenciais.login} successfully logged in`);
-      this.router.navigate(['/'], { replaceUrl: true });
+      }))
+      .subscribe((credenciais) => {
+        log.debug(`${credenciais.login} successfully logged in`);
+        this.router.navigate(['/'], { replaceUrl: true });
+        this.obterPerfil();
     }, error => {
       log.debug(`Login error: ${error}`);
       this.error = error;
+    });
+  }
+
+  obterPerfil() {
+    this._usuarioService.perfil()
+    .pipe()
+    .subscribe((obj: Usuario) => {
+      window.sessionStorage.setItem('adm', JSON.stringify(obj.administrador));
+    }, ({error}) => {
+      this._toastrService.error(error, 'Ops!');
     });
   }
 

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AfterViewInit } from '@angular/core/src/metadata/lifecycle_hooks';
 import { Router } from '@angular/router';
 
 import { AuthenticationService } from '../../authentication/authentication.service';
@@ -12,12 +13,16 @@ import { I18nService } from '../../i18n.service';
 export class HeaderComponent implements OnInit {
 
   menuHidden = true;
+  adm = false;
 
   constructor(private router: Router,
               private authenticationService: AuthenticationService,
-              private i18nService: I18nService) { }
+              private i18nService: I18nService) {
+  }
 
-  ngOnInit() { }
+  ngOnInit() {
+    setTimeout(() => this.adm = JSON.parse(window.sessionStorage.getItem('adm')));
+  }
 
   toggleMenu() {
     this.menuHidden = !this.menuHidden;

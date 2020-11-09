@@ -14,6 +14,7 @@ import * as _ from 'lodash';
 
 const ID_MODAL = '#ds-pergunta-especifica-modal';
 const ID_TABLE = '#ds-pergunta-opcoes-resposta-table';
+
 @Component({
   selector: 'app-pergunta-especifica',
   templateUrl: './pergunta-especifica.component.html',
@@ -138,7 +139,7 @@ export class PerguntaEspecificaComponent implements OnInit {
       return new Promise((res, rej) => rej());
     }
 
-    return this.pergunta.id ? this._atualizar() :this._criar();
+    return this.pergunta.id ? this._atualizar() : this._criar();
   }
 
   typeaheadOpcoesResposta = {

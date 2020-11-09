@@ -167,6 +167,7 @@ export class UsuarioComponent implements OnInit {
     this.form.controls['nome'].setValue(usuario.nome);
     this.form.controls['login'].setValue(usuario.login);
     this.form.controls['email'].setValue(usuario.email);
+    this.form.controls['administrador'].setValue(usuario.administrador);
 
     this._modalService.open(ID_MODAL);
   }

@@ -21,7 +21,7 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit() {
-    setTimeout(() => this.adm = JSON.parse(window.sessionStorage.getItem('adm')));
+    setTimeout(() => this.adm = JSON.parse(window.sessionStorage.getItem('adm')), 200);
   }
 
   toggleMenu() {

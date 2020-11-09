@@ -31,6 +31,7 @@
               <th class="text-secondary"><i class="fa fa-hashtag"></i></th>
               <th>Nome</th>
               <th>Login</th>
+              <th></th>
               <th><a class="float-right text-secondary mr-1" (click)="obterListagem(true)"><i class="fa fa-sync-alt"></i></a></th>
             </tr>
           </thead>
@@ -44,6 +45,7 @@
               <td class="table-index text-secondary"><small>{{i+1}}</small></td>
               <td>{{usuario.nome}}</td>
               <td>{{usuario.login}}</td>
+              <td><i *ngIf="usuario.administrador" class="fas fa-user-shield" title="Administrador"></i></td>
               <td>
                 <button class="btn btn-outline-secondary float-right ml-1" (click)="confirmarExclusao(usuario)">Excluir</button>
                 <button class="btn btn-outline-secondary float-right ml-1" (click)="visualizar(usuario)">Visualizar</button>
@@ -103,6 +105,7 @@
                       formControlName="administrador"
                       id="administrador"
                       name="administrador"
+                      checked="form.controls.values.administrador"
                       class="custom-control-input"/>
                 <label class="custom-control-label noselect" for="administrador">Administrador</label>
               </div>

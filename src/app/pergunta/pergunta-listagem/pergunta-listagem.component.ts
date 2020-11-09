@@ -103,16 +103,10 @@ export class PerguntaListagemComponent implements OnInit {
       const msg = typeof error.error === 'string' ? error.error : 'Ocorreu um erro ao excluir a pergunta.'
       this._toastrService.error(msg, 'Ops!');
       this._modalService.close(ID_MODAL_EXCLUSAO);
-    }
-  );
-}
-
-  novo() {
-    this._router.navigate(['/perguntas/novo']);
+    });
   }
 
   visualizar(pergunta: Pergunta) {
-
     if (!pergunta.id) {
       return;
     }

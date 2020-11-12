@@ -13,7 +13,7 @@ const routes = {
     }
     return `/perguntas/?${ListagemHelper.paginacao.queryParams(pagina, itensPorPagina)}${filtros}`;
   },
-  criar: () => `/perguntas/`,
+  criar: () => `/perguntas`,
   pergunta: (id: number) => `/perguntas/${id}`,
   pesquisar: (termo: string) => `/perguntas/pesquisa/?termo=${termo}`,
   opcoesResposta: (id: number) => `/perguntas/${id}/opcoes-resposta`,

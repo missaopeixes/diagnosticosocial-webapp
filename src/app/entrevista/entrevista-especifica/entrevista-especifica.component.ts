@@ -47,7 +47,7 @@ export class EntrevistaEspecificaComponent implements OnInit {
   public salvandoQuestionario: boolean;
   public excluindoQRespondido: boolean;
   public nomeUsuario: string;
-  public offline: boolean;
+  // public offline: boolean;
 
   public questionarioSelecionado: QuestionarioDaEntrevista;
   public questionariosRespondidos: QuestionarioRespondido[];
@@ -444,7 +444,7 @@ export class EntrevistaEspecificaComponent implements OnInit {
     });
   }
 
-  toggleOffline() {
-    this.offline = !this.offline;
-  }
+  // toggleOffline() {
+  //   this.offline = !this.offline;
+  // }
 }

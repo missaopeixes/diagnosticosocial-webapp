@@ -10,6 +10,7 @@ import * as _ from 'lodash';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import * as moment from 'moment';
 import { globals } from '@env/environment';
+import { AuthenticationService, Credentials } from '@app/core/authentication/authentication.service';
 
 const ITENS_POR_PAGINA = 15;
 const ID_MODAL_EXCLUSAO = '#ds-entrevista-modal-exclusao';
@@ -28,25 +29,32 @@ export class EntrevistaListagemComponent implements OnInit {
   public entrevistaExclusao: Entrevista;
   public formFiltro: FormGroup;
   public exibeFiltro: boolean;
-  public idUsuario: number;
-  public admSessao: boolean;
+  public credenciais: Credentials;
 
   constructor(
     private _entrevistaService: EntrevistaService,
     private _toastrService: ToastrService,
     private _router: Router,
     private _formBuilder: FormBuilder,
-    private _modalService: ModalService) {
+    private _modalService: ModalService,
+    private _authenticationService: AuthenticationService) {
+  }
+
+  get administrador() : boolean {
+    return this.credenciais ? this.credenciais.administrador : false;
+  }
+
+  get idUsuario() : number {
+    return this.credenciais ? this.credenciais.id : 0;
   }
 
   ngOnInit() {
     this.listagem = new Listagem<Entrevista>();
     this.exibeFiltro = true;
-    this.admSessao = JSON.parse(window.sessionStorage.getItem('adm'));
-    this.idUsuario = JSON.parse(window.sessionStorage.getItem('idUsuario'));
+    this.credenciais = this._authenticationService.credentials;
 
     this.formFiltro = this._formBuilder.group({
-      idUsuario: this.admSessao ? [undefined] : [this.idUsuario],
+      idUsuario: this.administrador ? [undefined] : [this.idUsuario],
       evento: [''],
       usuario: [''],
       nome: [''],

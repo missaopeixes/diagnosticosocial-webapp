@@ -28,6 +28,7 @@ export interface IEntrevista {
 
   observacoes: string;
   concluida?: boolean;
+  offline?: boolean;
 
   createdAt?: Date;
   updatedAt?: Date;
@@ -42,6 +43,7 @@ export class Entrevista implements IEntrevista {
 
   observacoes: string;
   concluida: boolean;
+  offline: boolean;
 
   createdAt?: Date;
   updatedAt?: Date;
@@ -50,6 +52,7 @@ export class Entrevista implements IEntrevista {
     this.nome = '';
     this.observacoes = '';
     this.concluida = false;
+    this.offline = false;
 
     Object.assign(this, obj);
   }

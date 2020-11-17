@@ -1,21 +1,18 @@
-import { Component, OnInit, EventEmitter } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Listagem } from '@app/shared/listagem';
-import { Pergunta, TipoResposta, IPergunta } from '@app/pergunta/pergunta';
+import { Pergunta, TipoResposta } from '@app/pergunta/pergunta';
 import { EntrevistaService } from '@app/entrevista/entrevista.service';
 import { Entrevista, IEntrevista, QuestionarioRespondido } from '@app/entrevista/entrevista';
-import { finalize, debounceTime, distinctUntilChanged, map, switchMap } from 'rxjs/operators';
+import { finalize } from 'rxjs/operators';
 import { FormGroup, Validators, FormBuilder, FormControl } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { Observable } from 'rxjs';
-import { PerguntaService } from '@app/pergunta/pergunta.service';
 import { AnimationHelper } from '@app/shared/helpers/animation-helper';
 import * as _ from 'lodash';
-import { PerguntaEspecificaHelper } from '@app/pergunta/pergunta-especifica/pergunta-especifica.helper';
 import { Resposta } from '@app/resposta/resposta';
 import { EventoService } from '@app/evento/evento.service';
 import { IEvento, Evento, QtdQuestionarioPorEnquete, QtdQuestionarioPorEnqueteUtils } from '@app/evento/evento';
-import { IQuestionario, Questionario, IQuestionarioDaEntrevista, QuestionarioDaEntrevista } from '@app/questionario/questionario';
+import { QuestionarioDaEntrevista } from '@app/questionario/questionario';
 import { ModalService } from '@app/shared/modal/modal.service';
 import { QuestionarioService } from '@app/questionario/questionario.service';
 import { AuthenticationService } from '@app/core';
@@ -50,6 +47,7 @@ export class EntrevistaEspecificaComponent implements OnInit {
   public salvandoQuestionario: boolean;
   public excluindoQRespondido: boolean;
   public nomeUsuario: string;
+  // public offline: boolean;
 
   public questionarioSelecionado: QuestionarioDaEntrevista;
   public questionariosRespondidos: QuestionarioRespondido[];
@@ -445,4 +443,8 @@ export class EntrevistaEspecificaComponent implements OnInit {
       }
     });
   }
+
+  // toggleOffline() {
+  //   this.offline = !this.offline;
+  // }
 }

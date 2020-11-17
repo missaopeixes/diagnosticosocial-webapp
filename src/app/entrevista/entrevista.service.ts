@@ -6,8 +6,11 @@ import { Entrevista, IEntrevista, QuestionarioRespondido } from '@app/entrevista
 import { Resposta } from '@app/resposta/resposta';
 
 const routes = {
-  listar: (pagina: number, itensPorPagina?: number, filtroEvento?: string, filtroUsuario?: string, filtroNome?: string, filtroConcluida?: boolean) => {
+  listar: (pagina: number, itensPorPagina?: number, filtroIdUsuario?: number, filtroEvento?: string, filtroUsuario?: string, filtroNome?: string, filtroConcluida?: boolean) => {
     let filtros = `&filtroConcluidas=${!!filtroConcluida}`;
+    if (!!filtroIdUsuario) {
+      filtros = filtros.concat(`&filtroIdUsuario=${filtroIdUsuario}`);
+    }
     if (!!filtroEvento) {
       filtros = filtros.concat(`&filtroEvento=${filtroEvento}`);
     }
@@ -20,7 +23,7 @@ const routes = {
     return `/entrevistas/?${ListagemHelper.paginacao.queryParams(pagina, itensPorPagina)}${filtros}`;
   },
   listarTodos: () => `/entrevistas/todos`,
-  escpecifica: (id: number) => `/entrevistas/${id}`,
+  especifica: (id: number) => `/entrevistas/${id}`,
   criar: () => `/entrevistas/`,
   respostas: (idEntrevista: number, idQuestionarioRespondido: number) => `/entrevistas/${idEntrevista}/questionario-respondido/${idQuestionarioRespondido}/respostas`,
   questionario: (id: number) => `/entrevistas/${id}/questionario-respondido`,
@@ -35,13 +38,14 @@ export class EntrevistaService {
 
   obterPorPagina(pagina: number,
     itensPorPagina?: number,
+    filtroIdUsuario?: number,
     filtroEvento?: string,
     filtroUsuario?: string,
     filtroNome?: string,
     filtroConcluida?: boolean,
     ) : Observable<Listagem<Entrevista>> {
     return this._httpClient.get<Listagem<Entrevista>>(
-      routes.listar(pagina, itensPorPagina, filtroEvento, filtroUsuario, filtroNome, filtroConcluida));
+      routes.listar(pagina, itensPorPagina, filtroIdUsuario, filtroEvento, filtroUsuario, filtroNome, filtroConcluida));
   }
 
   obterTodos() : Observable<IEntrevista[]> {
@@ -49,7 +53,7 @@ export class EntrevistaService {
   }
 
   obterEspecifica(id: number) : Observable<IEntrevista> {
-    return this._httpClient.get<IEntrevista>(routes.escpecifica(id));
+    return this._httpClient.get<IEntrevista>(routes.especifica(id));
   }
 
   criar(entrevista: Entrevista) : Observable<IEntrevista> {
@@ -57,11 +61,11 @@ export class EntrevistaService {
   }
 
   atualizar(id: number, entrevista: Entrevista) : Observable<Entrevista> {
-    return this._httpClient.put<Entrevista>(routes.escpecifica(id), entrevista);
+    return this._httpClient.put<Entrevista>(routes.especifica(id), entrevista);
   }
 
   excluir(id: number) : Promise<any> {
-    return this._httpClient.delete(routes.escpecifica(id)).toPromise();
+    return this._httpClient.delete(routes.especifica(id)).toPromise();
   }
 
   obterRespostas(idEntrevista: number, idQuestionarioRespondido: number) : Observable<Resposta[]> {

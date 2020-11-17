@@ -42,21 +42,23 @@ export class LoginComponent implements OnInit {
         this.loginForm.markAsPristine();
         this.isLoading = false;
       }))
-      .subscribe((credenciais) => {
-        log.debug(`${credenciais.login} successfully logged in`);
-        this.router.navigate(['/'], { replaceUrl: true });
-        this.obterPerfil();
+    .subscribe((credenciais) => {
+      log.debug(`${credenciais.login} successfully logged in`);
+      this.router.navigate(['/'], { replaceUrl: true });
+      this.obterPerfil();
     }, error => {
       log.debug(`Login error: ${error}`);
       this.error = error;
     });
   }
-
+  
   obterPerfil() {
     this._usuarioService.perfil()
     .pipe()
     .subscribe((obj: Usuario) => {
       window.sessionStorage.setItem('adm', JSON.stringify(obj.administrador));
+      window.sessionStorage.setItem('idUsuario', JSON.stringify(obj.id));
+      if (!obj.administrador) this.router.navigate(['/entrevistas'], { replaceUrl: true });
     }, ({error}) => {
       this._toastrService.error(error, 'Ops!');
     });

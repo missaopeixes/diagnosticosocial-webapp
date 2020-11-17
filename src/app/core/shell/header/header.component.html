@@ -23,7 +23,7 @@
           <i class="fas fa-clipboard-check"></i>
           <span>Entrevistas</span>
         </a>
-        <div *ngIf="adm" class="nav-item text-uppercase" ngbDropdown placement="bottom-right">
+        <div *ngIf="credenciais && credenciais.administrador" class="nav-item text-uppercase" ngbDropdown placement="bottom-right">
           <a id="user-dropdown" class="nav-link" ngbDropdownToggle>
             <i class="fas fa-database"></i>
             <span>Cadastros</span>

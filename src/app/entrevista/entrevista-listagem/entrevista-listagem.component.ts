@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 import * as _ from 'lodash';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import * as moment from 'moment';
+import { globals } from '@env/environment';
 
 const ITENS_POR_PAGINA = 15;
 const ID_MODAL_EXCLUSAO = '#ds-entrevista-modal-exclusao';
@@ -27,6 +28,8 @@ export class EntrevistaListagemComponent implements OnInit {
   public entrevistaExclusao: Entrevista;
   public formFiltro: FormGroup;
   public exibeFiltro: boolean;
+  public idUsuario: number;
+  public admSessao: boolean;
 
   constructor(
     private _entrevistaService: EntrevistaService,
@@ -39,8 +42,11 @@ export class EntrevistaListagemComponent implements OnInit {
   ngOnInit() {
     this.listagem = new Listagem<Entrevista>();
     this.exibeFiltro = true;
+    this.admSessao = JSON.parse(window.sessionStorage.getItem('adm'));
+    this.idUsuario = JSON.parse(window.sessionStorage.getItem('idUsuario'));
 
     this.formFiltro = this._formBuilder.group({
+      idUsuario: this.admSessao ? [undefined] : [this.idUsuario],
       evento: [''],
       usuario: [''],
       nome: [''],
@@ -62,6 +68,7 @@ export class EntrevistaListagemComponent implements OnInit {
     this.carregando = true;
     this._entrevistaService.obterPorPagina(this.listagem.pagina,
       ITENS_POR_PAGINA,
+      this.formFiltro.value.idUsuario,
       this.formFiltro.value.evento,
       this.formFiltro.value.usuario,
       this.formFiltro.value.nome,

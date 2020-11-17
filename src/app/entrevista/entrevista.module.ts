@@ -15,6 +15,7 @@ import { EntrevistaService } from './entrevista.service';
 // import { EntrevistaEspecificoComponent } from './entrevista-especifico/entrevista-especifico.component';
 import { PerguntaModule } from '@app/pergunta/pergunta.module';
 import { PerguntaService } from '@app/pergunta/pergunta.service';
+import { UsuarioService } from '@app/usuario/usuario.service';
 import { TruncatePipe } from '@app/shared/truncate-pipe';
 
 @NgModule({
@@ -40,7 +41,8 @@ import { TruncatePipe } from '@app/shared/truncate-pipe';
     NgbActiveModal,
     NgbTypeahead,
     EntrevistaService,
-    PerguntaService
+    PerguntaService,
+    UsuarioService
   ]
 })
 export class EntrevistaModule { }

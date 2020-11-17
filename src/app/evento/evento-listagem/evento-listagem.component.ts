@@ -27,6 +27,7 @@ export class EventoListagemComponent implements OnInit {
   public salvando: boolean;
   public eventoExclusao: Evento;
   public gerandoMock: boolean;
+  public admSessao: boolean;
 
   constructor(
     private _eventoService: EventoService,
@@ -38,6 +39,7 @@ export class EventoListagemComponent implements OnInit {
 
   ngOnInit() {
     this.listagem = new Listagem<Evento>();
+    this.admSessao = JSON.parse(window.sessionStorage.getItem('adm'));
 
     this.obterListagem();
   }

@@ -102,8 +102,10 @@ export class AuthenticationService {
     } else {
       sessionStorage.removeItem(CREDENTIALS_KEY);
       sessionStorage.removeItem('adm');
+      sessionStorage.removeItem('idUsuario');
       localStorage.removeItem(CREDENTIALS_KEY);
       localStorage.removeItem('adm');
+      localStorage.removeItem('idUsuario');
     }
   }
 

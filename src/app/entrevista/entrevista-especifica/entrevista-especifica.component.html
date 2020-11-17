@@ -1,23 +1,41 @@
 <div class="container">
-
     <div class="row">
-      <div class="col-md-12">
-        <h3 [hidden]="!entrevista.id">Entrevista com <u>{{entrevista.nome}}</u></h3>
-        <h3 [hidden]="entrevista.id">Nova Entrevista</h3>
+      <div class="col-md-6">
+        <h3>
+          <span [hidden]="!entrevista.id">Entrevista com <u class="d-none d-md-inline-block">{{entrevista.nome}}</u></span>
+          <span [hidden]="entrevista.id">Nova Entrevista</span>
+        </h3>
+        <h3 class="d-md-none">
+          <u>{{entrevista.nome}}</u>
+        </h3>
+      </div>
+      <div class="col-md-6">
+        <br class="d-md-none"/>
+        <button
+            class="btn btn-outline-secondary float-md-right"
+            [ngClass]="{
+              'btn-warning': offline,
+              'btn-outline-secondary': !offline
+            }"
+            (click)="toggleOffline()">
+            <span [hidden]="!offline">
+              <i class="fas fa-ban"></i> &nbsp;Offline
+            </span>
+            <span [hidden]="offline">
+              <i class="fas fa-wifi"></i> &nbsp;Online
+            </span>
+          </button>
       </div>
     </div>
 
     <div class="row mt-2">
-      <div class="col-md-6 col-sm-12 my-2" *ngIf="!!entrevista.id">
+      <div class="col-md-6 col-sm-12 my-3" *ngIf="!!entrevista.id">
         <div class="status-entrevista" *ngIf="!entrevista.concluida">
           <span>Entrevista em andamento...</span>
         </div>
         <div class="status-entrevista concluida" *ngIf="entrevista.concluida">
           <span><i class="fa fa-check-circle"></i> &nbsp;Entrevista concluida.</span>
         </div>
-      </div>
-      <div class="col-md-6 col-sm-12" *ngIf="!!entrevista.id && !entrevista.concluida">
-        <button class="btn btn-outline-secondary float-right" type="button" [disabled]="!form.valid" (click)="concluirEntrevista()">&nbsp;Concluir entrevista</button>
       </div>
       <div class="loader-bar" [ngClass]="{'loading': carregando || salvando}"></div>
     </div>
@@ -38,7 +56,13 @@
             </div>
             <div class="col-md-12 form-group">
               <label for="nome">Nome do entrevistado</label>
-              <input class="form-control" type="text" name="nome" formControlName="nome" (change)="changeNomeEntrevistado()"/>
+              <input
+                class="form-control"
+                type="text"
+                name="nome"
+                formControlName="nome"
+                (change)="changeNomeEntrevistado()"
+                autocomplete="off"/>
             </div>
           </div>
 
@@ -46,12 +70,23 @@
             <div class="col-md-12 form-group">
               <label>Responder questionário</label>
               <select class="custom-select" name="questionario" formControlName="questionario">
-                <option [ngValue]="questionario" *ngFor="let questionario of questionarios; let i = index;">{{questionario.nome}} – {{qtdQuestionarioPorEnqueteStr(questionario.quantidadePorEnquete)}}</option>
+                <option [ngValue]="questionario" *ngFor="let questionario of questionarios; let i = index;">{{questionario.nome}}</option> <!-- – {{qtdQuestionarioPorEnqueteStr(questionario.quantidadePorEnquete)}} -->
               </select>
               <div class="loader-bar" [ngClass]="{'loading': carregandoQuestionarios}"></div>
             </div>
             <div class="col-md-12 mb-3">
-              <button type="button" class="btn btn-primary my-2 col-md-12" (click)="responderQuestionario()" [disabled]="!form.valid">Responder</button>
+              <button type="button"
+                class="btn btn-primary my-2 col-md-12"
+                (click)="responderQuestionario()"
+                [disabled]="!form.valid">Responder
+              </button>
+            </div>
+            <div class="col-md-12 mb-3" *ngIf="!!entrevista.id && !entrevista.concluida">
+              <button class="btn btn-outline-secondary col-md-12"
+                type="button"
+                [disabled]="!form.valid"
+                (click)="concluirEntrevista()">&nbsp;Concluir entrevista
+              </button>
             </div>
           </div>
 
@@ -90,6 +125,10 @@
             </tr>
           </tbody>
         </table>
+
+        <div class="row mt-4">
+          
+        </div>
       </div>
     </div>
 

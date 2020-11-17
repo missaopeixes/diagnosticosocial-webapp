@@ -7,6 +7,8 @@ export const CREDENTIALS_KEY = 'DS_ACCESS_JWT';
 
 export interface Credentials {
   // Customize received credentials here
+  id: number;
+  administrador: boolean;
   login: string;
   token: string;
   validade?: string;

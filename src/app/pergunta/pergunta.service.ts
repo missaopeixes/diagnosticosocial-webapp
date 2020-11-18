@@ -17,7 +17,7 @@ const routes = {
   pergunta: (id: number) => `/perguntas/${id}`,
   pesquisar: (termo: string) => `/perguntas/pesquisa/?termo=${termo}`,
   opcoesResposta: (id: number) => `/perguntas/${id}/opcoes-resposta`,
-  opcaoResposta: (id: number, idResposta: number) => `/perguntas/${id}/opcoes-resposta/${idResposta}`
+  opcaoResposta: (id: number, idResposta: number) => `/perguntas/${id}/opcoes-resposta/${idResposta}/validacao-desvinculo`
 };
 
 @Injectable()
@@ -58,6 +58,6 @@ export class PerguntaService {
   }
 
   desvincularResposta(id: number, idResposta: number) : Observable<any> {
-    return this._httpClient.delete(routes.opcaoResposta(id, idResposta));
+    return this._httpClient.get(routes.opcaoResposta(id, idResposta));
   }
 }

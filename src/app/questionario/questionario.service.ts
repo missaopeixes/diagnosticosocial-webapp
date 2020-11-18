@@ -11,7 +11,7 @@ const routes = {
   escpecifico: (id: number) => `/questionarios/${id}`,
   criar: () => `/questionarios/`,
   perguntas: (id: number) => `/questionarios/${id}/perguntas`,
-  pergunta: (id: number, idPergunta: number) => `/questionarios/${id}/perguntas/${idPergunta}`
+  pergunta: (id: number, idPergunta: number) => `/questionarios/${id}/perguntas/${idPergunta}/validacao-desvinculo`
 };
 
 @Injectable()
@@ -52,6 +52,6 @@ export class QuestionarioService {
   }
 
   desvincularPergunta(id: number, idPergunta: number) : Observable<any> {
-    return this._httpClient.delete(routes.pergunta(id, idPergunta));
+    return this._httpClient.get(routes.pergunta(id, idPergunta));
   }
 }

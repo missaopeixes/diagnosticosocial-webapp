@@ -187,7 +187,23 @@ export class PerguntaEspecificaComponent implements OnInit {
   }
 
   removerResposta(opcaoResposta: OpcaoResposta) {
-    return _.remove(this.pergunta.opcoesResposta, {id: opcaoResposta.id});
+    if (!!this.pergunta.id) {
+      this.salvando = true;
+      this._perguntaService.desvincularResposta(this.pergunta.id, opcaoResposta.id)
+      .pipe(finalize(() =>
+      this.salvando = false
+      ))
+      .subscribe((resultado: any) => {
+        if (resultado === true) {
+          _.remove(this.pergunta.opcoesResposta, {id: opcaoResposta.id});
+        }
+      }, ({error}) => {
+        const msg = typeof error === 'string' ? error : 'Ocorreu um erro ao remover a opção de resposta.'
+        this._toastrService.error(msg, 'Ops!');
+      });
+    }else{
+      _.remove(this.pergunta.opcoesResposta, {id: opcaoResposta.id});
+    }
   }
 
   moverResposta(opcao: OpcaoResposta, up: boolean) {

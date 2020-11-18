@@ -155,7 +155,23 @@ export class QuestionarioEspecificoComponent implements OnInit {
   }
 
   removerPergunta(pergunta: Pergunta) {
-    return _.remove(this.questionario.perguntas, {id: pergunta.id});
+    if (!!this.questionario.id) {
+      this.salvando = true;
+      this._questionarioService.desvincularPergunta(this.questionario.id, pergunta.id)
+      .pipe(finalize(() =>
+        this.salvando = false
+      ))
+      .subscribe((resultado: any) => {
+        if (resultado === true) {
+          _.remove(this.questionario.perguntas, {id: pergunta.id});
+        }
+      }, ({error}) => {
+        const msg = typeof error === 'string' ? error : 'Ocorreu um erro ao remover a pergunta.'
+        this._toastrService.error(msg, 'Ops!');
+      });
+    }else{
+      _.remove(this.questionario.perguntas, {id: pergunta.id});
+    }
   }
 
   moverPergunta(pergunta: Pergunta, up: boolean) {

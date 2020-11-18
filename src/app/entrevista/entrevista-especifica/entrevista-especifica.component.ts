@@ -158,13 +158,46 @@ export class EntrevistaEspecificaComponent implements OnInit {
     });
   }
 
-  _montarFormulario(perguntas: Pergunta[], respostas?: Resposta[], observacoes?: string) {
+  private _aplicarRespostasFormulario(respostas: Resposta[], perguntas: Pergunta[]) {
+    respostas.forEach(r => {
+
+      if (!!r.idOpcaoEscolhida) {
+        let pergunta = perguntas.find(p => p.id === r.idPergunta);
+
+        if (pergunta.tipoResposta === TipoResposta.MultiplaEscolha) {
+          this.formQuestionario.controls[`resposta-pergunta-${r.idPergunta}`].setValue(r.idOpcaoEscolhida.toString());
+        }
+        if (pergunta.tipoResposta === TipoResposta.MultiplaSelecao) {
+          this.formQuestionario.controls[`resposta-pergunta-${r.idPergunta}-selecao-${r.idOpcaoEscolhida}`].setValue(r.idOpcaoEscolhida.toString());
+        }
+      }
+      else if (!!r.respostaEmNumero) {
+        this.formQuestionario.controls[`resposta-pergunta-${r.idPergunta}`].setValue(r.respostaEmNumero.toString());
+      }
+      else if (!!r.respostaEmTexto) {
+        this.formQuestionario.controls[`resposta-pergunta-${r.idPergunta}`].setValue(r.respostaEmTexto);
+      }
+
+      if (!!r.observacoes) {
+        this.formQuestionario.controls[`observacoes-pergunta-${r.idPergunta}`].setValue(r.observacoes);
+      }
+    });
+  }
+  
+  private _montarFormulario(perguntas: Pergunta[], respostas?: Resposta[], observacoes?: string) {
     let group: any = {
       observacoes: new FormControl('')
     };
 
     perguntas.forEach((p) => {
-      group[`resposta-pergunta-${p.id}`] = new FormControl('', Validators.required);
+
+      if (p.tipoResposta === TipoResposta.MultiplaSelecao) {
+        p.opcoesResposta.forEach(op => group[`resposta-pergunta-${p.id}-selecao-${op.id}`] = new FormControl(''));
+      }
+      else {
+        group[`resposta-pergunta-${p.id}`] = new FormControl('', Validators.required);
+      }
+
       group[`observacoes-pergunta-${p.id}`] = new FormControl('');
     });
 
@@ -172,21 +205,9 @@ export class EntrevistaEspecificaComponent implements OnInit {
     this.questionarioSelecionado.perguntas = perguntas;
 
     if (!!respostas) {
-      respostas.forEach((r) => {
-        if (!!r.idOpcaoEscolhida) {
-          this.formQuestionario.controls[`resposta-pergunta-${r.idPergunta}`].setValue(r.idOpcaoEscolhida.toString());
-        }
-        else if (!!r.respostaEmNumero) {
-          this.formQuestionario.controls[`resposta-pergunta-${r.idPergunta}`].setValue(r.respostaEmNumero.toString());
-        }
-        else if (!!r.respostaEmTexto) {
-          this.formQuestionario.controls[`resposta-pergunta-${r.idPergunta}`].setValue(r.respostaEmTexto);
-        }
-
-        if (!!r.observacoes) {
-          this.formQuestionario.controls[`observacoes-pergunta-${r.idPergunta}`].setValue(r.observacoes);
-        }
-      });
+      setTimeout(() => {
+        this._aplicarRespostasFormulario(respostas, perguntas);
+      }, 100);
     }
 
     if (!!observacoes) {
@@ -260,7 +281,7 @@ export class EntrevistaEspecificaComponent implements OnInit {
 
     this.questionarioSelecionado.perguntas.forEach((pergunta) => {
 
-      let respostaForm = this.formQuestionario.value[`resposta-pergunta-${pergunta.id}`];
+      let respostaForm;
       let observcoesForm = this.formQuestionario.value[`observacoes-pergunta-${pergunta.id}`];
       let resposta = new Resposta({
         idQuestionario: questionarioRespondido.idQuestionario,
@@ -268,17 +289,40 @@ export class EntrevistaEspecificaComponent implements OnInit {
         observacoes: observcoesForm
       });
 
-      if (pergunta.tipoResposta === TipoResposta.MultiplaEscolha) {
-        resposta.idOpcaoEscolhida = respostaForm;
-      }
-      else if (pergunta.tipoResposta === TipoResposta.Texto) {
-        resposta.respostaEmTexto = respostaForm;
-      }
-      else if (pergunta.tipoResposta === TipoResposta.Numero) {
-        resposta.respostaEmNumero = parseFloat(respostaForm);
-      }
+      switch (pergunta.tipoResposta) {
 
-      questionarioRespondido.respostas.push(resposta);
+        case TipoResposta.MultiplaEscolha:
+          respostaForm = this.formQuestionario.value[`resposta-pergunta-${pergunta.id}`];
+          resposta.idOpcaoEscolhida = respostaForm;
+          questionarioRespondido.respostas.push(resposta);
+          break;
+
+        case TipoResposta.Texto:
+          respostaForm = this.formQuestionario.value[`resposta-pergunta-${pergunta.id}`];
+          resposta.respostaEmTexto = respostaForm;
+          questionarioRespondido.respostas.push(resposta);
+          break;
+
+        case TipoResposta.Numero:
+          respostaForm = this.formQuestionario.value[`resposta-pergunta-${pergunta.id}`];
+          resposta.respostaEmNumero = parseFloat(respostaForm);
+          questionarioRespondido.respostas.push(resposta);
+          break;
+
+        case TipoResposta.MultiplaSelecao:
+          pergunta.opcoesResposta.forEach(op => {
+            let respostaSelecaoForm = this.formQuestionario.value[`resposta-pergunta-${pergunta.id}-selecao-${op.id}`];
+            if (respostaSelecaoForm) {
+              let r = Object.assign({}, resposta);
+              r.idOpcaoEscolhida = op.id;
+              questionarioRespondido.respostas.push(r);
+            }
+          });
+          break;
+
+        default:
+          break;
+      }
     });
 
     const salvarQuestionario = (qRespondido: QuestionarioRespondido) => {

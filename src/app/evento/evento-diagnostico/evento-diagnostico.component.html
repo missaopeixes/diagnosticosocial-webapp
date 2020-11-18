@@ -71,7 +71,7 @@
             </div>
 
             <div class="row">
-              <div class="col-md-12 wrap-diagnostico-pergunta-opcoes" *ngIf="p.tipoResposta === 1">
+              <div class="col-md-12 wrap-diagnostico-pergunta-opcoes" *ngIf="p.possuiOpcoes()">
                 <div class="row">
 
                   <div class="col-md-7 col-sm-12">
@@ -86,9 +86,13 @@
                       </thead>
                       <tbody>
                         <tr *ngFor="let opcao of p.opcoesResposta">
-                          <td>
+                          <td *ngIf="p.tipoResposta === 1">
                             <i class="far fa-dot-circle text-secondary" [hidden]="opcao.greatest"></i>
                             <i class="fa fa-trophy text-primary" [hidden]="!opcao.greatest"></i>
+                          </td>
+                          <td *ngIf="p.tipoResposta === 4">
+                            <i class="far fa-check-square text-secondary" [hidden]="opcao.count"></i>
+                            <i class="fas fa-check-square text-primary" [hidden]="!opcao.count"></i>
                           </td>
                           <td>
                             <b counto

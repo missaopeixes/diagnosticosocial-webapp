@@ -4,6 +4,7 @@ export enum TipoResposta {
   MultiplaEscolha = 1,
   Texto,
   Numero,
+  MultiplaSelecao
 }
 
 export interface IPergunta {
@@ -36,7 +37,18 @@ export class Pergunta implements IPergunta {
       case TipoResposta.MultiplaEscolha: return 'Múltipla escolha';
       case TipoResposta.Numero: return 'Número';
       case TipoResposta.Texto: return 'Texto';
+      case TipoResposta.MultiplaSelecao: return 'Múltipla seleção';
       default: return '';
+    }
+  }
+
+  possuiOpcoes() : boolean {
+    switch (this.tipoResposta) {
+      case TipoResposta.MultiplaEscolha:
+      case TipoResposta.MultiplaSelecao:
+        return true;
+      default:
+        return false;
     }
   }
 }

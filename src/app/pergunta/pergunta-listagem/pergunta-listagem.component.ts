@@ -59,7 +59,7 @@ export class PerguntaListagemComponent implements OnInit {
     else {
       this.listagem.pagina++;
     }
-    console.log("descricao: ", this.formFiltro.value.descricao, "utilizadas: ", this.formFiltro.value.utilizadas);
+
     this.carregando = true;
     this._perguntaService.obterPorPagina(this.listagem.pagina,
       ITENS_POR_PAGINA,

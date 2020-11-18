@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { PerguntaEspecificaHelper } from '@app/pergunta/pergunta-especifica/pergunta-especifica.helper';
-import { Pergunta, IPergunta } from '@app/pergunta/pergunta';
+import { Pergunta, IPergunta, TipoResposta } from '@app/pergunta/pergunta';
 import { ModalService } from '@app/shared/modal/modal.service';
 import { debounceTime, distinctUntilChanged, switchMap, finalize, timeout } from 'rxjs/operators';
 import { Observable } from 'rxjs';
@@ -203,12 +203,17 @@ export class PerguntaEspecificaComponent implements OnInit {
   }
 
   changeTipoResposta() {
-    if (parseInt(this.form.value.tipoResposta) == 1) {
-      this.exibeOpcoes = true;
-    }
-    else {
-      this.exibeOpcoes = false;
-      this.pergunta.opcoesResposta = [];
+    switch (parseInt(this.form.value.tipoResposta)) {
+
+      case TipoResposta.MultiplaEscolha:
+      case TipoResposta.MultiplaSelecao:
+        this.exibeOpcoes = true;
+        break;
+
+      default:
+        this.exibeOpcoes = false;
+        this.pergunta.opcoesResposta = [];
+        break;
     }
   }
 

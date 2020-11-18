@@ -182,6 +182,20 @@
                   </div>
                 </div>
 
+                <div *ngIf="pergunta.tipoResposta === 4">
+                  <div *ngFor="let opcao of pergunta.opcoesResposta; let op = index;">
+                    <div class="custom-control custom-checkbox m-2">
+                      <input type="checkbox"
+                        id="pergunta-{{pergunta.id}}-opcao-{{opcao.id}}"
+                        name="pergunta-{{pergunta.id}}-opcao-{{opcao.id}}"
+                        formControlName="resposta-pergunta-{{pergunta.id}}-selecao-{{opcao.id}}"
+                        value="{{opcao.id}}"
+                        class="custom-control-input"/>
+                      <label class="custom-control-label" for="pergunta-{{pergunta.id}}-opcao-{{opcao.id}}">{{opcao.descricao}}</label>
+                    </div>
+                  </div>
+                </div>
+
                 <div class="row">
                   <div class="col-md-12">
                     <button class="btn btn-link" (click)="pergunta.exibeObservacoes = !pergunta.exibeObservacoes;">

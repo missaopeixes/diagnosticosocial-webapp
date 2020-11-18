@@ -4,6 +4,7 @@ export enum TipoResposta {
   MultiplaEscolha = 1,
   Texto,
   Numero,
+  MultiplaSelecao
 }
 
 export interface IPergunta {

@@ -132,7 +132,7 @@ export class QuestionarioEspecificoComponent implements OnInit {
         debounceTime(200),
         distinctUntilChanged(),
         switchMap(term => {
-          if (term.length < 2) return [];
+          if (term.length < 1) return [];
 
           this.pesquisando = true;
           return this._pesquisaService.pesquisar(term).pipe(finalize(() => this.pesquisando = false));

@@ -26,12 +26,22 @@
             <div class="col-md-12">
               <div class="form-group">
                 <label for="tipoResposta">Tipo de resposta</label>
-                <select class="custom-select" name="tipoResposta" formControlName="tipoResposta" (change)="changeTipoResposta()">
-                  <option value="1">Multipla escolha</option>
-                  <option value="2">Texto</option>
-                  <option value="3">Número</option>
-                  <option value="4">Múltipla seleção</option>
-                </select>
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend input-group-prepend-tipo-resposta">
+                    <label class="input-group-text" for="selectTipoResposta">
+                      <i class="far fa-dot-circle text-secondary" *ngIf="form.controls.tipoResposta.value == 1"></i>
+                      <i class="fas fa-quote-right text-secondary" *ngIf="form.controls.tipoResposta.value == 2"></i>
+                      <i class="ico-number text-secondary" *ngIf="form.controls.tipoResposta.value == 3">123</i>
+                      <i class="far fa-check-square text-secondary" *ngIf="form.controls.tipoResposta.value == 4"></i>
+                    </label>
+                  </div>
+                  <select id="selectTipoResposta" class="custom-select" name="tipoResposta" formControlName="tipoResposta" (change)="changeTipoResposta()">
+                    <option value="1">Multipla escolha</option>
+                    <option value="2">Texto</option>
+                    <option value="3">Número</option>
+                    <option value="4">Múltipla seleção</option>
+                  </select>
+                </div>
               </div>
             </div>
           </div>

@@ -65,7 +65,13 @@
             </tr>
             <tr *ngFor="let pergunta of questionario.perguntas; let i = index;">
               <td class="table-index text-secondary"><small>{{i+1}}</small></td>
-              <td>{{pergunta.descricao}}</td>
+              <td>
+                <span>{{pergunta.descricao}}</span>&nbsp;&nbsp;
+                <i class="far fa-dot-circle text-secondary" *ngIf="pergunta.tipoResposta == 1" title="Mútipla escolha"></i>
+                <i class="fas fa-quote-right text-secondary" *ngIf="pergunta.tipoResposta == 2" title="Texto"></i>
+                <i class="ico-number text-secondary" *ngIf="pergunta.tipoResposta == 3" title="Número">123</i>
+                <i class="far fa-check-square text-secondary" *ngIf="pergunta.tipoResposta == 4" title="Múltipla seleção"></i>
+              </td>
               <td>
                 <button class="btn btn-outline-secondary float-right ml-1" (click)="removerPergunta(pergunta)" data-toggle="tooltip" title="Remover">
                   <i class="fa fa-ban"></i>

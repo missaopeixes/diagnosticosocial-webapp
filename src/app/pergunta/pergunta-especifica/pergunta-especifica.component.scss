@@ -1,0 +1,21 @@
+.input-group-prepend-tipo-resposta {
+  label {
+    width: 50px;
+
+    i {
+      transform: translate(-50%, 0);
+      left: 50%;
+      position: relative;
+
+      &.fa-quote-right {
+        font-size: 13px;
+      }
+
+      &.ico-number{
+        font-weight: bold;
+        font-size: 13px;
+      }
+    }
+
+  }
+}

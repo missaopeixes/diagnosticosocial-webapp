@@ -31,7 +31,6 @@
               <th class="text-secondary"><i class="fa fa-hashtag"></i></th>
               <th>Nome</th>
               <th>Login</th>
-              <th></th>
               <th><a class="float-right text-secondary mr-1" (click)="obterListagem(true)"><i class="fa fa-sync-alt"></i></a></th>
             </tr>
           </thead>
@@ -43,9 +42,11 @@
             </tr>
             <tr *ngFor="let usuario of listagem.conteudo; let i = index;">
               <td class="table-index text-secondary"><small>{{i+1}}</small></td>
-              <td>{{usuario.nome}}</td>
+              <td>
+                {{usuario.nome}}&nbsp;&nbsp;
+                <i *ngIf="usuario.administrador" class="fas fa-user-shield text-secondary" title="Administrador"></i>
+              </td>
               <td>{{usuario.login}}</td>
-              <td><i *ngIf="usuario.administrador" class="fas fa-user-shield" title="Administrador"></i></td>
               <td>
                 <button class="btn btn-outline-secondary float-right ml-1" (click)="confirmarExclusao(usuario)">Excluir</button>
                 <button class="btn btn-outline-secondary float-right ml-1" (click)="visualizar(usuario)">Visualizar</button>

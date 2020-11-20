@@ -169,6 +169,10 @@ $height-loader-bar: 2px;
   max-height: calc(100vh - 193px);
 }
 
+.ico-number:hover{
+  cursor: default;
+}
+
 .noselect {
   -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */

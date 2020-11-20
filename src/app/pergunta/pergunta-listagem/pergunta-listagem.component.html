@@ -74,7 +74,9 @@
           <tbody>
             <tr *ngFor="let pergunta of listagem.conteudo; let i = index;">
               <td class="table-index text-secondary"><small>{{i+1}}</small></td>
-              <td title="{{pergunta.descricao}}">{{pergunta.descricao | truncate:[40]}}</td> <!--  -->
+              <td title="{{pergunta.descricao}}">
+                <span>{{pergunta.descricao | truncate:[40]}}</span>
+              </td>
               <td>{{tipoResposta(pergunta.tipoResposta)}}</td>
               <td>{{formatDate(pergunta.createdAt)}}</td>
               <td>

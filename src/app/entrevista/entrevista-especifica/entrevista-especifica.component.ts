@@ -290,7 +290,6 @@ export class EntrevistaEspecificaComponent implements OnInit {
       });
 
       switch (pergunta.tipoResposta) {
-
         case TipoResposta.MultiplaEscolha:
           respostaForm = this.formQuestionario.value[`resposta-pergunta-${pergunta.id}`];
           resposta.idOpcaoEscolhida = respostaForm;
@@ -327,6 +326,7 @@ export class EntrevistaEspecificaComponent implements OnInit {
 
     const salvarQuestionario = (qRespondido: QuestionarioRespondido) => {
       this.salvandoQuestionario = true;
+      window.document.querySelectorAll('#form-entrevista')[0].scrollTo(0, 0);
 
       if (!!qRespondido.id) {
         this._entrevistaService.atualizarQuestionario(this.entrevista.id, qRespondido)

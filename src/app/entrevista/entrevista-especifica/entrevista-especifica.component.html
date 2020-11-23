@@ -247,6 +247,22 @@
   </div>
 </div>
 
+<div id="ds-entrevista-modal-cancelamento-questionario-respondido" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-body">
+          <p>Tem certeza que deseja cancelar este questionário?</p>
+          <p><b>As respostas realizadas serão perdidas.</b></p>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn btn-primary" (click)="confirmarCancelamentoQuestionario()">Sim, cancelar</button>
+          <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" (click)="cancelarCancelamentoQuestionario()">Não, voltar ao questionário</button>
+        </div>
+      </div>
+  </div>
+</div>
+
 <div id="ds-entrevista-modal-conclusao-entrevista" class="modal fade" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">

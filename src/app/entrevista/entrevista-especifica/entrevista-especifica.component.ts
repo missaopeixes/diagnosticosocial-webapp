@@ -20,6 +20,7 @@ import { AuthenticationService } from '@app/core';
 const ID_TABLE = '#ds-questionarios-respondidos-table';
 const ID_MODAL_RESPOSTAS = '#ds-entrevista-especifica-respostas-modal';
 const ID_MODAL_EXCLUSAO = '#ds-entrevista-modal-exclusao-questionario-respondido';
+const ID_MODAL_CONFIRM_CANCELAMENTO_QUEST = '#ds-entrevista-modal-cancelamento-questionario-respondido';
 const ID_MODAL_CONCLUSAO = '#ds-entrevista-modal-conclusao-entrevista';
 
 @Component({
@@ -397,6 +398,28 @@ export class EntrevistaEspecificaComponent implements OnInit {
   }
 
   cancelarQuestionario() {
+    if (this.formQuestionario.pristine) {
+      this.fecharQuestionario();
+    }
+    else {
+      this._modalService.close(ID_MODAL_RESPOSTAS).then(() => {
+        this._modalService.open(ID_MODAL_CONFIRM_CANCELAMENTO_QUEST);
+      });
+    }
+  }
+
+  cancelarCancelamentoQuestionario() {
+    this._modalService.close(ID_MODAL_CONFIRM_CANCELAMENTO_QUEST).then(() => {
+      this._modalService.open(ID_MODAL_RESPOSTAS);
+    });
+  }
+
+  confirmarCancelamentoQuestionario() {
+    this.questionarioEmEdicao = undefined;
+    this._modalService.close(ID_MODAL_CONFIRM_CANCELAMENTO_QUEST);
+  }
+
+  fecharQuestionario() {
     this.questionarioEmEdicao = undefined;
     this._modalService.close(ID_MODAL_RESPOSTAS);
   }

@@ -114,7 +114,7 @@ export class EntrevistaListagemComponent implements OnInit {
   }
 
   novo() {
-    this._router.navigate(['/entrevistas/novo']);
+    this._router.navigate(['/entrevistas/nova']);
   }
 
   visualizar(entrevista: Entrevista) {

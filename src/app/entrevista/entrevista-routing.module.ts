@@ -9,7 +9,7 @@ const routes: Routes = [
   Route.withShell([
     { path: 'entrevistas', component: EntrevistaListagemComponent, data: { title: 'Entrevistas' } },
     { path: 'entrevistas/:id', component: EntrevistaEspecificaComponent, data: { title: 'Entrevista' } },
-    { path: 'entrevistas/novo', component: EntrevistaEspecificaComponent, data: { title: 'Nova entrevista' } }
+    { path: 'entrevistas/nova', component: EntrevistaEspecificaComponent, data: { title: 'Nova entrevista' } }
   ])
 ];
 

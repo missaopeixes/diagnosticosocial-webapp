@@ -87,6 +87,10 @@ export class EntrevistaEspecificaComponent implements OnInit {
         if (id) {
           this.obterEntrevista(id);
         }
+        else if (this.eventos.length === 1) {
+          this.form.controls['evento'].setValue(this.eventos[0]);
+          this.eventoChanged();
+        }
       });
     });
     this.nomeUsuario = this._authenticationService.credentials.nome.split(' ')[0];
@@ -515,7 +519,7 @@ export class EntrevistaEspecificaComponent implements OnInit {
     this._activatedRoute.params.subscribe((params: Params) => {
       const id = params['id'] ? parseInt(params['id']) : undefined;
       if (!!id) {
-        this._router.navigate(['/entrevistas/novo']);
+        this._router.navigate(['/entrevistas/nova']);
       }
       else {
         this._modalService.close(ID_MODAL_CONCLUSAO).then(() => this.ngOnInit());

@@ -215,6 +215,17 @@ export class EntrevistaEspecificaComponent implements OnInit {
     }
   }
 
+  private _selecionarQuestionarioNaoRespondido() {
+
+    const proximoNaoRespondido = this.questionarios.find(q => {
+      return !this.questionariosRespondidos.find(qr => qr.idQuestionario === q.id);
+    });
+
+    if (proximoNaoRespondido) {
+      this.form.controls['questionario'].setValue(proximoNaoRespondido);
+    }
+  }
+
   responderQuestionario() {
     this.questionarioSelecionado = this.form.value.questionario;
     if (!!this.questionarioSelecionado && this.questionarioSelecionado.id) {
@@ -349,6 +360,7 @@ export class EntrevistaEspecificaComponent implements OnInit {
           // this._toastrService.success('Questionário respondido.', 'OK!');
           this._modalService.close(ID_MODAL_RESPOSTAS).then(() => {
             this.questionariosRespondidos.push(q);
+            this._selecionarQuestionarioNaoRespondido();
             AnimationHelper.table.splashNew(ID_TABLE, true);
           });
         },(error) => {

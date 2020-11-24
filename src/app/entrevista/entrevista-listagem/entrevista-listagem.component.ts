@@ -7,9 +7,8 @@ import { EntrevistaService } from '@app/entrevista/entrevista.service';
 import { finalize } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import * as _ from 'lodash';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder } from '@angular/forms';
 import * as moment from 'moment';
-import { globals } from '@env/environment';
 import { AuthenticationService, Credentials } from '@app/core/authentication/authentication.service';
 
 const ITENS_POR_PAGINA = 15;

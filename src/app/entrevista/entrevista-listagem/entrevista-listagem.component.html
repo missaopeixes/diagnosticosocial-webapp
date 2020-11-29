@@ -73,7 +73,61 @@
     <div class="loader-bar" [ngClass]="{'loading': carregando}"></div>
     <div class="row">
       <div class="col-md-12 mt-auto">
-        <table class="table table-responsive-sm table-hover" id="ds-entrevista-table">
+        <!-- MODO MOBILE -->
+        <div id="ds-entrevista-list" *ngIf="modoMobile">
+          <div class="row">
+            <div class="col-12">
+              <a class="float-right text-secondary mr-1" (click)="obterListagem(true)"><i class="fa fa-sync-alt"></i></a>
+            </div>
+            <div *ngIf="carregando" class="col-12 text-center">
+              <i>Carregando entrevistas...</i>
+            </div>
+          </div><hr>
+          <div class="row card-entrevista" *ngFor="let entrevista of listagem.conteudo; let i = index;">
+            <div class="col-12">
+              <div class="row">
+                <div class="col-12 pr-0">
+                  <small class="text-primary">{{entrevista.concluida ? 'Concluída' : 'Em andamento'}}</small>
+                  <small class="text-secondary">por {{entrevista.usuario | truncate:[20]}}</small>
+                  <button
+                    class="btn btn-link pb-0 float-right"
+                    id="entrevista-mobile-dropdown"
+                    type="button"
+                    (click)="abrirOpcoes(entrevista.id)">
+                    <i class="fas fa-ellipsis-h"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-12" (click)="visualizar(entrevista)">
+                  <h4>{{entrevista.nome | truncate:[20]}}</h4>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-12">
+                  <i>
+                    {{entrevista.evento | truncate:[30]}}<br>{{formatDate(entrevista.createdAt)}}
+                  </i>
+                </div>
+              </div>
+            </div>
+
+            <div id="entrevista-mobile-opcoes-{{entrevista.id}}" class="row py-2 entrevista-mobile-opcoes" style="display: none;">
+              <div class="col-12">
+                <button class="btn btn-secondary float-right ml-1" (click)="confirmarExclusao(entrevista)">
+                  Excluir
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="row ml-1 mb-1">
+            <div class="col-12"></div>
+              <small class="text-secondary">Exibindo {{listagem.conteudo.length}} de {{listagem.total}}</small>
+          </div>
+        </div>
+        <!-- MODO DESKTOP -->
+        <table *ngIf="!modoMobile" class="table table-responsive-sm table-hover" id="ds-entrevista-table">
           <thead>
             <tr>
               <th class="text-secondary"><i class="fa fa-hashtag"></i></th>

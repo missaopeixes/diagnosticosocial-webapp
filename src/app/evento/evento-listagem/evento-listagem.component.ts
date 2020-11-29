@@ -6,9 +6,12 @@ import { ModalService } from '@app/shared/modal/modal.service';
 import { EventoService } from '@app/evento/evento.service';
 import { finalize } from 'rxjs/operators';
 import * as _ from 'lodash';
+import * as moment from 'moment';
 import { AnimationHelper } from '@app/shared/helpers/animation-helper';
 import { EventoEspecificoHelper } from '../evento-especifico/evento-especifico.helper';
 import { Router } from '@angular/router';
+
+declare var $: any;
 
 const ID_MODAL_EXCLUSAO = '#ds-evento-modal-exclusao';
 const ID_MODAL_MOCK = '#ds-evento-modal-gerar-mock';
@@ -23,6 +26,7 @@ export class EventoListagemComponent implements OnInit {
 
   public listagem: Listagem<Evento>;
   public carregando: boolean;
+  public modoMobile: boolean;
   public erroListagem: boolean;
   public salvando: boolean;
   public eventoExclusao: Evento;
@@ -40,6 +44,13 @@ export class EventoListagemComponent implements OnInit {
   ngOnInit() {
     this.listagem = new Listagem<Evento>();
     this.admSessao = JSON.parse(window.sessionStorage.getItem('adm'));
+
+    if($(window).width() <= 720){
+      this.modoMobile = true;
+    }
+    else{
+      this.modoMobile = false;
+    }
 
     this.obterListagem();
   }
@@ -132,5 +143,19 @@ export class EventoListagemComponent implements OnInit {
       },
       () => this._toastrService.error('Falha ao gerar dados fictícios.')
     );
+  }
+
+  formatDate(utc: string) {
+    return moment(utc).format('DD/MM/YY HH:mm');
+  }
+
+  abrirOpcoes(id: number){
+    const display = $('#evento-mobile-opcoes-'+id).attr('style');
+    if (display == null || display == '') {
+      $('#evento-mobile-opcoes-'+id).slideUp(100);
+    }
+    else{
+      $('#evento-mobile-opcoes-'+id).slideDown(100);
+    }
   }
 }

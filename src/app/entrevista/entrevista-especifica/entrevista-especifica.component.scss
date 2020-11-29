@@ -1,4 +1,3 @@
-
 @import '../../../theme/theme-variables.scss';
 
 .status-entrevista {
@@ -19,4 +18,30 @@
       font-style: normal;
     }
   }
+}
+#ds-questionario-respondido-list{
+  .card-questionario-respondido{
+    background: #f8f8f9;
+    border-radius: 5px;
+    padding: 15px;
+    margin: 15px 0;
+    box-shadow: 1px 1px 1px 1px #e3e5e9;
+  }
+
+  .questionario-respondido-mobile-opcoes{
+    width: -webkit-fill-available;
+    background-color: #eee;
+    color: #289c93;
+    position: relative;
+    bottom: -15px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    box-shadow: 1px 1px 1px 1px #e3e5e9;
+  }
+}
+.pergunta-notificacao{
+  font-size: 8px;
+  position: relative;
+  top: -10px;
+  left: 5px;
 }

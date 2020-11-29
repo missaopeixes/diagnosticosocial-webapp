@@ -11,6 +11,8 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 import * as moment from 'moment';
 import { AuthenticationService, Credentials } from '@app/core/authentication/authentication.service';
 
+declare var $: any;
+
 const ITENS_POR_PAGINA = 15;
 const ID_MODAL_EXCLUSAO = '#ds-entrevista-modal-exclusao';
 
@@ -23,6 +25,7 @@ export class EntrevistaListagemComponent implements OnInit {
 
   public listagem: Listagem<Entrevista>;
   public carregando: boolean;
+  public modoMobile: boolean;
   public erroListagem: boolean;
   public salvando: boolean;
   public entrevistaExclusao: Entrevista;
@@ -49,7 +52,6 @@ export class EntrevistaListagemComponent implements OnInit {
 
   ngOnInit() {
     this.listagem = new Listagem<Entrevista>();
-    this.exibeFiltro = true;
     this.credenciais = this._authenticationService.credentials;
 
     this.formFiltro = this._formBuilder.group({
@@ -59,7 +61,17 @@ export class EntrevistaListagemComponent implements OnInit {
       nome: [''],
       concluida: ['']
     });
-    this.formFiltro.controls['concluida'].setValue(true);
+    
+    if($(window).width() <= 720){
+      this.modoMobile = true;
+      this.exibeFiltro = false;
+      this.formFiltro.controls['concluida'].setValue(false);
+    }
+    else{
+      this.formFiltro.controls['concluida'].setValue(true);
+      this.modoMobile = false;
+      this.exibeFiltro = true;
+    }
 
     this.obterListagem();
   }
@@ -122,5 +134,15 @@ export class EntrevistaListagemComponent implements OnInit {
 
   formatDate(utc: string) {
     return moment(utc).format('DD/MM/YY HH:mm');
+  }
+
+  abrirOpcoes(id: number){
+    const display = $('#entrevista-mobile-opcoes-'+id).attr('style');
+    if (display == null || display == '') {
+      $('#entrevista-mobile-opcoes-'+id).slideUp(100);
+    }
+    else{
+      $('#entrevista-mobile-opcoes-'+id).slideDown(100);
+    }
   }
 }

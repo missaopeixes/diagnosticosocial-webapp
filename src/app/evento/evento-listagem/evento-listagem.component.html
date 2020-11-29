@@ -24,7 +24,63 @@
     <div class="loader-bar" [ngClass]="{'loading': carregando}"></div>
     <div class="row">
       <div class="col-md-12 mt-auto">
-        <table class="table table-responsive-sm table-hover" id="ds-evento-table">
+        <!-- MODO MOBILE -->
+        <div id="ds-evento-list" *ngIf="modoMobile">
+          <div class="row">
+            <div class="col-12">
+              <a class="float-right text-secondary mr-1" (click)="obterListagem(true)"><i class="fa fa-sync-alt"></i></a>
+            </div>
+            <div *ngIf="carregando" class="col-12 text-center">
+              <i>Carregando questionários...</i>
+            </div>
+          </div><hr>
+          <div class="row card-evento" *ngFor="let evento of listagem.conteudo; let i = index;">
+            <div class="col-12">
+              <div class="row">
+                <div *ngIf="admSessao" class="col-11 pr-0" (click)="visualizar(evento)">
+                  <h5>{{evento.nome | truncate:[20]}}</h5>
+                </div>
+                <div *ngIf="!admSessao" class="col-11 pr-0">
+                  <h5>{{evento.nome | truncate:[20]}}</h5>
+                </div>
+                <div class="col-1 px-0">
+                  <button
+                    class="btn btn-link pb-0 float-right"
+                    id="evento-mobile-dropdown"
+                    type="button"
+                    (click)="abrirOpcoes(evento.id)">
+                    <i class="fas fa-ellipsis-h"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-12">
+                  <i>
+                    {{formatDate(evento.createdAt)}}
+                  </i>
+                </div>
+              </div>
+            </div>
+
+            <div id="evento-mobile-opcoes-{{evento.id}}" class="row py-2 evento-mobile-opcoes" style="display: none;">
+              <div class="col-12">
+                <button *ngIf="admSessao" class="btn btn-secondary float-right ml-1" (click)="confirmarExclusao(evento)">
+                  Excluir
+                </button>
+                <button class="btn btn-secondary float-right ml-1" (click)="diagnostico(evento)">
+                  Diagnóstico
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="row ml-1 mb-1">
+            <div class="col-12"></div>
+              <small class="text-secondary">Exibindo {{listagem.conteudo.length}} de {{listagem.total}}</small>
+          </div>
+        </div>
+        <!-- MODO DESKTOP -->
+        <table *ngIf="!modoMobile" class="table table-responsive-sm table-hover" id="ds-evento-table">
           <thead>
             <tr>
               <th class="text-secondary"><i class="fa fa-hashtag"></i></th>

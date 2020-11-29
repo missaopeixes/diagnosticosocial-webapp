@@ -63,12 +63,12 @@
             </div>
 
             <div id="evento-mobile-opcoes-{{evento.id}}" class="row py-2 evento-mobile-opcoes" style="display: none;">
-              <div class="col-12">
-                <button *ngIf="admSessao" class="btn btn-secondary float-right ml-1" (click)="confirmarExclusao(evento)">
-                  Excluir
-                </button>
+              <div class="col-12 px-1 d-flex justify-content-end">
                 <button class="btn btn-secondary float-right ml-1" (click)="diagnostico(evento)">
                   Diagnóstico
+                </button>
+                <button *ngIf="admSessao" class="btn btn-link float-right ml-1" (click)="confirmarExclusao(evento)">
+                  Excluir
                 </button>
               </div>
             </div>

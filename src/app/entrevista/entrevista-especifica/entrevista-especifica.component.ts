@@ -539,8 +539,20 @@ export class EntrevistaEspecificaComponent implements OnInit {
     });
   }
 
-  obterValidacao(index: number){
-    return this.questionarioSelecionado.perguntas[index].id;
+  perguntaRespondida(id: number) {
+    const pergunta = this.questionarioSelecionado.perguntas.find(p => p.id === id);
+    if (!pergunta) {
+      return false;
+    }
+
+    if (pergunta.tipoResposta === TipoResposta.MultiplaSelecao) {
+      return pergunta.opcoesResposta.filter(op => {
+        return this.formQuestionario.controls[`resposta-pergunta-${pergunta.id}-selecao-${op.id}`].value === true;
+      }).length > 0;
+    }
+    else {
+      return this.formQuestionario.controls[`resposta-pergunta-${pergunta.id}`].valid;
+    }
   }
 
   abrirOpcoes(id: number){

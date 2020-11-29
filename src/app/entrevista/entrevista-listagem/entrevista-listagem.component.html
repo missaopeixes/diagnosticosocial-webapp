@@ -99,7 +99,7 @@
                 </div>
               </div>
               <div class="row">
-                <div class="col-12" (click)="visualizar(entrevista)">
+                <div class="col-12">
                   <h4>{{entrevista.nome | truncate:[20]}}</h4>
                 </div>
               </div>
@@ -113,8 +113,11 @@
             </div>
 
             <div id="entrevista-mobile-opcoes-{{entrevista.id}}" class="row py-2 entrevista-mobile-opcoes" style="display: none;">
-              <div class="col-12">
-                <button class="btn btn-secondary float-right ml-1" (click)="confirmarExclusao(entrevista)">
+              <div class="col-12 px-1 d-flex justify-content-end">
+                <button class="btn btn-secondary float-right ml-1" (click)="visualizar(entrevista)">
+                  Visualizar
+                </button>
+                <button class="btn btn-link float-right ml-1" (click)="confirmarExclusao(entrevista)">
                   Excluir
                 </button>
               </div>

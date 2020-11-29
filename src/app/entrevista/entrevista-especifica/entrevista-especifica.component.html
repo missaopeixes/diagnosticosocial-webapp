@@ -100,7 +100,7 @@
           <div class="row card-questionario-respondido" *ngFor="let qRespondido of questionariosRespondidos; let i = index;">
             <div class="col-12">
               <div class="row">
-                <div class="col-11 pr-0" (click)="editarQuestionario(qRespondido)">
+                <div class="col-11 pr-0">
                   <h4>{{nomeQuestionario(qRespondido.idQuestionario) | truncate:[20]}}</h4>
                 </div>
                 <div class="col-1 px-0">
@@ -119,10 +119,12 @@
                 </div>
               </div>
             </div>
-
             <div id="questionario-respondido-mobile-opcoes-{{qRespondido.id}}" class="row py-2 questionario-respondido-mobile-opcoes" style="display: none;">
-              <div class="col-12">
-                <button class="btn btn-secondary float-right ml-1" (click)="removerQuestionarioRespondido(qRespondido.id)">
+              <div class="col-12 px-1 d-flex justify-content-end">
+                <button class="btn btn-secondary float-right ml-1" (click)="editarQuestionario(qRespondido)" title="Editar">
+                  Editar
+                </button>
+                <button class="btn btn-link float-right ml-1" (click)="removerQuestionarioRespondido(qRespondido.id)">
                   Excluir
                 </button>
               </div>
@@ -187,7 +189,7 @@
 
           <div class="row" *ngFor="let pergunta of (!!questionarioSelecionado ? questionarioSelecionado.perguntas : []); let i = index;">
             <div class="col-md-12" *ngIf="!carregandoPerguntas">
-              <h5 class="title mb-3">{{i+1}}) &nbsp;{{pergunta.descricao}}<i *ngIf="!formQuestionario.controls['resposta-pergunta-'+obterValidacao(i)].valid" class="fas fa-circle text-primary pergunta-notificacao"></i></h5>
+              <h5 class="title mb-3">{{i+1}}) &nbsp;{{pergunta.descricao}}<i *ngIf="!perguntaRespondida(pergunta.id)" class="fas fa-circle pergunta-notificacao"></i></h5>
 
               <fieldset>
 

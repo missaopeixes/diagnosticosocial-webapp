@@ -17,7 +17,10 @@ import { ModalService } from '@app/shared/modal/modal.service';
 import { QuestionarioService } from '@app/questionario/questionario.service';
 import { AuthenticationService } from '@app/core';
 
+declare var $: any;
+
 const ID_TABLE = '#ds-questionarios-respondidos-table';
+const ID_LIST = '#ds-questionario-respondido-list';
 const ID_MODAL_RESPOSTAS = '#ds-entrevista-especifica-respostas-modal';
 const ID_MODAL_EXCLUSAO = '#ds-entrevista-modal-exclusao-questionario-respondido';
 const ID_MODAL_CONFIRM_CANCELAMENTO_QUEST = '#ds-entrevista-modal-cancelamento-questionario-respondido';
@@ -33,6 +36,7 @@ export class EntrevistaEspecificaComponent implements OnInit {
   public entrevista: Entrevista;
   public respostas: Listagem<Resposta>;
   public carregando: boolean;
+  public modoMobile: boolean;
   public carregandoPerguntas: boolean;
   public carregandoQuestionarios: boolean;
   public salvando: boolean;
@@ -79,6 +83,13 @@ export class EntrevistaEspecificaComponent implements OnInit {
   ngOnInit() {
     this.entrevista = new Entrevista();
     this.questionariosRespondidos = [];
+
+    if($(window).width() <= 720){
+      this.modoMobile = true;
+    }
+    else{
+      this.modoMobile = false;
+    }
 
     this._initForm();
     this._activatedRoute.params.subscribe((params: Params) => {
@@ -367,6 +378,7 @@ export class EntrevistaEspecificaComponent implements OnInit {
             this.questionariosRespondidos.push(q);
             this._selecionarQuestionarioNaoRespondido();
             AnimationHelper.table.splashNew(ID_TABLE, true);
+            //AnimationHelper.table.splashNew(ID_LIST, true); fazer animação splash para o card no mobile
           });
         },(error) => {
           const msg = typeof error === 'string' ? error : 'Ocorreu um erro ao salvar questionário respondido.';
@@ -525,6 +537,32 @@ export class EntrevistaEspecificaComponent implements OnInit {
         this._modalService.close(ID_MODAL_CONCLUSAO).then(() => this.ngOnInit());
       }
     });
+  }
+
+  perguntaRespondida(id: number) {
+    const pergunta = this.questionarioSelecionado.perguntas.find(p => p.id === id);
+    if (!pergunta) {
+      return false;
+    }
+
+    if (pergunta.tipoResposta === TipoResposta.MultiplaSelecao) {
+      return pergunta.opcoesResposta.filter(op => {
+        return this.formQuestionario.controls[`resposta-pergunta-${pergunta.id}-selecao-${op.id}`].value === true;
+      }).length > 0;
+    }
+    else {
+      return this.formQuestionario.controls[`resposta-pergunta-${pergunta.id}`].valid;
+    }
+  }
+
+  abrirOpcoes(id: number){
+    const display = $('#questionario-respondido-mobile-opcoes-'+id).attr('style');
+    if (display == null || display == '') {
+      $('#questionario-respondido-mobile-opcoes-'+id).slideUp(100);
+    }
+    else{
+      $('#questionario-respondido-mobile-opcoes-'+id).slideDown(100);
+    }
   }
 
   // toggleOffline() {

@@ -11,6 +11,7 @@ export class QuestionarioRespondido {
   idQuestionario: number;
   respostas: Resposta[];
   observacoes?: string;
+  idEntrevistaOffline?: number;
 
   constructor(obj?: IQuestionarioRespondido) {
     if (!!obj) {

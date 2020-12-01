@@ -1,13 +1,18 @@
 import { Injectable } from '@angular/core';
 import { AuthenticationService } from '@app/core/authentication/authentication.service';
-import { Entrevista, IEntrevista } from '@app/entrevista/entrevista';
+import { Entrevista, IEntrevista, QuestionarioRespondido } from '@app/entrevista/entrevista';
 import { Storage } from "@app/core/storage/storage";
+import { Resposta } from '@app/resposta/resposta';
 
 export class EntrevistaStorage {
 
   constructor(
     private _authService: AuthenticationService,
     private _store: Storage) {}
+
+  private _autoDecrement(list: Object[]) {
+    return (list.length + 1) * -1;
+  }
 
   obter(id: number) : IEntrevista | undefined {
     return this._store.entrevistas.find((e) => e.id === id);
@@ -20,7 +25,7 @@ export class EntrevistaStorage {
 
     obj.offline = true;
     obj.idUsuario = this._authService.credentials.id;
-    obj.id = (entrevistas.length + 1) * -1;
+    obj.id = this._autoDecrement(entrevistas);
 
     entrevistas.push(obj);
     this._store.entrevistas = entrevistas;
@@ -28,31 +33,49 @@ export class EntrevistaStorage {
     return obj;
   }
 
-  // atualizar(id: number, entrevista: Entrevista) : Observable<Entrevista> {
-  //   return this._httpClient.put<Entrevista>(routes.especifica(id), entrevista);
-  // }
+  atualizar(id: number, obj: Entrevista) : Entrevista {
+    let lista = this._store.entrevistas;
 
-  // excluir(id: number) : Promise<any> {
-  //   return this._httpClient.delete(routes.especifica(id)).toPromise();
-  // }
+    let e = lista.find((e) => e.id === id);
+    e.nome = obj.nome;
+    e.concluida = obj.concluida;
+    e.observacoes = obj.observacoes;
 
-  // limpar() : Promise<any> {
-  //   return this._httpClient.delete(routes.especifica(id)).toPromise();
-  // }
+    this._store.entrevistas = lista;
 
-  // obterRespostas(idEntrevista: number, idQuestionarioRespondido: number) : Observable<Resposta[]> {
-  //   return this._httpClient.get<Resposta[]>(routes.respostas(idEntrevista, idQuestionarioRespondido))
-  // }
+    return obj;
+  }
 
-  // criarQuestionario(idEntrevista: number, questionario: QuestionarioRespondido) {
-  //   return this._httpClient.post(routes.questionario(idEntrevista), questionario);
-  // }
+  salvarQuestionarioRespondido(obj: QuestionarioRespondido) : QuestionarioRespondido {
+    let lista = this._store.questionariosRespondidos;
 
-  // atualizarQuestionario(idEntrevista: number, questionario: QuestionarioRespondido) {
-  //   return this._httpClient.put(routes.questionarioEspecico(idEntrevista, questionario.id), questionario);
-  // }
+    obj.id = this._autoDecrement(lista);
 
-  // excluirQuestionario(idEntrevista: number, idQuestionarioRespondido: number) {
-  //   return this._httpClient.delete(routes.questionarioEspecico(idEntrevista, idQuestionarioRespondido));
-  // }
+    lista.push(obj);
+    this._store.questionariosRespondidos = lista;
+
+    return obj;
+  }
+
+  atualizarQuestionarioRespondido(obj: QuestionarioRespondido) : QuestionarioRespondido {
+    let lista = this._store.questionariosRespondidos;
+
+    let qr = lista.find((e) => e.id === obj.id);
+    qr.respostas = obj.respostas;
+    qr.observacoes = obj.observacoes;
+
+    this._store.questionariosRespondidos = lista;
+
+    return obj;
+  }
+
+  obterRespostas(id: number, idQuestionarioRespondido: number) : Resposta[] {
+    let qRespondido = this._store.questionariosRespondidos.find(qr => qr.idEntrevistaOffline === id && qr.id === idQuestionarioRespondido);
+    return qRespondido ? qRespondido.respostas : [];
+  }
+
+  excluirQuestionarioRespondido(id: number, idQuestionarioRespondido: number) {
+    let lista = this._store.questionariosRespondidos;
+    this._store.questionariosRespondidos = lista.filter(qr => !(qr.idEntrevistaOffline === id && qr.id === idQuestionarioRespondido));
+  }
 }

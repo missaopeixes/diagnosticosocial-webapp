@@ -121,7 +121,7 @@ export class EntrevistaEspecificaComponent implements OnInit {
 
   obterEntrevista(id: number) {
     this.carregando = true;
-    this._entrevistaService.obterEspecifica(id)
+    this._entrevistaService.obterEspecifica(id, this.offline)
     .pipe(finalize(() =>
       this.carregando = false
     ))
@@ -285,10 +285,10 @@ export class EntrevistaEspecificaComponent implements OnInit {
 
     this.formQuestionario = new FormGroup({});
     this.carregandoPerguntas = true;
-    this._questionarioService.obterPerguntas(respondido.idQuestionario)
+    this._questionarioService.obterPerguntas(respondido.idQuestionario, this.offline)
     .subscribe((perguntas: Pergunta[]) => {
 
-      this._entrevistaService.obterRespostas(this.entrevista.id, respondido.id)
+      this._entrevistaService.obterRespostas(this.entrevista.id, respondido.id, this.offline)
       .pipe(finalize(() => this.carregandoPerguntas = false))
       .subscribe((respostas: Resposta[]) => {
 
@@ -368,7 +368,7 @@ export class EntrevistaEspecificaComponent implements OnInit {
       window.document.querySelectorAll('#form-entrevista')[0].scrollTo(0, 0);
 
       if (!!qRespondido.id) {
-        this._entrevistaService.atualizarQuestionario(this.entrevista.id, qRespondido)
+        this._entrevistaService.atualizarQuestionario(this.entrevista.id, qRespondido, this.offline)
         .pipe(finalize(() => this.salvandoQuestionario = false))
         .subscribe(() => {
           this._toastrService.success('Respostas atualizadas.', 'OK!');
@@ -382,7 +382,7 @@ export class EntrevistaEspecificaComponent implements OnInit {
         });
       }
       else {
-        this._entrevistaService.criarQuestionario(this.entrevista.id, qRespondido)
+        this._entrevistaService.criarQuestionario(this.entrevista.id, qRespondido, this.offline)
         .pipe(finalize(() => this.salvandoQuestionario = false))
         .subscribe((q: QuestionarioRespondido) => {
           // this._toastrService.success('Questionário respondido.', 'OK!');
@@ -412,7 +412,7 @@ export class EntrevistaEspecificaComponent implements OnInit {
       this.salvando = true;
       let obj = new Entrevista(this.entrevista);
       obj.nome = this.form.value['nome'];
-      this._entrevistaService.atualizar(this.entrevista.id, obj)
+      this._entrevistaService.atualizar(this.entrevista.id, obj, this.offline)
       .pipe(finalize(() =>
       this.salvando = false
       ))
@@ -469,7 +469,7 @@ export class EntrevistaEspecificaComponent implements OnInit {
 
   confirmaExclusaoQuestionarioRespondido() {
     this.excluindoQRespondido = true;
-    this._entrevistaService.excluirQuestionario(this.entrevista.id, this.questionarioEmEdicao)
+    this._entrevistaService.excluirQuestionario(this.entrevista.id, this.questionarioEmEdicao, this.offline)
     .pipe(finalize(() => this.excluindoQRespondido = false))
     .subscribe((q: QuestionarioRespondido) => {
       this._toastrService.success('Questionário excluido.', 'OK!');
@@ -504,7 +504,7 @@ export class EntrevistaEspecificaComponent implements OnInit {
     let obj = new Entrevista(this.entrevista);
     obj.concluida = true;
     this.salvando = true;
-    this._entrevistaService.atualizar(this.entrevista.id, obj)
+    this._entrevistaService.atualizar(this.entrevista.id, obj, this.offline)
     .pipe(finalize(() =>
     this.salvando = false
     ))
@@ -524,7 +524,7 @@ export class EntrevistaEspecificaComponent implements OnInit {
       this.entrevista.nome = this.form.value['nome'];
   
       this.salvando = true;
-      this._entrevistaService.criar(this.entrevista)
+      this._entrevistaService.criar(this.entrevista, this.offline)
       .pipe(finalize(() =>
         this.salvando = false
       ))

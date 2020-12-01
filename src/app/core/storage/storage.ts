@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Entrevista } from "@app/entrevista/entrevista";
+import { Entrevista, QuestionarioRespondido } from "@app/entrevista/entrevista";
 import { Evento } from "@app/evento/evento";
 import { QuestionarioDaEntrevista } from "@app/questionario/questionario";
 import * as moment from 'moment';
@@ -7,6 +7,7 @@ import * as moment from 'moment';
 const LOCAL = {
   eventos: 'webapp-storage-eventos',
   questionarios: 'webapp-storage-questionarios',
+  questionariosRespondidos: 'webapp-storage-questionarios-respondidos',
   entrevistas: 'webapp-storage-entrevistas',
   eventoOffline: 'webapp-evento-offline',
   validadeEventoOffline: 'webapp-validade-evento-offline'
@@ -47,6 +48,13 @@ export class Storage {
   }
   set entrevistas(store: Entrevista[]) {
     localStorage.setItem(LOCAL.entrevistas, JSON.stringify(store));
+  }
+
+  get questionariosRespondidos() : QuestionarioRespondido[] {
+    return this._getStorage(LOCAL.questionariosRespondidos).map(obj => new QuestionarioRespondido(obj));
+  }
+  set questionariosRespondidos(store: QuestionarioRespondido[]) {
+    localStorage.setItem(LOCAL.questionariosRespondidos, JSON.stringify(store));
   }
 
   get eventoOffline(): Evento | null {

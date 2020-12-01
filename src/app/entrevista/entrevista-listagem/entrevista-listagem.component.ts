@@ -157,7 +157,6 @@ export class EntrevistaListagemComponent implements OnInit {
   }
 
   offlineHabilitado() {
-    const ev = this._eventoService.obterHabilitadoOffline();
-    return ev && ev.id;
+    return !!this._eventoService.obterHabilitadoOffline();
   }
 }

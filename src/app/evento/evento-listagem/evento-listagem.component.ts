@@ -32,7 +32,7 @@ export class EventoListagemComponent implements OnInit {
   public eventoExclusao: Evento;
   public gerandoMock: boolean;
   public admSessao: boolean;
-  public off: Evento;
+  public offline: Evento | null;
 
   constructor(
     private _eventoService: EventoService,
@@ -47,7 +47,7 @@ export class EventoListagemComponent implements OnInit {
     this.admSessao = JSON.parse(window.sessionStorage.getItem('adm'));
     this.modoMobile = $(window).width() <= 720;
 
-    this.off = this._eventoService.obterHabilitadoOffline();
+    this.offline = this._eventoService.obterHabilitadoOffline();
 
     this.obterListagem();
   }
@@ -166,7 +166,7 @@ export class EventoListagemComponent implements OnInit {
     this._eventoService.habilitarOffline(evento)
     .then(() => {
       this.carregando = false;
-      this.off = this._eventoService.obterHabilitadoOffline();
+      this.offline = this._eventoService.obterHabilitadoOffline();
     })
     .catch((err) => {
       this._toastrService.error(err, 'Ocorreu um erro ao buscar salvar dados dos questionarios.');

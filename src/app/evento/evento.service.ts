@@ -3,12 +3,10 @@ import { HttpClient } from '@angular/common/http';
 import { Listagem, ListagemHelper } from '@app/shared/listagem';
 import { Observable, forkJoin } from 'rxjs';
 import { Evento, IEvento } from '@app/evento/evento';
-import { IQuestionario, IQuestionarioDaEntrevista, QuestionarioDaEntrevista } from '@app/questionario/questionario';
-import { Resposta } from '@app/resposta/resposta';
-import { Storage } from '@app/core/storage/storage';
-import { PerguntaService } from '@app/pergunta/pergunta.service';
+import { IQuestionarioDaEntrevista, QuestionarioDaEntrevista } from '@app/questionario/questionario';
 import { QuestionarioService } from '@app/questionario/questionario.service';
 import { Pergunta } from '@app/pergunta/pergunta';
+import { EventoStorage } from './evento.storage';
 
 const routes = {
   listar: (pagina: number, itensPorPagina?: number) => `/eventos/?${ListagemHelper.paginacao.queryParams(pagina, itensPorPagina)}`,
@@ -28,7 +26,7 @@ export class EventoService {
   constructor(
     private _httpClient: HttpClient,
     private _questionarioService: QuestionarioService,
-    private _store: Storage) { }
+    private _eventoStorage: EventoStorage) {}
 
   obterPorPagina(pagina: number, itensPorPagina?: number) : Observable<Listagem<Evento>> {
     return this._httpClient.get<Listagem<Evento>>(routes.listar(pagina, itensPorPagina));
@@ -45,7 +43,14 @@ export class EventoService {
     return this._httpClient.get<IEvento[]>(routes.todos());
   }
 
-  obterQuestionarios(idEvento: number) : Observable<IQuestionarioDaEntrevista[]> {
+  obterQuestionarios(idEvento: number, offline = false) : Observable<IQuestionarioDaEntrevista[]> {
+    if (offline) {
+      return new Observable<IQuestionarioDaEntrevista[]>(observer => {
+        observer.next(this._eventoStorage.obterQuestionarios());
+        observer.complete();
+      });
+    }
+
     return this._httpClient.get<IQuestionarioDaEntrevista[]>(routes.questionarios(idEvento));
   }
 
@@ -80,7 +85,8 @@ export class EventoService {
   }
 
   obterHabilitadoOffline() : Evento | null {
-    return this._store.eventoOffline;
+    const ev = this._eventoStorage.obter();
+    return ev && ev.id ? ev : null;
   }
 
   habilitarOffline(evento: Evento) : Promise<void> {
@@ -97,9 +103,7 @@ export class EventoService {
 
           response.forEach(perguntas => perguntas.forEach(p => perguntasStore.push(p)));
 
-          this._store.perguntas = perguntasStore;
-          this._store.questionarios = questionarios;
-          this._store.eventoOffline = evento;
+          this._eventoStorage.habilitar(perguntasStore, questionarios, evento);
           res();
 
         },({error}) => rej(error));

@@ -82,8 +82,7 @@ export class EntrevistaEspecificaComponent implements OnInit {
   }
 
   private _offlineHabilitado() {
-    const ev = this._eventoService.obterHabilitadoOffline();
-    return ev && ev.id;
+    return !!this._eventoService.obterHabilitadoOffline();
   }
 
   ngOnInit() {
@@ -135,7 +134,7 @@ export class EntrevistaEspecificaComponent implements OnInit {
       this.form.controls['evento'].setValue(evento);
 
       this.carregandoQuestionarios = true;
-      this._eventoService.obterQuestionarios(this.form.value.evento.id)
+      this._eventoService.obterQuestionarios(this.form.value.evento.id, this.offline)
       .pipe(finalize(() =>
         this.carregandoQuestionarios = false
       ))
@@ -174,7 +173,7 @@ export class EntrevistaEspecificaComponent implements OnInit {
   eventoChanged() {
 
     this.carregandoQuestionarios = true;
-    this._eventoService.obterQuestionarios(this.form.value.evento.id)
+    this._eventoService.obterQuestionarios(this.form.value.evento.id, this.offline)
     .pipe(finalize(() =>
       this.carregandoQuestionarios = false
     ))

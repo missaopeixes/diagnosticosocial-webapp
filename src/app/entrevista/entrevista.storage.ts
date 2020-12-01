@@ -3,7 +3,6 @@ import { AuthenticationService } from '@app/core/authentication/authentication.s
 import { Entrevista, IEntrevista } from '@app/entrevista/entrevista';
 import { Storage } from "@app/core/storage/storage";
 
-@Injectable()
 export class EntrevistaStorage {
 
   constructor(

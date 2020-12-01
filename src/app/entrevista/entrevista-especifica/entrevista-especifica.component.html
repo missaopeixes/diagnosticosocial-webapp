@@ -12,17 +12,17 @@
     </div>
 
     <div class="row mt-2">
-      <div class="col-md-6 col-sm-12 my-3" *ngIf="!!entrevista.id">
+      <div class="col-md-12 col-sm-12 my-3" *ngIf="offline">
+        <div class="status-entrevista offline">
+          <span><i class="fas fa-check-circle"></i> &nbsp;Offline</span>
+        </div>
+      </div>
+      <div class="col-md-12 col-sm-12 my-3" *ngIf="!!entrevista.id">
         <div class="status-entrevista" *ngIf="!entrevista.concluida">
           <span>Entrevista em andamento...</span>
         </div>
         <div class="status-entrevista concluida" *ngIf="entrevista.concluida">
           <span><i class="fa fa-check-circle"></i> &nbsp;Entrevista concluida.</span>
-        </div>
-      </div>
-      <div class="col-md-6 col-sm-12 my-3" *ngIf="offline">
-        <div class="status-entrevista offline">
-          <span><i class="fas fa-check-circle"></i> &nbsp;Offline</span>
         </div>
       </div>
       <div class="loader-bar" [ngClass]="{'loading': carregando || salvando}"></div>

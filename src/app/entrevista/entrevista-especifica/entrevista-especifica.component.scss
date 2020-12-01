@@ -16,9 +16,12 @@
     font-weight: 600;
     font-style: normal;
   }
-  &.offline span, &.andamento span {
-    font-style: normal;
-    color: $gray-700;
+  &.andamento {
+    span {
+      border-color: gray;
+      color: gray;
+      font-style: italic;
+    }
   }
 }
 #ds-questionario-respondido-list{

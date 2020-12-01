@@ -16,17 +16,9 @@
     font-weight: 600;
     font-style: normal;
   }
-  &.offline span {
+  &.offline span, &.andamento span {
     font-style: normal;
     color: $gray-700;
-  }
-  &.andamento {
-    span {
-      border-color: $warning;
-      color: $warning;
-      font-weight: 600;
-      font-style: normal;
-    }
   }
 }
 #ds-questionario-respondido-list{

@@ -1,7 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Entrevista } from "@app/entrevista/entrevista";
 import { Evento } from "@app/evento/evento";
-import { Pergunta } from "@app/pergunta/pergunta";
 import { QuestionarioDaEntrevista } from "@app/questionario/questionario";
 import * as moment from 'moment';
 

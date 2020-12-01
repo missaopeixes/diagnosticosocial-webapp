@@ -20,6 +20,14 @@
     font-style: normal;
     color: $gray-700;
   }
+  &.andamento {
+    span {
+      border-color: $warning;
+      color: $warning;
+      font-weight: 600;
+      font-style: normal;
+    }
+  }
 }
 #ds-questionario-respondido-list{
   .card-questionario-respondido{
@@ -42,11 +50,8 @@
   }
 }
 .pergunta-notificacao{
-  font-size: 8px;
+  font-size: 12px;
   position: relative;
-  top: -10px;
-  left: 5px;
-  color: #00ffc4;
-  text-shadow: 0px 0px 2px #aaa;
-
+  top: -3px;
+  left: 9px;
 }

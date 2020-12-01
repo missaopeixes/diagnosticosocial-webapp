@@ -6,8 +6,8 @@ import { Entrevista, IEntrevista, QuestionarioRespondido } from '@app/entrevista
 import { Resposta } from '@app/resposta/resposta';
 
 const routes = {
-  listar: (pagina: number, itensPorPagina?: number, filtroIdUsuario?: number, filtroEvento?: string, filtroUsuario?: string, filtroNome?: string, filtroConcluida?: boolean) => {
-    let filtros = `&filtroConcluidas=${!!filtroConcluida}`;
+  listar: (pagina: number, itensPorPagina?: number, filtroIdUsuario?: number, filtroEvento?: string, filtroUsuario?: string, filtroNome?: string, filtroStatus?: string) => {
+    let filtros = `&filtroStatus=${filtroStatus}`;
     if (!!filtroIdUsuario) {
       filtros = filtros.concat(`&filtroIdUsuario=${filtroIdUsuario}`);
     }
@@ -42,10 +42,10 @@ export class EntrevistaService {
     filtroEvento?: string,
     filtroUsuario?: string,
     filtroNome?: string,
-    filtroConcluida?: boolean,
+    filtroStatus?: string,
     ) : Observable<Listagem<Entrevista>> {
     return this._httpClient.get<Listagem<Entrevista>>(
-      routes.listar(pagina, itensPorPagina, filtroIdUsuario, filtroEvento, filtroUsuario, filtroNome, filtroConcluida));
+      routes.listar(pagina, itensPorPagina, filtroIdUsuario, filtroEvento, filtroUsuario, filtroNome, filtroStatus));
   }
 
   obterTodos() : Observable<IEntrevista[]> {

@@ -189,7 +189,7 @@
 
           <div class="row" *ngFor="let pergunta of (!!questionarioSelecionado ? questionarioSelecionado.perguntas : []); let i = index;">
             <div class="col-md-12" *ngIf="!carregandoPerguntas">
-              <h5 class="title mb-3">{{i+1}}) &nbsp;{{pergunta.descricao}}<i *ngIf="!perguntaRespondida(pergunta.id)" class="fas fa-circle pergunta-notificacao"></i></h5>
+              <h5 class="title mb-3">{{i+1}}) &nbsp;{{pergunta.descricao}}<i *ngIf="!perguntaRespondida(pergunta.id)" title="Não respondida!" class="text-warning fas fa-exclamation-triangle pergunta-notificacao"></i></h5>
 
               <fieldset>
 

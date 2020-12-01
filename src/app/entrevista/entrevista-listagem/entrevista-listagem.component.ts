@@ -59,16 +59,16 @@ export class EntrevistaListagemComponent implements OnInit {
       evento: [''],
       usuario: [''],
       nome: [''],
-      concluida: ['']
+      status: ['']
     });
     
     if($(window).width() <= 720){
       this.modoMobile = true;
       this.exibeFiltro = false;
-      this.formFiltro.controls['concluida'].setValue(false);
+      this.formFiltro.controls['status'].setValue('3');
     }
     else{
-      this.formFiltro.controls['concluida'].setValue(true);
+      this.formFiltro.controls['status'].setValue('1');
       this.modoMobile = false;
       this.exibeFiltro = true;
     }
@@ -85,13 +85,14 @@ export class EntrevistaListagemComponent implements OnInit {
     }
 
     this.carregando = true;
-    this._entrevistaService.obterPorPagina(this.listagem.pagina,
+    this._entrevistaService.obterPorPagina(
+      this.listagem.pagina,
       ITENS_POR_PAGINA,
       this.formFiltro.value.idUsuario,
       this.formFiltro.value.evento,
       this.formFiltro.value.usuario,
       this.formFiltro.value.nome,
-      this.formFiltro.value.concluida)
+      this.formFiltro.value.status)
     .pipe(finalize(() =>
       this.carregando = false
     ))

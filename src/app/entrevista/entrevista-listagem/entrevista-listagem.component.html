@@ -43,7 +43,7 @@
                 <input type="text" class="form-control" id="filtroNome" formControlName="nome" placeholder="Nome do entrevistado">
               </div>
             </div>
-            <div class="col-lg-2 col-md-6">
+            <!-- <div class="col-lg-2 col-md-6">
               <div class="custom-control custom-checkbox pt-2 pl-4">
                   <input type="checkbox"
                         id="filtroConcluida"
@@ -51,6 +51,17 @@
                         name="filtroConcluida"
                         class="custom-control-input"/>
                   <label class="custom-control-label" for="filtroConcluida">Concluídas</label>
+              </div>
+            </div> -->
+            <div class="col-lg-3 col-md-6">
+              <div class="form-group">
+                <div class="input-group mb-3">
+                  <select id="filtroStatus" class="custom-select" formControlName="status">
+                    <option value="1" selected>Somente concluídas</option>
+                    <option value="2">Somente em andamento</option>
+                    <option value="3">Todas</option>
+                  </select>
+                </div>
               </div>
             </div>
             <div class="col-lg-1 col-md-6">
@@ -87,8 +98,15 @@
             <div class="col-12">
               <div class="row">
                 <div class="col-12 pr-0">
-                  <small class="text-primary">{{entrevista.concluida ? 'Concluída' : 'Em andamento'}}</small>
-                  <small class="text-secondary">por {{entrevista.usuario | truncate:[20]}}</small>
+                  <div class="text-primary status-label" *ngIf="entrevista.concluida">
+                    <i class="fas fa-check-circle"></i>
+                    <small class="font-weight-bold">Concluída</small>
+                  </div>
+                  <div class="text-warning status-label" *ngIf="!entrevista.concluida">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <small class="font-weight-bold">Em andamento</small>
+                  </div>
+                  <small class="text-secondary">por {{entrevista.usuario | truncate:[16]}}</small>
                   <button
                     class="btn btn-link pb-0 float-right"
                     id="entrevista-mobile-dropdown"

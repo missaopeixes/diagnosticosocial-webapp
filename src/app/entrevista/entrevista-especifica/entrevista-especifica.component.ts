@@ -176,7 +176,6 @@ export class EntrevistaEspecificaComponent implements OnInit {
 
   private _aplicarRespostasFormulario(respostas: Resposta[], perguntas: Pergunta[]) {
     respostas.forEach(r => {
-
       if (!!r.idOpcaoEscolhida) {
         let pergunta = perguntas.find(p => p.id === r.idPergunta);
 
@@ -185,7 +184,7 @@ export class EntrevistaEspecificaComponent implements OnInit {
         }
         if (pergunta.tipoResposta === TipoResposta.MultiplaSelecao) {
           let groupMS: any = this.formQuestionario.controls[`resposta-pergunta-${r.idPergunta}`];
-          groupMS.controls[`resposta-pergunta-${r.idPergunta}-selecao-${r.idOpcaoEscolhida}`].setValue(r.idOpcaoEscolhida.toString());
+          groupMS.controls[`resposta-pergunta-${r.idPergunta}-selecao-${r.idOpcaoEscolhida}`].setValue(true);
         }
       }
       else if (!!r.respostaEmNumero) {
@@ -304,7 +303,6 @@ export class EntrevistaEspecificaComponent implements OnInit {
       this._entrevistaService.obterRespostas(this.entrevista.id, respondido.id)
       .pipe(finalize(() => this.carregandoPerguntas = false))
       .subscribe((respostas: Resposta[]) => {
-
         this.questionarioSelecionado = _.find(this.questionarios, {id: respondido.idQuestionario});
         this.questionarioEmEdicao = respondido.id;
         this._montarFormulario(perguntas, respostas, respondido.observacoes);
@@ -362,11 +360,13 @@ export class EntrevistaEspecificaComponent implements OnInit {
 
         case TipoResposta.MultiplaSelecao:
           pergunta.opcoesResposta.forEach(op => {
-            let respostaSelecaoForm = this.formQuestionario.value[`resposta-pergunta-${pergunta.id}-selecao-${op.id}`];
-            if (respostaSelecaoForm) {
-              let r = Object.assign({}, resposta);
-              r.idOpcaoEscolhida = op.id;
-              questionarioRespondido.respostas.push(r);
+            let msFormGroup: any = this.formQuestionario.controls[`resposta-pergunta-${pergunta.id}`];
+            if (msFormGroup) {
+              if (msFormGroup.value[`resposta-pergunta-${pergunta.id}-selecao-${op.id}`] == true) {
+                let r = Object.assign({}, resposta);
+                r.idOpcaoEscolhida = op.id;
+                questionarioRespondido.respostas.push(r);
+              }
             }
           });
           break;

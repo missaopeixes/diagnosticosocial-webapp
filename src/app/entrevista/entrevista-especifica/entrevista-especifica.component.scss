@@ -18,6 +18,14 @@
       font-style: normal;
     }
   }
+  &.andamento {
+    span {
+      border-color: $warning;
+      color: $warning;
+      font-weight: 600;
+      font-style: normal;
+    }
+  }
 }
 #ds-questionario-respondido-list{
   .card-questionario-respondido{

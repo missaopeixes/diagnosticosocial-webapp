@@ -30,11 +30,11 @@
 
     <div class="row mt-2">
       <div class="col-md-6 col-sm-12 my-3" *ngIf="!!entrevista.id">
-        <div class="status-entrevista" *ngIf="!entrevista.concluida">
-          <span>Entrevista em andamento...</span>
+        <div class="status-entrevista andamento" *ngIf="!entrevista.concluida">
+          <span><i class="fas fa-exclamation-triangle"></i> &nbsp;Entrevista em andamento...</span>
         </div>
         <div class="status-entrevista concluida" *ngIf="entrevista.concluida">
-          <span><i class="fa fa-check-circle"></i> &nbsp;Entrevista concluida.</span>
+          <span><i class="fa fa-check-circle"></i> &nbsp;Entrevista concluída!</span>
         </div>
       </div>
       <div class="loader-bar" [ngClass]="{'loading': carregando || salvando}"></div>

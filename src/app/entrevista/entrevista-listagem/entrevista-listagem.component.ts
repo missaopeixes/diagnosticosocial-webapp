@@ -10,6 +10,7 @@ import * as _ from 'lodash';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import * as moment from 'moment';
 import { AuthenticationService, Credentials } from '@app/core/authentication/authentication.service';
+import { EventoService } from '@app/evento/evento.service';
 
 declare var $: any;
 
@@ -39,6 +40,7 @@ export class EntrevistaListagemComponent implements OnInit {
     private _router: Router,
     private _formBuilder: FormBuilder,
     private _modalService: ModalService,
+    private _eventoService: EventoService,
     private _authenticationService: AuthenticationService) {
   }
 
@@ -124,8 +126,16 @@ export class EntrevistaListagemComponent implements OnInit {
     });
   }
 
-  novo() {
+  nova() {
     this._router.navigate(['/entrevistas/nova']);
+  }
+
+  novaOffline() {
+    this._router.navigate(['/entrevistas/nova'], {
+      queryParams: {
+        offline: true
+      }
+    });
   }
 
   visualizar(entrevista: Entrevista) {
@@ -144,5 +154,10 @@ export class EntrevistaListagemComponent implements OnInit {
     else{
       $('#entrevista-mobile-opcoes-'+id).slideDown(100);
     }
+  }
+
+  offlineHabilitado() {
+    const ev = this._eventoService.obterHabilitadoOffline();
+    return ev && ev.id;
   }
 }

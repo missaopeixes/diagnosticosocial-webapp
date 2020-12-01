@@ -1,55 +1,30 @@
 import { Injectable } from '@angular/core';
-import { AuthenticationService, Credentials } from '@app/core/authentication/authentication.service';
-import { Entrevista, IEntrevista, QuestionarioRespondido } from '@app/entrevista/entrevista';
-
-const STORAGE_ENTREVISTAS = 'webapp-storage-entrevistas';
+import { AuthenticationService } from '@app/core/authentication/authentication.service';
+import { Entrevista, IEntrevista } from '@app/entrevista/entrevista';
+import { Storage } from "@app/core/storage/storage";
 
 @Injectable()
 export class EntrevistaStorage {
 
-  constructor(private authenticationService: AuthenticationService) {}
-
-  private _get() : IEntrevista[] {
-    let store:any = JSON.parse(localStorage.getItem(STORAGE_ENTREVISTAS));
-
-    if (!store || !Array.isArray(store)) {
-      localStorage.setItem(STORAGE_ENTREVISTAS, '[]');
-      return [];
-    }
-
-    return store.map((e) => new Entrevista(e));
-  }
-
-  private _set(store: IEntrevista[]) : void {
-    localStorage.setItem(STORAGE_ENTREVISTAS, JSON.stringify(store));
-  }
-
-  get credenciais(): Credentials | null {
-    return this.authenticationService.credentials;
-  }
-
-  private _checkCredentials(): boolean {
-    if (this.credenciais) {
-      throw new Error('Credenciais inválidas');
-    }
-    return true;
-  }
+  constructor(
+    private _authService: AuthenticationService,
+    private _store: Storage) {}
 
   obter(id: number) : IEntrevista | undefined {
-    return this._get().find((e) => e.id === id);
+    return this._store.entrevistas.find((e) => e.id === id);
   }
 
   criar(obj: Entrevista) : Entrevista {
-    if (!this._checkCredentials()) return;
+    if (!this._authService.credentials) return;
 
-    let entrevistas = this._get();
+    let entrevistas = this._store.entrevistas;
 
     obj.offline = true;
-    obj.idUsuario = this.credenciais.id;
+    obj.idUsuario = this._authService.credentials.id;
     obj.id = (entrevistas.length + 1) * -1;
 
     entrevistas.push(obj);
-    this._set(entrevistas);
+    this._store.entrevistas = entrevistas;
 
     return obj;
   }

@@ -52,7 +52,7 @@ export class EntrevistaEspecificaComponent implements OnInit {
   public salvandoQuestionario: boolean;
   public excluindoQRespondido: boolean;
   public nomeUsuario: string;
-  // public offline: boolean;
+  public offline: boolean;
 
   public questionarioSelecionado: QuestionarioDaEntrevista;
   public questionariosRespondidos: QuestionarioRespondido[];
@@ -66,7 +66,8 @@ export class EntrevistaEspecificaComponent implements OnInit {
     private _questionarioService: QuestionarioService,
     private _authenticationService: AuthenticationService,
     private _router: Router,
-    private _formBuilder: FormBuilder) {
+    private _formBuilder: FormBuilder,
+    private _route: ActivatedRoute) {
   }
 
   private _initForm() {
@@ -80,31 +81,43 @@ export class EntrevistaEspecificaComponent implements OnInit {
     });
   }
 
+  private _offlineHabilitado() {
+    const ev = this._eventoService.obterHabilitadoOffline();
+    return ev && ev.id;
+  }
+
   ngOnInit() {
     this.entrevista = new Entrevista();
     this.questionariosRespondidos = [];
-
-    if($(window).width() <= 720){
-      this.modoMobile = true;
-    }
-    else{
-      this.modoMobile = false;
-    }
+    this.modoMobile = $(window).width() <= 720;
 
     this._initForm();
-    this._activatedRoute.params.subscribe((params: Params) => {
-      this.obterEventos(() => {
-        const id = params['id'] ? parseInt(params['id']) : undefined;
-        if (id) {
-          this.obterEntrevista(id);
-        }
-        else if (this.eventos.length === 1) {
-          this.form.controls['evento'].setValue(this.eventos[0]);
-          this.eventoChanged();
-        }
+    this._route.queryParamMap.subscribe(queryParams => {
+      this.offline = queryParams.get("offline") === 'true';
+
+      if (this.offline && !this._offlineHabilitado()) {
+        this._router.navigate(['/entrevistas/nova'], {
+          queryParams: {
+            offline: undefined
+          }
+        });
+      }
+
+      this._activatedRoute.params.subscribe((params: Params) => {
+
+        this.obterEventos(() => {
+          const id = params['id'] ? parseInt(params['id']) : undefined;
+          if (id) {
+            this.obterEntrevista(id);
+          }
+          else if (this.eventos.length === 1) {
+            this.form.controls['evento'].setValue(this.eventos[0]);
+            this.eventoChanged();
+          }
+        });
       });
+      this.nomeUsuario = this._authenticationService.credentials.nome.split(' ')[0];
     });
-    this.nomeUsuario = this._authenticationService.credentials.nome.split(' ')[0];
   }
 
   obterEntrevista(id: number) {
@@ -143,7 +156,7 @@ export class EntrevistaEspecificaComponent implements OnInit {
 
   obterEventos(done?: Function) {
     this.carregando = true;
-    this._eventoService.obterTodos()
+    this._eventoService.obterTodos(this.offline)
     .pipe(finalize(() =>
       this.carregando = false
     ))
@@ -564,8 +577,4 @@ export class EntrevistaEspecificaComponent implements OnInit {
       $('#questionario-respondido-mobile-opcoes-'+id).slideDown(100);
     }
   }
-
-  // toggleOffline() {
-  //   this.offline = !this.offline;
-  // }
 }

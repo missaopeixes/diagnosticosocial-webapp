@@ -10,13 +10,15 @@
     border-radius: 2px 5px 5px 2px;
     border-left: 3px solid $gray-400;
   }
-  &.concluida {
-    span {
-      border-color: $primary;
-      color: $primary;
-      font-weight: 600;
-      font-style: normal;
-    }
+  &.concluida span {
+    border-color: $primary;
+    color: $primary;
+    font-weight: 600;
+    font-style: normal;
+  }
+  &.offline span {
+    font-style: normal;
+    color: $gray-700;
   }
 }
 #ds-questionario-respondido-list{

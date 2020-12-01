@@ -62,7 +62,7 @@ export class Storage {
     let evento = new Evento(JSON.parse(localStorage.getItem(LOCAL.eventoOffline)));
     let validade = moment(localStorage.getItem(LOCAL.validadeEventoOffline), 'DD/MM/YYYY');
 
-    if (evento && moment().diff(validade, 'days') > 0) {
+    if (evento && evento.id && moment().diff(validade, 'days') > 0) {
       return null;
     }
 
@@ -71,7 +71,7 @@ export class Storage {
   set eventoOffline(evento: Evento) {
     if (evento.id) {
       localStorage.setItem(LOCAL.eventoOffline, JSON.stringify(evento));
-      localStorage.setItem(LOCAL.validadeEventoOffline, JSON.stringify(moment().add('7 days').format('DD/MM/YYYY')));
+      localStorage.setItem(LOCAL.validadeEventoOffline, JSON.stringify(moment().add(0, 'day').format('DD/MM/YYYY')));
     }
   }
 }

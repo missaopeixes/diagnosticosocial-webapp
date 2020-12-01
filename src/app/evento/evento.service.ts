@@ -34,7 +34,14 @@ export class EventoService {
     return this._httpClient.get<Listagem<Evento>>(routes.listar(pagina, itensPorPagina));
   }
 
-  obterTodos() : Observable<IEvento[]> {
+  obterTodos(offline = false) : Observable<IEvento[]> {
+    if (offline) {
+      return new Observable<IEvento[]>(observer => {
+        observer.next([this.obterHabilitadoOffline()]);
+        observer.complete();
+      });
+    }
+
     return this._httpClient.get<IEvento[]>(routes.todos());
   }
 
@@ -72,25 +79,22 @@ export class EventoService {
     return this._httpClient.get<Object[]>(routes.respostas(id, idPergunta));
   }
 
-  obterHabilitadoOffline() : Evento {
+  obterHabilitadoOffline() : Evento | null {
     return this._store.eventoOffline;
   }
 
   habilitarOffline(evento: Evento) : Promise<void> {
     return new Promise((res, rej) => {
 
-      console.log('A');
       this.obterQuestionarios(evento.id)
       .subscribe((questionarios: QuestionarioDaEntrevista[]) => {
 
-        console.log('B', questionarios);
         let perguntasStore : Pergunta[] = [];
 
         let observables = questionarios.map(q => this._questionarioService.obterPerguntas(q.id));
         forkJoin(observables)
         .subscribe((response: Pergunta[][]) => {
 
-          console.log('C', response);
           response.forEach(perguntas => perguntas.forEach(p => perguntasStore.push(p)));
 
           this._store.perguntas = perguntasStore;

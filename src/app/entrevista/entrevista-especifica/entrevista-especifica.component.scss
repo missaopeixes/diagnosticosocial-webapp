@@ -20,10 +20,9 @@
   }
   &.andamento {
     span {
-      border-color: $warning;
-      color: $warning;
-      font-weight: 600;
-      font-style: normal;
+      border-color: gray;
+      color: gray;
+      font-style: italic;
     }
   }
 }

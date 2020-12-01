@@ -7,7 +7,6 @@ import * as moment from 'moment';
 
 const LOCAL = {
   eventos: 'webapp-storage-eventos',
-  perguntas: 'webapp-storage-perguntas',
   questionarios: 'webapp-storage-questionarios',
   entrevistas: 'webapp-storage-entrevistas',
   eventoOffline: 'webapp-evento-offline',
@@ -42,13 +41,6 @@ export class Storage {
   }
   set questionarios(store: QuestionarioDaEntrevista[]) {
     localStorage.setItem(LOCAL.questionarios, JSON.stringify(store));
-  }
-
-  get perguntas() : Pergunta[] {
-    return this._getStorage(LOCAL.perguntas).map(obj => new Pergunta(obj));
-  }
-  set perguntas(store: Pergunta[]) {
-    localStorage.setItem(LOCAL.perguntas, JSON.stringify(store));
   }
 
   get entrevistas() : Entrevista[] {

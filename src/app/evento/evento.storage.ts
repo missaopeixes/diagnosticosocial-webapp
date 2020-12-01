@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { AuthenticationService } from '@app/core/authentication/authentication.service';
 import { Evento } from '@app/evento/evento';
 import { Storage } from "@app/core/storage/storage";
 import { Pergunta } from '@app/pergunta/pergunta';
@@ -15,8 +14,7 @@ export class EventoStorage {
     return this._store.eventoOffline;
   }
 
-  habilitar(perguntas: Pergunta[], questionarios: QuestionarioDaEntrevista[], evento: Evento) {
-    this._store.perguntas = perguntas;
+  habilitar(questionarios: QuestionarioDaEntrevista[], evento: Evento) {
     this._store.questionarios = questionarios;
     this._store.eventoOffline = evento;
   }

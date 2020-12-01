@@ -267,7 +267,7 @@ export class EntrevistaEspecificaComponent implements OnInit {
       this._modalService.open(ID_MODAL_RESPOSTAS);
 
       this.carregandoPerguntas = true;
-      this._questionarioService.obterPerguntas(this.questionarioSelecionado.id)
+      this._questionarioService.obterPerguntas(this.questionarioSelecionado.id, this.offline)
       .pipe(finalize(() =>
         this.carregandoPerguntas = false
       ))

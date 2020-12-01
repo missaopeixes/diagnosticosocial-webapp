@@ -95,15 +95,13 @@ export class EventoService {
       this.obterQuestionarios(evento.id)
       .subscribe((questionarios: QuestionarioDaEntrevista[]) => {
 
-        let perguntasStore : Pergunta[] = [];
-
         let observables = questionarios.map(q => this._questionarioService.obterPerguntas(q.id));
         forkJoin(observables)
         .subscribe((response: Pergunta[][]) => {
 
-          response.forEach(perguntas => perguntas.forEach(p => perguntasStore.push(p)));
+          response.forEach((perguntas, index) => questionarios[index].perguntas = perguntas);
 
-          this._eventoStorage.habilitar(perguntasStore, questionarios, evento);
+          this._eventoStorage.habilitar(questionarios, evento);
           res();
 
         },({error}) => rej(error));

@@ -4,6 +4,7 @@ import { Listagem, ListagemHelper } from '@app/shared/listagem';
 import { Observable } from 'rxjs';
 import { Questionario, IQuestionario } from '@app/questionario/questionario';
 import { Pergunta, IPergunta } from '@app/pergunta/pergunta';
+import { QuestionarioStorage } from './questionario.storage';
 
 const routes = {
   listar: (pagina: number, itensPorPagina?: number) => `/questionarios/?${ListagemHelper.paginacao.queryParams(pagina, itensPorPagina)}`,
@@ -17,7 +18,9 @@ const routes = {
 @Injectable()
 export class QuestionarioService {
 
-  constructor(private _httpClient: HttpClient) { }
+  constructor(
+    private _httpClient: HttpClient,
+    private _questionarioStorage: QuestionarioStorage) { }
 
   obterPorPagina(pagina: number, itensPorPagina?: number) : Observable<Listagem<Questionario>> {
     return this._httpClient.get<Listagem<Questionario>>(routes.listar(pagina, itensPorPagina));
@@ -43,7 +46,14 @@ export class QuestionarioService {
     return this._httpClient.delete(routes.escpecifico(id)).toPromise();
   }
 
-  obterPerguntas(id: number) : Observable<IPergunta[]> {
+  obterPerguntas(id: number, offline = false) : Observable<IPergunta[]> {
+    if (offline) {
+      return new Observable<IPergunta[]>(observer => {
+        observer.next(this._questionarioStorage.obterPerguntas(id));
+        observer.complete();
+      });
+    }
+
     return this._httpClient.get<IPergunta[]>(routes.perguntas(id))
   }
 

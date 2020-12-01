@@ -4,7 +4,7 @@ import { Pergunta, TipoResposta } from '@app/pergunta/pergunta';
 import { EntrevistaService } from '@app/entrevista/entrevista.service';
 import { Entrevista, IEntrevista, QuestionarioRespondido } from '@app/entrevista/entrevista';
 import { finalize } from 'rxjs/operators';
-import { FormGroup, Validators, FormBuilder, FormControl } from '@angular/forms';
+import { FormGroup, Validators, FormBuilder, FormControl, ValidatorFn, ValidationErrors } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { AnimationHelper } from '@app/shared/helpers/animation-helper';
@@ -184,7 +184,8 @@ export class EntrevistaEspecificaComponent implements OnInit {
           this.formQuestionario.controls[`resposta-pergunta-${r.idPergunta}`].setValue(r.idOpcaoEscolhida.toString());
         }
         if (pergunta.tipoResposta === TipoResposta.MultiplaSelecao) {
-          this.formQuestionario.controls[`resposta-pergunta-${r.idPergunta}-selecao-${r.idOpcaoEscolhida}`].setValue(r.idOpcaoEscolhida.toString());
+          let groupMS: any = this.formQuestionario.controls[`resposta-pergunta-${r.idPergunta}`];
+          groupMS.controls[`resposta-pergunta-${r.idPergunta}-selecao-${r.idOpcaoEscolhida}`].setValue(r.idOpcaoEscolhida.toString());
         }
       }
       else if (!!r.respostaEmNumero) {
@@ -204,11 +205,17 @@ export class EntrevistaEspecificaComponent implements OnInit {
     let group: any = {
       observacoes: new FormControl('')
     };
+    let customValidators: ValidatorFn[] = [];
 
     perguntas.forEach((p) => {
 
       if (p.tipoResposta === TipoResposta.MultiplaSelecao) {
-        p.opcoesResposta.forEach(op => group[`resposta-pergunta-${p.id}-selecao-${op.id}`] = new FormControl(''));
+        let groupMS = {};
+        p.opcoesResposta.forEach(op => groupMS[`resposta-pergunta-${p.id}-selecao-${op.id}`] = new FormControl(''));
+
+        group[`resposta-pergunta-${p.id}`] = new FormGroup(groupMS);
+
+        customValidators.push(this.validacaoMS(p));
       }
       else {
         group[`resposta-pergunta-${p.id}`] = new FormControl('', Validators.required);
@@ -218,6 +225,7 @@ export class EntrevistaEspecificaComponent implements OnInit {
     });
 
     this.formQuestionario = new FormGroup(group);
+    this.formQuestionario.setValidators(customValidators);
     this.questionarioSelecionado.perguntas = perguntas;
 
     if (!!respostas) {
@@ -229,6 +237,23 @@ export class EntrevistaEspecificaComponent implements OnInit {
     if (!!observacoes) {
       this.formQuestionario.controls['observacoes'].setValue(observacoes);
     }
+  }
+
+  public validacaoMS(pergunta: Pergunta): ValidatorFn{
+    return (group: FormGroup): ValidationErrors => {
+      let g: any = group.controls[`resposta-pergunta-${pergunta.id}`];
+      let perguntaMSValida = pergunta.opcoesResposta.filter(op => {
+        let ctrl = g.controls[`resposta-pergunta-${pergunta.id}-selecao-${op.id}`];
+        return ctrl ? ctrl.value == true : false;
+      }).length > 0;
+
+      if (!perguntaMSValida) {
+        group.controls[`resposta-pergunta-${pergunta.id}`].setErrors({
+          required: true
+        });
+      }
+      return;
+    };
   }
 
   private _selecionarQuestionarioNaoRespondido() {
@@ -545,14 +570,7 @@ export class EntrevistaEspecificaComponent implements OnInit {
       return false;
     }
 
-    if (pergunta.tipoResposta === TipoResposta.MultiplaSelecao) {
-      return pergunta.opcoesResposta.filter(op => {
-        return this.formQuestionario.controls[`resposta-pergunta-${pergunta.id}-selecao-${op.id}`].value === true;
-      }).length > 0;
-    }
-    else {
-      return this.formQuestionario.controls[`resposta-pergunta-${pergunta.id}`].valid;
-    }
+    return this.formQuestionario.controls[`resposta-pergunta-${pergunta.id}`].valid;
   }
 
   abrirOpcoes(id: number){

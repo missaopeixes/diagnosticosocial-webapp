@@ -31,7 +31,7 @@
     <div class="row mt-2">
       <div class="col-md-6 col-sm-12 my-3" *ngIf="!!entrevista.id">
         <div class="status-entrevista andamento" *ngIf="!entrevista.concluida">
-          <span><i class="fas fa-exclamation-triangle"></i> &nbsp;Entrevista em andamento...</span>
+          <span><i class="text-warning fas fa-exclamation-triangle"></i> &nbsp;Entrevista em andamento...</span>
         </div>
         <div class="status-entrevista concluida" *ngIf="entrevista.concluida">
           <span><i class="fa fa-check-circle"></i> &nbsp;Entrevista concluída!</span>
@@ -220,15 +220,17 @@
                 </div>
 
                 <div *ngIf="pergunta.tipoResposta === 4">
-                  <div *ngFor="let opcao of pergunta.opcoesResposta; let op = index;">
-                    <div class="custom-control custom-checkbox m-2">
-                      <input type="checkbox"
-                        id="pergunta-{{pergunta.id}}-opcao-{{opcao.id}}"
-                        name="pergunta-{{pergunta.id}}-opcao-{{opcao.id}}"
-                        formControlName="resposta-pergunta-{{pergunta.id}}-selecao-{{opcao.id}}"
-                        value="{{opcao.id}}"
-                        class="custom-control-input"/>
-                      <label class="custom-control-label" for="pergunta-{{pergunta.id}}-opcao-{{opcao.id}}">{{opcao.descricao}}</label>
+                  <div formGroupName="resposta-pergunta-{{pergunta.id}}">
+                    <div *ngFor="let opcao of pergunta.opcoesResposta; let op = index;">
+                      <div class="custom-control custom-checkbox m-2">
+                        <input type="checkbox"
+                          id="pergunta-{{pergunta.id}}-opcao-{{opcao.id}}"
+                          name="pergunta-{{pergunta.id}}-opcao-{{opcao.id}}"
+                          formControlName="resposta-pergunta-{{pergunta.id}}-selecao-{{opcao.id}}"
+                          value="{{opcao.id}}"
+                          class="custom-control-input"/>
+                        <label class="custom-control-label" for="pergunta-{{pergunta.id}}-opcao-{{opcao.id}}">{{opcao.descricao}}</label>
+                      </div>
                     </div>
                   </div>
                 </div>

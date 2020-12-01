@@ -15,7 +15,20 @@ export class EntrevistaStorage {
   }
 
   obter(id: number) : IEntrevista | undefined {
-    return this._store.entrevistas.find((e) => e.id === id);
+    let entrevista = this._store.entrevistas.find((e) => e.id === id);
+
+    if (!entrevista) {
+      return;
+    }
+
+    entrevista.questionariosRespondidos =
+      this._store.questionariosRespondidos.filter(qr => qr.idEntrevistaOffline === id);
+
+    return entrevista;
+  }
+
+  listar() : Entrevista[] {
+    return this._store.entrevistas;
   }
 
   criar(obj: Entrevista) : Entrevista {
@@ -25,12 +38,18 @@ export class EntrevistaStorage {
 
     obj.offline = true;
     obj.idUsuario = this._authService.credentials.id;
+    obj.usuario = this._authService.credentials.nome;
     obj.id = this._autoDecrement(entrevistas);
 
     entrevistas.push(obj);
     this._store.entrevistas = entrevistas;
 
     return obj;
+  }
+
+  excluir(id: number) {
+    let lista = this._store.entrevistas;
+    this._store.entrevistas = lista.filter(e => e.id !== id);
   }
 
   atualizar(id: number, obj: Entrevista) : Entrevista {

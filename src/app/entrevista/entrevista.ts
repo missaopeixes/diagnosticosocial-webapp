@@ -31,6 +31,10 @@ export interface IEntrevista {
   concluida?: boolean;
   offline?: boolean;
 
+  usuario?: string;
+  evento?: string;
+  questionariosRespondidos?: QuestionarioRespondido[];
+
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -45,6 +49,10 @@ export class Entrevista implements IEntrevista {
   observacoes: string;
   concluida: boolean;
   offline: boolean;
+
+  usuario?: string;
+  evento?: string;
+  questionariosRespondidos?: QuestionarioRespondido[];
 
   createdAt?: Date;
   updatedAt?: Date;

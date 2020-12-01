@@ -1,9 +1,11 @@
+@import '../../../theme/theme-variables.scss';
+
 #ds-entrevista-list{
   .card-entrevista{
     background: #f8f8f9;
     border-radius: 5px;
-    padding: 15px;
-    margin: 15px 0;
+    padding: 15px 0px;
+    margin: 10px;
     box-shadow: 1px 1px 1px 1px #e3e5e9;
 
     .status-label{
@@ -20,5 +22,14 @@
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;
     box-shadow: 1px 1px 1px 1px #e3e5e9;
+  }
+
+  .offline-flag {
+    padding: 3px 10px;
+    // border: 1px solid $gray-700;
+    background: $orange;
+    color: $white;
+    border-radius: 10px;
+    font-size: 13px;
   }
 }

@@ -61,6 +61,10 @@ export class EntrevistaService {
       routes.listar(pagina, itensPorPagina, filtroIdUsuario, filtroEvento, filtroUsuario, filtroNome, filtroStatus));
   }
 
+  listarOffline() : Entrevista[] {
+    return this._entrevistaStorage.listar();
+  }
+
   obterTodos() : Observable<IEntrevista[]> {
     return this._httpClient.get<IEntrevista[]>(routes.listarTodos());
   }
@@ -99,6 +103,13 @@ export class EntrevistaService {
   }
 
   excluir(id: number) : Promise<any> {
+    if (this.offline) {
+      return new Promise<any>(res => {
+        this._entrevistaStorage.excluir(id);
+        res();
+      });
+    }
+
     return this._httpClient.delete(routes.especifica(id)).toPromise();
   }
 

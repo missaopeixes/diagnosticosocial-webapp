@@ -3,7 +3,7 @@
       <div class="col-md-6">
         <h3>
           <span [hidden]="!entrevista.id">Entrevista com <u class="d-none d-md-inline-block">{{entrevista.nome}}</u></span>
-          <span [hidden]="entrevista.id">Nova Entrevista</span>
+          <span [hidden]="entrevista.id">Nova entrevista</span>
         </h3>
         <h3 class="d-md-none">
           <u>{{entrevista.nome}}</u>
@@ -305,7 +305,7 @@
 
           <div class="modal-footer">
             <button class="btn btn-primary" (click)="novaEntrevista()">Sim, mais uma</button>
-            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Agora não</button>
+            <button type="button" class="btn btn-outline-secondary" (click)="voltar()">Agora não</button>
           </div>
         </div>
     </div>

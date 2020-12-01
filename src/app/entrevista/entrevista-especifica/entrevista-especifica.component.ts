@@ -79,6 +79,7 @@ export class EntrevistaEspecificaComponent implements OnInit {
     this.formQuestionario = this._formBuilder.group({
       observacoes: ['']
     });
+    this.questionariosRespondidos = [];
   }
 
   private _offlineHabilitado() {
@@ -262,13 +263,16 @@ export class EntrevistaEspecificaComponent implements OnInit {
   }
 
   responderQuestionario() {
-    this.questionarioSelecionado = this.form.value.questionario;
-    if (!!this.questionarioSelecionado && this.questionarioSelecionado.id) {
-
-      if (this.questionarioSelecionado.quantidadePorEnquete === QtdQuestionarioPorEnquete.apenasUm &&
-      _.find(this.questionariosRespondidos, {idQuestionario: this.questionarioSelecionado.id})) {
-        return this._toastrService.warning('Deve ser respondido apenas uma vez por entrevista!', 'Questionário já respondido');
+    if (!!this.form.value.questionario && this.form.value.questionario.id) {
+      
+      console.log('olá', this.form.value.questionario);
+      if (
+        this.form.value.questionario.quantidadePorEnquete === QtdQuestionarioPorEnquete.apenasUm &&
+        _.find(this.questionariosRespondidos, {idQuestionario: this.form.value.questionario.id})) {
+          return this._toastrService.warning('Deve ser respondido apenas uma vez por entrevista!', 'Questionário já respondido');
       }
+
+      this.questionarioSelecionado = this.form.value.questionario;
 
       this.questionarioSelecionado.perguntas = [];
       this._modalService.open(ID_MODAL_RESPOSTAS);
@@ -528,6 +532,7 @@ export class EntrevistaEspecificaComponent implements OnInit {
     return new Promise((res, rej) => {
       this.entrevista = new Entrevista();
       this.entrevista.idEvento = this.form.value['evento'].id;
+      this.entrevista.evento = this.form.value['evento'].nome;
       this.entrevista.nome = this.form.value['nome'];
   
       this.salvando = true;
@@ -558,6 +563,10 @@ export class EntrevistaEspecificaComponent implements OnInit {
     });
   }
 
+  voltar() {
+    this._router.navigate(['/entrevistas']);
+  }
+
   perguntaRespondida(id: number) {
     const pergunta = this.questionarioSelecionado.perguntas.find(p => p.id === id);
     if (!pergunta) {
@@ -570,7 +579,8 @@ export class EntrevistaEspecificaComponent implements OnInit {
       }).length > 0;
     }
     else {
-      return this.formQuestionario.controls[`resposta-pergunta-${pergunta.id}`].valid;
+      const ctrl = this.formQuestionario.controls[`resposta-pergunta-${pergunta.id}`];
+      return ctrl ? ctrl.valid : false;
     }
   }
 

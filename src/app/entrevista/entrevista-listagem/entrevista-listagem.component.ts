@@ -5,7 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { ModalService } from '@app/shared/modal/modal.service';
 import { EntrevistaService } from '@app/entrevista/entrevista.service';
 import { finalize } from 'rxjs/operators';
-import { Router } from '@angular/router';
+import { Params, Router } from '@angular/router';
 import * as _ from 'lodash';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import * as moment from 'moment';
@@ -25,6 +25,7 @@ const ID_MODAL_EXCLUSAO = '#ds-entrevista-modal-exclusao';
 export class EntrevistaListagemComponent implements OnInit {
 
   public listagem: Listagem<Entrevista>;
+  public listagemOffline: Entrevista[] = [];
   public carregando: boolean;
   public modoMobile: boolean;
   public erroListagem: boolean;
@@ -32,6 +33,7 @@ export class EntrevistaListagemComponent implements OnInit {
   public entrevistaExclusao: Entrevista;
   public formFiltro: FormGroup;
   public exibeFiltro: boolean;
+  public entrevistaExclusaoOffline: boolean;
   public credenciais: Credentials;
 
   constructor(
@@ -75,7 +77,12 @@ export class EntrevistaListagemComponent implements OnInit {
       this.exibeFiltro = true;
     }
 
+    this.obterListagemOffline();
     this.obterListagem();
+  }
+
+  obterListagemOffline() {
+    this.listagemOffline = this._entrevistaService.listarOffline();
   }
 
   obterListagem(refresh: boolean = false) {
@@ -104,9 +111,24 @@ export class EntrevistaListagemComponent implements OnInit {
     );
   }
 
-  confirmarExclusao(obj: Entrevista) {
+  confirmarExclusao(obj: Entrevista, offline = false) {
     this.entrevistaExclusao = obj;
+    this.entrevistaExclusaoOffline = offline;
     this._modalService.open(ID_MODAL_EXCLUSAO);
+  }
+
+  excluirOffline() {
+    this._entrevistaService.offline = true;
+    this._entrevistaService.excluir(this.entrevistaExclusao.id)
+    .then(() => {
+      _.remove(this.listagemOffline, (obj) => obj.id === this.entrevistaExclusao.id)
+      this._entrevistaService.offline = false;
+      this._modalService.close(ID_MODAL_EXCLUSAO);
+    })
+    .catch(() => {
+      this._toastrService.error('Ocorreu um erro ao excluir entrevista não sincronizada.', 'Ops!');
+      this._entrevistaService.offline = false;
+    });
   }
 
   excluir() {
@@ -139,8 +161,14 @@ export class EntrevistaListagemComponent implements OnInit {
     });
   }
 
-  visualizar(entrevista: Entrevista) {
-    this._router.navigate([`/entrevistas/${entrevista.id}`]);
+  visualizar(entrevista: Entrevista, offline = false) {
+    let params : Params = {};
+    if (offline) {
+      params.offline = true;
+    }
+    this._router.navigate([`/entrevistas/${entrevista.id}`], {
+      queryParams: params
+    });
   }
 
   formatDate(utc: string) {
@@ -159,5 +187,9 @@ export class EntrevistaListagemComponent implements OnInit {
 
   offlineHabilitado() {
     return !!this._eventoService.obterHabilitadoOffline();
+  }
+
+  entrevistasOfflineEmAndamento() {
+    return this.listagemOffline.filter(e => !e.concluida);
   }
 }

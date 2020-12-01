@@ -32,6 +32,7 @@ export class EventoListagemComponent implements OnInit {
   public eventoExclusao: Evento;
   public gerandoMock: boolean;
   public admSessao: boolean;
+  public off: Evento;
 
   constructor(
     private _eventoService: EventoService,
@@ -44,13 +45,9 @@ export class EventoListagemComponent implements OnInit {
   ngOnInit() {
     this.listagem = new Listagem<Evento>();
     this.admSessao = JSON.parse(window.sessionStorage.getItem('adm'));
+    this.modoMobile = $(window).width() <= 720;
 
-    if($(window).width() <= 720){
-      this.modoMobile = true;
-    }
-    else{
-      this.modoMobile = false;
-    }
+    this.off = this._eventoService.obterHabilitadoOffline();
 
     this.obterListagem();
   }
@@ -157,5 +154,23 @@ export class EventoListagemComponent implements OnInit {
     else{
       $('#evento-mobile-opcoes-'+id).slideDown(100);
     }
+  }
+
+  eventoHabilitadoOffiline(evento: Evento) {
+    const e = this._eventoService.obterHabilitadoOffline()
+    return e ? e.id === evento.id : false;
+  }
+
+  habilitarOffline(evento: Evento) {
+    this.carregando = true;
+    this._eventoService.habilitarOffline(evento)
+    .then(() => {
+      this.carregando = false;
+      this.off = this._eventoService.obterHabilitadoOffline();
+    })
+    .catch((err) => {
+      this._toastrService.error(err, 'Ocorreu um erro ao buscar salvar dados dos questionarios.');
+      this.carregando = false;
+    });
   }
 }

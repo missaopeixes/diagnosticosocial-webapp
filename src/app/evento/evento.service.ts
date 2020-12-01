@@ -1,10 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Listagem, ListagemHelper } from '@app/shared/listagem';
-import { Observable } from 'rxjs';
+import { Observable, forkJoin } from 'rxjs';
 import { Evento, IEvento } from '@app/evento/evento';
-import { IQuestionario, IQuestionarioDaEntrevista } from '@app/questionario/questionario';
+import { IQuestionario, IQuestionarioDaEntrevista, QuestionarioDaEntrevista } from '@app/questionario/questionario';
 import { Resposta } from '@app/resposta/resposta';
+import { Storage } from '@app/core/storage/storage';
+import { PerguntaService } from '@app/pergunta/pergunta.service';
+import { QuestionarioService } from '@app/questionario/questionario.service';
+import { Pergunta } from '@app/pergunta/pergunta';
 
 const routes = {
   listar: (pagina: number, itensPorPagina?: number) => `/eventos/?${ListagemHelper.paginacao.queryParams(pagina, itensPorPagina)}`,
@@ -21,7 +25,10 @@ const routes = {
 @Injectable()
 export class EventoService {
 
-  constructor(private _httpClient: HttpClient) { }
+  constructor(
+    private _httpClient: HttpClient,
+    private _questionarioService: QuestionarioService,
+    private _store: Storage) { }
 
   obterPorPagina(pagina: number, itensPorPagina?: number) : Observable<Listagem<Evento>> {
     return this._httpClient.get<Listagem<Evento>>(routes.listar(pagina, itensPorPagina));
@@ -63,5 +70,36 @@ export class EventoService {
 
   respostas(id: number, idPergunta: number) : Observable<Object[]>{
     return this._httpClient.get<Object[]>(routes.respostas(id, idPergunta));
+  }
+
+  obterHabilitadoOffline() : Evento {
+    return this._store.eventoOffline;
+  }
+
+  habilitarOffline(evento: Evento) : Promise<void> {
+    return new Promise((res, rej) => {
+
+      console.log('A');
+      this.obterQuestionarios(evento.id)
+      .subscribe((questionarios: QuestionarioDaEntrevista[]) => {
+
+        console.log('B', questionarios);
+        let perguntasStore : Pergunta[] = [];
+
+        let observables = questionarios.map(q => this._questionarioService.obterPerguntas(q.id));
+        forkJoin(observables)
+        .subscribe((response: Pergunta[][]) => {
+
+          console.log('C', response);
+          response.forEach(perguntas => perguntas.forEach(p => perguntasStore.push(p)));
+
+          this._store.perguntas = perguntasStore;
+          this._store.questionarios = questionarios;
+          this._store.eventoOffline = evento;
+          res();
+
+        },({error}) => rej(error));
+      },({error}) => rej(error));
+    })
   }
 }

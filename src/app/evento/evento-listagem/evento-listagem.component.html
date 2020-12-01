@@ -24,7 +24,7 @@
     <div class="loader-bar" [ngClass]="{'loading': carregando}"></div>
     <div class="row">
       <div class="col-md-12 mt-auto">
-        <!-- MODO MOBILE -->
+        <!-- MOBILE -->
         <div id="ds-evento-list" *ngIf="modoMobile">
           <div class="row">
             <div class="col-12">
@@ -79,7 +79,7 @@
               <small class="text-secondary">Exibindo {{listagem.conteudo.length}} de {{listagem.total}}</small>
           </div>
         </div>
-        <!-- MODO DESKTOP -->
+        <!-- DESKTOP -->
         <table *ngIf="!modoMobile" class="table table-responsive-sm table-hover" id="ds-evento-table">
           <thead>
             <tr>
@@ -89,14 +89,17 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngIf="carregando">
-              <td colspan="4" class="text-center">
-                <i>Carregando questionários...</i>
-              </td>
-            </tr>
             <tr *ngFor="let evento of listagem.conteudo; let i = index;">
               <td class="table-index text-secondary"><small>{{i+1}}</small></td>
-              <td>{{evento.nome}}</td>
+              <td>
+                {{evento.nome}}
+                <span
+                  *ngIf="eventoHabilitadoOffiline(evento)"
+                  class="ml-2 text-primary"
+                  title="Habilitado para entrevistas offline">
+                  <i class="fa fa-check-circle"></i> Offline
+                </span>
+              </td>
               <td>
                 <!-- <button class="btn btn-outline-secondary float-right ml-1" (click)="preencherMock(evento)">
                   Dados Fictícios
@@ -106,6 +109,9 @@
                 </button>
                 <button *ngIf="admSessao" class="btn btn-outline-secondary float-right ml-1" (click)="visualizar(evento)">
                   Visualizar
+                </button>
+                <button class="btn btn-outline-secondary float-right ml-1" (click)="habilitarOffline(evento)">
+                  Offline
                 </button>
                 <button class="btn btn-outline-secondary float-right ml-1" (click)="diagnostico(evento)">
                   Diagnóstico

@@ -18,9 +18,18 @@ const routes = {
 @Injectable()
 export class QuestionarioService {
 
+  private _offline = false;
+
   constructor(
     private _httpClient: HttpClient,
     private _questionarioStorage: QuestionarioStorage) { }
+
+  public get offline() : boolean {
+    return this._offline;
+  }
+  public set offline(val: boolean) {
+    this._offline = val;
+  }
 
   obterPorPagina(pagina: number, itensPorPagina?: number) : Observable<Listagem<Questionario>> {
     return this._httpClient.get<Listagem<Questionario>>(routes.listar(pagina, itensPorPagina));
@@ -46,8 +55,8 @@ export class QuestionarioService {
     return this._httpClient.delete(routes.escpecifico(id)).toPromise();
   }
 
-  obterPerguntas(id: number, offline = false) : Observable<IPergunta[]> {
-    if (offline) {
+  obterPerguntas(id: number) : Observable<IPergunta[]> {
+    if (this.offline) {
       return new Observable<IPergunta[]>(observer => {
         observer.next(this._questionarioStorage.obterPerguntas(id));
         observer.complete();

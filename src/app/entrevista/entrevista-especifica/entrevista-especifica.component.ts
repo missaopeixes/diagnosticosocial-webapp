@@ -85,6 +85,21 @@ export class EntrevistaEspecificaComponent implements OnInit {
     return !!this._eventoService.obterHabilitadoOffline();
   }
 
+  private _configuraOffline(offline: boolean) {
+    this.offline = offline;
+    if (offline && !this._offlineHabilitado()) {
+      this._router.navigate(['/entrevistas/nova'], {
+        queryParams: {
+          offline: undefined
+        }
+      });
+    }
+
+    this._eventoService.offline = offline;
+    this._questionarioService.offline = offline;
+    this._entrevistaService.offline = offline;
+  }
+
   ngOnInit() {
     this.entrevista = new Entrevista();
     this.questionariosRespondidos = [];
@@ -92,15 +107,7 @@ export class EntrevistaEspecificaComponent implements OnInit {
 
     this._initForm();
     this._route.queryParamMap.subscribe(queryParams => {
-      this.offline = queryParams.get("offline") === 'true';
-
-      if (this.offline && !this._offlineHabilitado()) {
-        this._router.navigate(['/entrevistas/nova'], {
-          queryParams: {
-            offline: undefined
-          }
-        });
-      }
+      this._configuraOffline(queryParams.get('offline') === 'true');
 
       this._activatedRoute.params.subscribe((params: Params) => {
 
@@ -121,7 +128,7 @@ export class EntrevistaEspecificaComponent implements OnInit {
 
   obterEntrevista(id: number) {
     this.carregando = true;
-    this._entrevistaService.obterEspecifica(id, this.offline)
+    this._entrevistaService.obterEspecifica(id)
     .pipe(finalize(() =>
       this.carregando = false
     ))
@@ -134,7 +141,7 @@ export class EntrevistaEspecificaComponent implements OnInit {
       this.form.controls['evento'].setValue(evento);
 
       this.carregandoQuestionarios = true;
-      this._eventoService.obterQuestionarios(this.form.value.evento.id, this.offline)
+      this._eventoService.obterQuestionarios(this.form.value.evento.id)
       .pipe(finalize(() =>
         this.carregandoQuestionarios = false
       ))
@@ -155,7 +162,7 @@ export class EntrevistaEspecificaComponent implements OnInit {
 
   obterEventos(done?: Function) {
     this.carregando = true;
-    this._eventoService.obterTodos(this.offline)
+    this._eventoService.obterTodos()
     .pipe(finalize(() =>
       this.carregando = false
     ))
@@ -173,7 +180,7 @@ export class EntrevistaEspecificaComponent implements OnInit {
   eventoChanged() {
 
     this.carregandoQuestionarios = true;
-    this._eventoService.obterQuestionarios(this.form.value.evento.id, this.offline)
+    this._eventoService.obterQuestionarios(this.form.value.evento.id)
     .pipe(finalize(() =>
       this.carregandoQuestionarios = false
     ))
@@ -267,7 +274,7 @@ export class EntrevistaEspecificaComponent implements OnInit {
       this._modalService.open(ID_MODAL_RESPOSTAS);
 
       this.carregandoPerguntas = true;
-      this._questionarioService.obterPerguntas(this.questionarioSelecionado.id, this.offline)
+      this._questionarioService.obterPerguntas(this.questionarioSelecionado.id)
       .pipe(finalize(() =>
         this.carregandoPerguntas = false
       ))
@@ -285,10 +292,10 @@ export class EntrevistaEspecificaComponent implements OnInit {
 
     this.formQuestionario = new FormGroup({});
     this.carregandoPerguntas = true;
-    this._questionarioService.obterPerguntas(respondido.idQuestionario, this.offline)
+    this._questionarioService.obterPerguntas(respondido.idQuestionario)
     .subscribe((perguntas: Pergunta[]) => {
 
-      this._entrevistaService.obterRespostas(this.entrevista.id, respondido.id, this.offline)
+      this._entrevistaService.obterRespostas(this.entrevista.id, respondido.id)
       .pipe(finalize(() => this.carregandoPerguntas = false))
       .subscribe((respostas: Resposta[]) => {
 
@@ -368,7 +375,7 @@ export class EntrevistaEspecificaComponent implements OnInit {
       window.document.querySelectorAll('#form-entrevista')[0].scrollTo(0, 0);
 
       if (!!qRespondido.id) {
-        this._entrevistaService.atualizarQuestionario(this.entrevista.id, qRespondido, this.offline)
+        this._entrevistaService.atualizarQuestionario(this.entrevista.id, qRespondido)
         .pipe(finalize(() => this.salvandoQuestionario = false))
         .subscribe(() => {
           this._toastrService.success('Respostas atualizadas.', 'OK!');
@@ -382,7 +389,7 @@ export class EntrevistaEspecificaComponent implements OnInit {
         });
       }
       else {
-        this._entrevistaService.criarQuestionario(this.entrevista.id, qRespondido, this.offline)
+        this._entrevistaService.criarQuestionario(this.entrevista.id, qRespondido)
         .pipe(finalize(() => this.salvandoQuestionario = false))
         .subscribe((q: QuestionarioRespondido) => {
           // this._toastrService.success('Questionário respondido.', 'OK!');
@@ -412,7 +419,7 @@ export class EntrevistaEspecificaComponent implements OnInit {
       this.salvando = true;
       let obj = new Entrevista(this.entrevista);
       obj.nome = this.form.value['nome'];
-      this._entrevistaService.atualizar(this.entrevista.id, obj, this.offline)
+      this._entrevistaService.atualizar(this.entrevista.id, obj)
       .pipe(finalize(() =>
       this.salvando = false
       ))
@@ -469,7 +476,7 @@ export class EntrevistaEspecificaComponent implements OnInit {
 
   confirmaExclusaoQuestionarioRespondido() {
     this.excluindoQRespondido = true;
-    this._entrevistaService.excluirQuestionario(this.entrevista.id, this.questionarioEmEdicao, this.offline)
+    this._entrevistaService.excluirQuestionario(this.entrevista.id, this.questionarioEmEdicao)
     .pipe(finalize(() => this.excluindoQRespondido = false))
     .subscribe((q: QuestionarioRespondido) => {
       this._toastrService.success('Questionário excluido.', 'OK!');
@@ -504,7 +511,7 @@ export class EntrevistaEspecificaComponent implements OnInit {
     let obj = new Entrevista(this.entrevista);
     obj.concluida = true;
     this.salvando = true;
-    this._entrevistaService.atualizar(this.entrevista.id, obj, this.offline)
+    this._entrevistaService.atualizar(this.entrevista.id, obj)
     .pipe(finalize(() =>
     this.salvando = false
     ))
@@ -524,7 +531,7 @@ export class EntrevistaEspecificaComponent implements OnInit {
       this.entrevista.nome = this.form.value['nome'];
   
       this.salvando = true;
-      this._entrevistaService.criar(this.entrevista, this.offline)
+      this._entrevistaService.criar(this.entrevista)
       .pipe(finalize(() =>
         this.salvando = false
       ))

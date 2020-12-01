@@ -23,17 +23,26 @@ const routes = {
 @Injectable()
 export class EventoService {
 
+  private _offline = false;
+
   constructor(
     private _httpClient: HttpClient,
     private _questionarioService: QuestionarioService,
     private _eventoStorage: EventoStorage) {}
 
+  public get offline() : boolean {
+    return this._offline;
+  }
+  public set offline(val: boolean) {
+    this._offline = val;
+  }
+
   obterPorPagina(pagina: number, itensPorPagina?: number) : Observable<Listagem<Evento>> {
     return this._httpClient.get<Listagem<Evento>>(routes.listar(pagina, itensPorPagina));
   }
 
-  obterTodos(offline = false) : Observable<IEvento[]> {
-    if (offline) {
+  obterTodos() : Observable<IEvento[]> {
+    if (this.offline) {
       return new Observable<IEvento[]>(observer => {
         observer.next([this.obterHabilitadoOffline()]);
         observer.complete();
@@ -43,8 +52,8 @@ export class EventoService {
     return this._httpClient.get<IEvento[]>(routes.todos());
   }
 
-  obterQuestionarios(idEvento: number, offline = false) : Observable<IQuestionarioDaEntrevista[]> {
-    if (offline) {
+  obterQuestionarios(idEvento: number) : Observable<IQuestionarioDaEntrevista[]> {
+    if (this.offline) {
       return new Observable<IQuestionarioDaEntrevista[]>(observer => {
         observer.next(this._eventoStorage.obterQuestionarios());
         observer.complete();

@@ -35,10 +35,19 @@ const routes = {
 @Injectable()
 export class EntrevistaService {
 
+  private _offline = false;
+
   constructor(
     private _httpClient: HttpClient,
     private _entrevistaStorage: EntrevistaStorage
     ) { }
+
+  public get offline() : boolean {
+    return this._offline;
+  }
+  public set offline(val: boolean) {
+    this._offline = val;
+  }
 
   obterPorPagina(pagina: number,
     itensPorPagina?: number,
@@ -56,8 +65,8 @@ export class EntrevistaService {
     return this._httpClient.get<IEntrevista[]>(routes.listarTodos());
   }
 
-  obterEspecifica(id: number, offline = false) : Observable<IEntrevista> {
-    if (offline) {
+  obterEspecifica(id: number) : Observable<IEntrevista> {
+    if (this.offline) {
       return new Observable<IEntrevista>(observer => {
         observer.next(this._entrevistaStorage.obter(id));
         observer.complete();
@@ -67,8 +76,8 @@ export class EntrevistaService {
     return this._httpClient.get<IEntrevista>(routes.especifica(id));
   }
 
-  criar(entrevista: Entrevista, offline = false) : Observable<IEntrevista> {
-    if (offline) {
+  criar(entrevista: Entrevista) : Observable<IEntrevista> {
+    if (this.offline) {
       return new Observable<IEntrevista>(observer => {
         observer.next(this._entrevistaStorage.criar(entrevista));
         observer.complete();
@@ -78,8 +87,8 @@ export class EntrevistaService {
     return this._httpClient.post<IEntrevista>(routes.criar(), entrevista);
   }
 
-  atualizar(id: number, entrevista: Entrevista, offline = false) : Observable<Entrevista> {
-    if (offline) {
+  atualizar(id: number, entrevista: Entrevista) : Observable<Entrevista> {
+    if (this.offline) {
       return new Observable<Entrevista>(observer => {
         observer.next(this._entrevistaStorage.atualizar(id, entrevista));
         observer.complete();
@@ -93,8 +102,8 @@ export class EntrevistaService {
     return this._httpClient.delete(routes.especifica(id)).toPromise();
   }
 
-  obterRespostas(idEntrevista: number, idQuestionarioRespondido: number, offline = false) : Observable<Resposta[]> {
-    if (offline) {
+  obterRespostas(idEntrevista: number, idQuestionarioRespondido: number) : Observable<Resposta[]> {
+    if (this.offline) {
       return new Observable<Resposta[]>(observer => {
         observer.next(this._entrevistaStorage.obterRespostas(idEntrevista, idQuestionarioRespondido));
         observer.complete();
@@ -104,8 +113,8 @@ export class EntrevistaService {
     return this._httpClient.get<Resposta[]>(routes.respostas(idEntrevista, idQuestionarioRespondido))
   }
 
-  criarQuestionario(idEntrevista: number, questionario: QuestionarioRespondido, offline = false) : Observable<QuestionarioRespondido> {
-    if (offline) {
+  criarQuestionario(idEntrevista: number, questionario: QuestionarioRespondido) : Observable<QuestionarioRespondido> {
+    if (this.offline) {
       questionario.idEntrevistaOffline = idEntrevista;
       return new Observable<QuestionarioRespondido>(observer => {
         observer.next(this._entrevistaStorage.salvarQuestionarioRespondido(questionario));
@@ -116,8 +125,8 @@ export class EntrevistaService {
     return this._httpClient.post<QuestionarioRespondido>(routes.questionario(idEntrevista), questionario);
   }
 
-  atualizarQuestionario(idEntrevista: number, questionario: QuestionarioRespondido, offline = false) {
-    if (offline) {
+  atualizarQuestionario(idEntrevista: number, questionario: QuestionarioRespondido) {
+    if (this.offline) {
       questionario.idEntrevistaOffline = idEntrevista;
       return new Observable<QuestionarioRespondido>(observer => {
         observer.next(this._entrevistaStorage.atualizarQuestionarioRespondido(questionario));
@@ -128,8 +137,8 @@ export class EntrevistaService {
     return this._httpClient.put(routes.questionarioEspecico(idEntrevista, questionario.id), questionario);
   }
 
-  excluirQuestionario(idEntrevista: number, idQuestionarioRespondido: number, offline = false) : Observable<any> {
-    if (offline) {
+  excluirQuestionario(idEntrevista: number, idQuestionarioRespondido: number) : Observable<any> {
+    if (this.offline) {
       return new Observable<any>(observer => {
         observer.next(this._entrevistaStorage.excluirQuestionarioRespondido(idEntrevista, idQuestionarioRespondido));
         observer.complete();

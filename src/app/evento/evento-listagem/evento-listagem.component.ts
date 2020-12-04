@@ -26,7 +26,6 @@ export class EventoListagemComponent implements OnInit {
 
   public listagem: Listagem<Evento>;
   public carregando: boolean;
-  public modoMobile: boolean;
   public erroListagem: boolean;
   public salvando: boolean;
   public eventoExclusao: Evento;
@@ -45,7 +44,6 @@ export class EventoListagemComponent implements OnInit {
   ngOnInit() {
     this.listagem = new Listagem<Evento>();
     this.admSessao = JSON.parse(window.sessionStorage.getItem('adm'));
-    this.modoMobile = $(window).width() <= 720;
 
     this.offline = this._eventoService.obterHabilitadoOffline();
 

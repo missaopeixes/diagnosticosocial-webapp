@@ -2,9 +2,13 @@
   .card-evento{
     background: #f8f8f9;
     border-radius: 5px;
-    padding: 15px;
-    margin: 15px 0;
+    padding: 15px 0px;
+    margin: 10px;
     box-shadow: 1px 1px 1px 1px #e3e5e9;
+
+    .status-label{
+      display: contents;
+    }
   }
 
   .evento-mobile-opcoes{

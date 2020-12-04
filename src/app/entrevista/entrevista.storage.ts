@@ -21,8 +21,7 @@ export class EntrevistaStorage {
       return;
     }
 
-    entrevista.questionariosRespondidos =
-      this._store.questionariosRespondidos.filter(qr => qr.idEntrevistaOffline === id);
+    entrevista.questionariosRespondidos = this._store.questionariosRespondidos.filter(qr => qr.idEntrevistaOffline === id);
 
     return entrevista;
   }
@@ -48,6 +47,10 @@ export class EntrevistaStorage {
   }
 
   excluir(id: number) {
+    let e = this.obter(id);
+    e.questionariosRespondidos.forEach((qr) => {
+      this.excluirQuestionarioRespondido(id, qr.id);
+    });
     let lista = this._store.entrevistas;
     this._store.entrevistas = lista.filter(e => e.id !== id);
   }

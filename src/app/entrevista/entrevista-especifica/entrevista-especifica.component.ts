@@ -36,7 +36,6 @@ export class EntrevistaEspecificaComponent implements OnInit {
   public entrevista: Entrevista;
   public respostas: Listagem<Resposta>;
   public carregando: boolean;
-  public modoMobile: boolean;
   public carregandoPerguntas: boolean;
   public carregandoQuestionarios: boolean;
   public salvando: boolean;
@@ -104,7 +103,6 @@ export class EntrevistaEspecificaComponent implements OnInit {
   ngOnInit() {
     this.entrevista = new Entrevista();
     this.questionariosRespondidos = [];
-    this.modoMobile = $(window).width() <= 720;
 
     this._initForm();
     this._route.queryParamMap.subscribe(queryParams => {
@@ -288,8 +286,7 @@ export class EntrevistaEspecificaComponent implements OnInit {
 
   responderQuestionario() {
     if (!!this.form.value.questionario && this.form.value.questionario.id) {
-      
-      console.log('olá', this.form.value.questionario);
+
       if (
         this.form.value.questionario.quantidadePorEnquete === QtdQuestionarioPorEnquete.apenasUm &&
         _.find(this.questionariosRespondidos, {idQuestionario: this.form.value.questionario.id})) {
@@ -436,7 +433,7 @@ export class EntrevistaEspecificaComponent implements OnInit {
     }
 
     if (!!this.entrevista.id) {
-      salvarQuestionario(questionarioRespondido)
+      salvarQuestionario(questionarioRespondido);
     }
     else {
       this.criarEntrevista().then(() => salvarQuestionario(questionarioRespondido));
@@ -536,6 +533,7 @@ export class EntrevistaEspecificaComponent implements OnInit {
     if (possuiQuestionarioEmFalta || !this.entrevista.id) {
       return;
     }
+    window.document.querySelectorAll('#form-entrevista')[0].scrollTo(0, 0);
 
     let obj = new Entrevista(this.entrevista);
     obj.concluida = true;
@@ -589,7 +587,9 @@ export class EntrevistaEspecificaComponent implements OnInit {
   }
 
   voltar() {
-    this._router.navigate(['/entrevistas']);
+    this._modalService.close(ID_MODAL_CONCLUSAO).then(() => {
+      this._router.navigate(['/entrevistas']);
+    });
   }
 
   perguntaRespondida(id: number) {

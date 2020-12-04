@@ -87,7 +87,6 @@ export class EntrevistaService {
         observer.complete();
       });
     }
-
     return this._httpClient.post<IEntrevista>(routes.criar(), entrevista);
   }
 

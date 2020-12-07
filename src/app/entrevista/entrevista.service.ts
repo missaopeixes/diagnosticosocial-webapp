@@ -157,4 +157,8 @@ export class EntrevistaService {
 
     return this._httpClient.delete(routes.questionarioEspecico(idEntrevista, idQuestionarioRespondido));
   }
+
+  limparStorage(){
+    this._entrevistaStorage.limparStorage();
+  }
 }

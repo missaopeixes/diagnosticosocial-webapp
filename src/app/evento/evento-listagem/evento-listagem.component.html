@@ -47,7 +47,7 @@
               </div>
               <div class="row">
                 <div class="col-11 px-0">
-                  <div class="text-primary status-label" *ngIf="eventoHabilitadoOffiline(evento)" title="Habilitado para entrevistas offline">
+                  <div class="text-primary status-label" *ngIf="eventoHabilitadoOffline(evento)" title="Habilitado para entrevistas offline">
                     <i class="fas fa-check-circle"></i>
                     <small class="font-weight-bold">Offline</small>
                   </div>
@@ -69,7 +69,7 @@
             <div class="col-12">
               <div id="evento-mobile-opcoes-{{evento.id}}" class="row py-2 evento-mobile-opcoes" style="display: none;">
                 <div class="col-12 px-1">
-                  <button class="btn btn-secondary float-right ml-1" (click)="habilitarOffline(evento)">
+                  <button class="btn btn-secondary float-right ml-1" [disabled]="eventoHabilitadoOffline(evento)" (click)="habilitarOffline(evento)">
                     Offline
                   </button>
                   <button class="btn btn-secondary float-right ml-1" (click)="diagnostico(evento)">
@@ -108,7 +108,7 @@
                   <td>
                     {{evento.nome}}
                     <span
-                      *ngIf="eventoHabilitadoOffiline(evento)"
+                      *ngIf="eventoHabilitadoOffline(evento)"
                       class="ml-2 text-primary"
                       title="Habilitado para entrevistas offline">
                       <i class="fa fa-check-circle"></i> Offline
@@ -124,7 +124,7 @@
                     <button *ngIf="admSessao" class="btn btn-outline-secondary float-right ml-1" (click)="visualizar(evento)">
                       Visualizar
                     </button>
-                    <button class="btn btn-outline-secondary float-right ml-1" (click)="habilitarOffline(evento)">
+                    <button class="btn btn-outline-secondary float-right ml-1" [disabled]="eventoHabilitadoOffline(evento)" (click)="habilitarOffline(evento)">
                       Offline
                     </button>
                     <button class="btn btn-outline-secondary float-right ml-1" (click)="diagnostico(evento)">

@@ -120,36 +120,40 @@
           </div>
         </div>
         <!-- DESKTOP -->
-        <table class="row d-none d-lg-block table table-responsive-sm table-hover" id="ds-questionarios-respondidos-table">
-          <thead>
-            <tr>
-              <th class="text-secondary"><i class="fa fa-hashtag"></i></th>
-              <th>Questionário</th>
-              <th>Obs.</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngIf="carregando">
-              <td colspan="4" class="text-center">
-                <i>Carregando questionários respondidos...</i>
-              </td>
-            </tr>
-            <tr *ngFor="let qRespondido of questionariosRespondidos; let i = index;">
-              <td class="table-index text-secondary"><small>{{i+1}}</small></td>
-              <td><span title="{{nomeQuestionario(qRespondido.idQuestionario)}}">{{nomeQuestionario(qRespondido.idQuestionario) | truncate}}</span></td>
-              <td><span title="{{qRespondido.observacoes}}">{{(!!qRespondido.observacoes ? qRespondido.observacoes : '-') | truncate}}</span></td>
-              <td>
-                <button class="btn btn-outline-secondary float-right ml-1" (click)="removerQuestionarioRespondido(qRespondido.id)" data-toggle="tooltip" title="Remover">
-                  Excluir
-                </button>
-                <button class="btn btn-outline-secondary float-right ml-1" (click)="editarQuestionario(qRespondido)" title="Editar">
-                  Editar
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="row d-none d-lg-block">
+          <div class="col-12">
+            <table class="table table-responsive-sm table-hover" id="ds-questionarios-respondidos-table">
+              <thead>
+                <tr>
+                  <th class="text-secondary"><i class="fa fa-hashtag"></i></th>
+                  <th>Questionário</th>
+                  <th>Obs.</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngIf="carregando">
+                  <td colspan="4" class="text-center">
+                    <i>Carregando questionários respondidos...</i>
+                  </td>
+                </tr>
+                <tr *ngFor="let qRespondido of questionariosRespondidos; let i = index;">
+                  <td class="table-index text-secondary"><small>{{i+1}}</small></td>
+                  <td><span title="{{nomeQuestionario(qRespondido.idQuestionario)}}">{{nomeQuestionario(qRespondido.idQuestionario) | truncate}}</span></td>
+                  <td><span title="{{qRespondido.observacoes}}">{{(!!qRespondido.observacoes ? qRespondido.observacoes : '-') | truncate}}</span></td>
+                  <td>
+                    <button class="btn btn-outline-secondary float-right ml-1" (click)="removerQuestionarioRespondido(qRespondido.id)" data-toggle="tooltip" title="Remover">
+                      Excluir
+                    </button>
+                    <button class="btn btn-outline-secondary float-right ml-1" (click)="editarQuestionario(qRespondido)" title="Editar">
+                      Editar
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
 
         <div class="row mt-4">
           

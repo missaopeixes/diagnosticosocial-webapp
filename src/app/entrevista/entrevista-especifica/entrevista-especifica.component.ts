@@ -36,7 +36,6 @@ export class EntrevistaEspecificaComponent implements OnInit {
   public entrevista: Entrevista;
   public respostas: Listagem<Resposta>;
   public carregando: boolean;
-  public modoMobile: boolean;
   public carregandoPerguntas: boolean;
   public carregandoQuestionarios: boolean;
   public salvando: boolean;
@@ -52,7 +51,7 @@ export class EntrevistaEspecificaComponent implements OnInit {
   public salvandoQuestionario: boolean;
   public excluindoQRespondido: boolean;
   public nomeUsuario: string;
-  // public offline: boolean;
+  public offline: boolean;
 
   public questionarioSelecionado: QuestionarioDaEntrevista;
   public questionariosRespondidos: QuestionarioRespondido[];
@@ -66,7 +65,8 @@ export class EntrevistaEspecificaComponent implements OnInit {
     private _questionarioService: QuestionarioService,
     private _authenticationService: AuthenticationService,
     private _router: Router,
-    private _formBuilder: FormBuilder) {
+    private _formBuilder: FormBuilder,
+    private _route: ActivatedRoute) {
   }
 
   private _initForm() {
@@ -78,33 +78,51 @@ export class EntrevistaEspecificaComponent implements OnInit {
     this.formQuestionario = this._formBuilder.group({
       observacoes: ['']
     });
+    this.questionariosRespondidos = [];
+  }
+
+  private _offlineHabilitado() {
+    return !!this._eventoService.obterHabilitadoOffline();
+  }
+
+  private _configuraOffline(offline: boolean) {
+    this.offline = offline;
+    if (offline && !this._offlineHabilitado()) {
+      this._router.navigate(['/entrevistas/nova'], {
+        queryParams: {
+          offline: undefined
+        }
+      });
+    }
+
+    this._eventoService.offline = offline;
+    this._questionarioService.offline = offline;
+    this._entrevistaService.offline = offline;
   }
 
   ngOnInit() {
     this.entrevista = new Entrevista();
     this.questionariosRespondidos = [];
 
-    if($(window).width() <= 720){
-      this.modoMobile = true;
-    }
-    else{
-      this.modoMobile = false;
-    }
-
     this._initForm();
-    this._activatedRoute.params.subscribe((params: Params) => {
-      this.obterEventos(() => {
-        const id = params['id'] ? parseInt(params['id']) : undefined;
-        if (id) {
-          this.obterEntrevista(id);
-        }
-        else if (this.eventos.length === 1) {
-          this.form.controls['evento'].setValue(this.eventos[0]);
-          this.eventoChanged();
-        }
+    this._route.queryParamMap.subscribe(queryParams => {
+      this._configuraOffline(queryParams.get('offline') === 'true');
+
+      this._activatedRoute.params.subscribe((params: Params) => {
+
+        this.obterEventos(() => {
+          const id = params['id'] ? parseInt(params['id']) : undefined;
+          if (id) {
+            this.obterEntrevista(id);
+          }
+          else if (this.eventos.length === 1) {
+            this.form.controls['evento'].setValue(this.eventos[0]);
+            this.eventoChanged();
+          }
+        });
       });
+      this.nomeUsuario = this._authenticationService.credentials.nome.split(' ')[0];
     });
-    this.nomeUsuario = this._authenticationService.credentials.nome.split(' ')[0];
   }
 
   obterEntrevista(id: number) {
@@ -267,13 +285,15 @@ export class EntrevistaEspecificaComponent implements OnInit {
   }
 
   responderQuestionario() {
-    this.questionarioSelecionado = this.form.value.questionario;
-    if (!!this.questionarioSelecionado && this.questionarioSelecionado.id) {
+    if (!!this.form.value.questionario && this.form.value.questionario.id) {
 
-      if (this.questionarioSelecionado.quantidadePorEnquete === QtdQuestionarioPorEnquete.apenasUm &&
-      _.find(this.questionariosRespondidos, {idQuestionario: this.questionarioSelecionado.id})) {
-        return this._toastrService.warning('Deve ser respondido apenas uma vez por entrevista!', 'Questionário já respondido');
+      if (
+        this.form.value.questionario.quantidadePorEnquete === QtdQuestionarioPorEnquete.apenasUm &&
+        _.find(this.questionariosRespondidos, {idQuestionario: this.form.value.questionario.id})) {
+          return this._toastrService.warning('Deve ser respondido apenas uma vez por entrevista!', 'Questionário já respondido');
       }
+
+      this.questionarioSelecionado = this.form.value.questionario;
 
       this.questionarioSelecionado.perguntas = [];
       this._modalService.open(ID_MODAL_RESPOSTAS);
@@ -413,7 +433,7 @@ export class EntrevistaEspecificaComponent implements OnInit {
     }
 
     if (!!this.entrevista.id) {
-      salvarQuestionario(questionarioRespondido)
+      salvarQuestionario(questionarioRespondido);
     }
     else {
       this.criarEntrevista().then(() => salvarQuestionario(questionarioRespondido));
@@ -513,6 +533,7 @@ export class EntrevistaEspecificaComponent implements OnInit {
     if (possuiQuestionarioEmFalta || !this.entrevista.id) {
       return;
     }
+    window.document.querySelectorAll('#form-entrevista')[0].scrollTo(0, 0);
 
     let obj = new Entrevista(this.entrevista);
     obj.concluida = true;
@@ -534,6 +555,7 @@ export class EntrevistaEspecificaComponent implements OnInit {
     return new Promise((res, rej) => {
       this.entrevista = new Entrevista();
       this.entrevista.idEvento = this.form.value['evento'].id;
+      this.entrevista.evento = this.form.value['evento'].nome;
       this.entrevista.nome = this.form.value['nome'];
   
       this.salvando = true;
@@ -564,13 +586,20 @@ export class EntrevistaEspecificaComponent implements OnInit {
     });
   }
 
+  voltar() {
+    this._modalService.close(ID_MODAL_CONCLUSAO).then(() => {
+      this._router.navigate(['/entrevistas']);
+    });
+  }
+
   perguntaRespondida(id: number) {
     const pergunta = this.questionarioSelecionado.perguntas.find(p => p.id === id);
     if (!pergunta) {
       return false;
     }
 
-    return this.formQuestionario.controls[`resposta-pergunta-${pergunta.id}`].valid;
+    const ctrl = this.formQuestionario.controls[`resposta-pergunta-${pergunta.id}`];
+    return ctrl ? ctrl.valid : false;
   }
 
   abrirOpcoes(id: number){
@@ -582,8 +611,4 @@ export class EntrevistaEspecificaComponent implements OnInit {
       $('#questionario-respondido-mobile-opcoes-'+id).slideDown(100);
     }
   }
-
-  // toggleOffline() {
-  //   this.offline = !this.offline;
-  // }
 }

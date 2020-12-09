@@ -14,6 +14,7 @@ import { EventoListagemComponent } from './evento-listagem/evento-listagem.compo
 import { EventoEspecificoComponent } from './evento-especifico/evento-especifico.component';
 import { EventoDiagnosticoComponent } from './evento-diagnostico/evento-diagnostico.component';
 import { EventoService } from './evento.service';
+import { EventoStorage } from './evento.storage';
 import { EventoRoutingModule } from './evento-routing.module';
 import { EventoEspecificoHelper } from './evento-especifico/evento-especifico.helper';
 import { NgxChartsModule } from "@swimlane/ngx-charts";
@@ -48,6 +49,7 @@ import { EventoRespostasHelper } from './evento-respostas/evento-respostas.helpe
     NgbActiveModal,
     NgbTypeahead,
     QuestionarioService,
+    EventoStorage,
     EventoService,
     EventoEspecificoHelper,
     EventoRespostasHelper

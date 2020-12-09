@@ -10,18 +10,15 @@
     border-radius: 2px 5px 5px 2px;
     border-left: 3px solid $gray-400;
   }
-  &.concluida {
-    span {
-      border-color: $primary;
-      color: $primary;
-      font-weight: 600;
-      font-style: normal;
-    }
+  &.concluida span {
+    border-color: $primary;
+    color: $primary;
+    font-weight: 600;
+    font-style: normal;
   }
   &.andamento {
     span {
-      border-color: gray;
-      color: gray;
+      border-color: #ced4da;
       font-style: italic;
     }
   }

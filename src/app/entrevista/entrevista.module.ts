@@ -17,6 +17,7 @@ import { PerguntaModule } from '@app/pergunta/pergunta.module';
 import { PerguntaService } from '@app/pergunta/pergunta.service';
 import { UsuarioService } from '@app/usuario/usuario.service';
 import { TruncatePipe } from '@app/shared/truncate-pipe';
+import { EntrevistaStorage } from './entrevista.storage';
 
 @NgModule({
   imports: [
@@ -40,6 +41,7 @@ import { TruncatePipe } from '@app/shared/truncate-pipe';
     NgbModal,
     NgbActiveModal,
     NgbTypeahead,
+    EntrevistaStorage,
     EntrevistaService,
     PerguntaService,
     UsuarioService

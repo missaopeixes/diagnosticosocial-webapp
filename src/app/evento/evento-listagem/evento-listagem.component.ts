@@ -26,12 +26,12 @@ export class EventoListagemComponent implements OnInit {
 
   public listagem: Listagem<Evento>;
   public carregando: boolean;
-  public modoMobile: boolean;
   public erroListagem: boolean;
   public salvando: boolean;
   public eventoExclusao: Evento;
   public gerandoMock: boolean;
   public admSessao: boolean;
+  public offline: Evento | null;
 
   constructor(
     private _eventoService: EventoService,
@@ -45,12 +45,7 @@ export class EventoListagemComponent implements OnInit {
     this.listagem = new Listagem<Evento>();
     this.admSessao = JSON.parse(window.sessionStorage.getItem('adm'));
 
-    if($(window).width() <= 720){
-      this.modoMobile = true;
-    }
-    else{
-      this.modoMobile = false;
-    }
+    this.offline = this._eventoService.obterHabilitadoOffline();
 
     this.obterListagem();
   }
@@ -157,5 +152,26 @@ export class EventoListagemComponent implements OnInit {
     else{
       $('#evento-mobile-opcoes-'+id).slideDown(100);
     }
+  }
+
+  eventoHabilitadoOffline(evento: Evento) {
+    const e = this._eventoService.obterHabilitadoOffline()
+    return e ? e.id === evento.id : false;
+  }
+
+  habilitarOffline(evento: Evento) {
+    this.carregando = true;
+    this._eventoService.habilitarOffline(evento)
+    .then(() => {
+      this.carregando = false;
+      this.offline = this._eventoService.obterHabilitadoOffline();
+
+      this._toastrService.success('Os dados deste evento foram baixados com sucesso! Agora você pode realizar as entrevistas sem precisar de internet.', 'Ok!');
+      this.carregando = false;
+    })
+    .catch((err) => {
+      this._toastrService.error('Ocorreu um erro ao buscar dados deste evento.', 'Ops!');
+      this.carregando = false;
+    });
   }
 }

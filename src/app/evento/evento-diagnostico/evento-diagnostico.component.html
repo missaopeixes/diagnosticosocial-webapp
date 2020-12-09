@@ -6,6 +6,13 @@
     </div>
     <div class="loader-bar" [ngClass]="{'loading': carregandoEvento}"></div>
   </div>
+  <div class="row mb-3">
+    <div class="col-md-12">
+      <button class="btn btn-outline-secondary btn-sm" routerLink="/eventos">
+        Voltar
+      </button>
+    </div>
+  </div>
 
   <div class="row mb-2">
     <div class="col-md-12" [hidden]="!carregando">

@@ -6,10 +6,105 @@
         <h3 *ngIf="!administrador">Suas entrevistas</h3>
       </div>
       <div class="col-md-6">
+        <button
+          *ngIf="offlineHabilitado()"
+          class="btn btn-outline-secondary float-right btn-with-icon ml-2"
+          (click)="novaOffline()">
+          Nova (offline)
+        </button>
         <button class="btn btn-primary float-right btn-with-icon"
-          (click)="novo()">
+          (click)="nova()">
           Nova
         </button>
+      </div>
+    </div>
+
+    <div class="row my-5" *ngIf="listagemOffline.length">
+      <div class="col-12">
+        <div id="ds-entrevista-list">
+          <div class="row mb-3 mx-3">
+            <!-- Desktop -->
+            <div class="col-12" class="d-none d-lg-block">
+              <button class="btn btn-outline-primary mr-3" (click)="sincronizar()">
+                <i class="fas fa-sync"></i> &nbsp;Sincronizar
+              </button>
+              <span class="text-warning">
+                <i class="fas fa-exclamation-triangle"></i>
+                &nbsp;{{listagemOffline.length}} etrevistas não sincronizadas. <span *ngIf="entrevistasOfflineEmAndamento() > 0" class="text-danger">({{entrevistasOfflineEmAndamento()}} em andamento)</span>
+              </span>
+            </div>
+            <!-- Mobile -->
+            <div class="col-12 d-lg-none">
+              <p class="text-dark text-center">
+                <i class="fas fa-exclamation-triangle"></i>
+                &nbsp;{{listagemOffline.length}} etrevistas não sincronizadas. <span *ngIf="entrevistasOfflineEmAndamento() > 0" class="text-danger">({{entrevistasOfflineEmAndamento()}} em andamento)</span>
+              </p>
+              <button class="btn btn-outline-primary col-12" (click)="sincronizar()">
+                <i class="fas fa-sync"></i> &nbsp;Sincronizar
+              </button>
+            </div>
+          </div>
+          <div class="row card-entrevista" *ngFor="let entrevista of listagemOffline; let i = index;">
+            <div class="col-12">
+              <div class="row mb-2">
+                <div class="col-12 pr-0">
+                  <span class="offline-flag"><i class="fas fa-exclamation-circle"></i> Não sincronizada</span>
+
+                  <button
+                    class="btn btn-link pb-0 float-right"
+                    id="entrevista-mobile-dropdown"
+                    type="button"
+                    (click)="abrirOpcoes(entrevista.id)">
+                    <i class="fas fa-ellipsis-h"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-12 pr-0">
+                  <div class="text-primary status-label" *ngIf="entrevista.concluida">
+                    <i class="fas fa-check-circle"></i>
+                    <small class="font-weight-bold">Concluída</small>
+                  </div>
+                  <div class="text-warning status-label" *ngIf="!entrevista.concluida">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <small class="font-weight-bold">Em andamento</small>
+                  </div>
+                  <small class="text-secondary">por {{entrevista.usuario | truncate:[16]}}</small>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-12">
+                  <h4>{{entrevista.nome | truncate:[20]}}</h4>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-12">
+                  <span>
+                    {{entrevista.evento | truncate:[30]}}<br>{{formatDate(entrevista.createdAt)}}
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div id="entrevista-mobile-opcoes-{{entrevista.id}}" class="row py-2 entrevista-mobile-opcoes" style="display: none;">
+                <div class="col-12 px-1 d-flex justify-content-end">
+                  <button class="btn btn-secondary float-right ml-1" (click)="visualizar(entrevista, true)">
+                    Visualizar
+                  </button>
+                  <button class="btn btn-link float-right ml-1" (click)="confirmarExclusao(entrevista, true)">
+                    Excluir
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mb-2" *ngIf="listagemOffline.length">
+      <div class="col-12">
+        <h5>Entrevistas sincronizadas</h5>
       </div>
     </div>
 
@@ -85,7 +180,7 @@
     <div class="row">
       <div class="col-md-12 mt-auto">
         <!-- MODO MOBILE -->
-        <div id="ds-entrevista-list" *ngIf="modoMobile">
+        <div id="ds-entrevista-list" class="d-lg-none">
           <div class="row">
             <div class="col-12">
               <a class="float-right text-secondary mr-1" (click)="obterListagem(true)"><i class="fa fa-sync-alt"></i></a>
@@ -129,70 +224,74 @@
                 </div>
               </div>
             </div>
-
-            <div id="entrevista-mobile-opcoes-{{entrevista.id}}" class="row py-2 entrevista-mobile-opcoes" style="display: none;">
-              <div class="col-12 px-1 d-flex justify-content-end">
-                <button class="btn btn-secondary float-right ml-1" (click)="visualizar(entrevista)">
-                  Visualizar
-                </button>
-                <button class="btn btn-link float-right ml-1" (click)="confirmarExclusao(entrevista)">
-                  Excluir
-                </button>
+            <div class="col-12">
+              <div id="entrevista-mobile-opcoes-{{entrevista.id}}" class="row py-2 entrevista-mobile-opcoes" style="display: none;">
+                <div class="col-12 px-1 d-flex justify-content-end">
+                  <button class="btn btn-secondary float-right ml-1" (click)="visualizar(entrevista)">
+                    Visualizar
+                  </button>
+                  <button class="btn btn-link float-right ml-1" (click)="confirmarExclusao(entrevista)">
+                    Excluir
+                  </button>
+                </div>
               </div>
             </div>
           </div>
 
-          <div class="row ml-1 mb-1">
-            <div class="col-12"></div>
+          <div class="row my-4">
+            <div class="col-12 text-center">
               <small class="text-secondary">Exibindo {{listagem.conteudo.length}} de {{listagem.total}}</small>
+            </div>
           </div>
         </div>
         <!-- MODO DESKTOP -->
-        <table *ngIf="!modoMobile" class="table table-responsive-sm table-hover" id="ds-entrevista-table">
-          <thead>
-            <tr>
-              <th class="text-secondary"><i class="fa fa-hashtag"></i></th>
-              <th>Evento</th>
-              <th>Entrevistador</th>
-              <th>Entrevistado</th>
-              <th>Status</th>
-              <th>Criada em</th>
-              <th><a class="float-right text-secondary mr-1" (click)="obterListagem(true)"><i class="fa fa-sync-alt"></i></a></th>
-            </tr>
-          </thead>
-          <tbody *ngIf="carregando">
-            <tr>
-              <td colspan="7" class="text-center">
-                <i>Carregando entrevistas...</i>
-              </td>
-            </tr>
-          </tbody>
-          <tbody>
-            <tr *ngFor="let entrevista of listagem.conteudo; let i = index;">
-              <td class="table-index text-secondary"><small>{{i+1}}</small></td>
-              <td title="{{entrevista.evento}}">{{entrevista.evento | truncate:[10]}}</td>
-              <td title="{{entrevista.usuario}}">{{entrevista.usuario | truncate:[20]}}</td>
-              <td title="{{entrevista.nome}}">{{entrevista.nome | truncate:[30]}}</td>
-              <td>{{entrevista.concluida ? 'Concluída' : 'Em andamento'}}</td>
-              <td>{{formatDate(entrevista.createdAt)}}</td>
-              <td>
-                <button class="btn btn-outline-secondary float-right ml-1" (click)="confirmarExclusao(entrevista)">
-                  Excluir
-                </button>
-                <button class="btn btn-outline-secondary float-right ml-1" (click)="visualizar(entrevista)">
-                  Visualizar
-                </button>
-              </td>
-            </tr>
-          </tbody>
-          <tfoot>
-            <tr>
-              <td colspan="6">
-                <small class="text-secondary">Exibindo {{listagem.conteudo.length}} de {{listagem.total}}</small>
-              </td>
-            </tr>
-          </tfoot>
-        </table>
+        <div class="d-none d-lg-block">
+          <table class="table table-responsive-sm table-hover" id="ds-entrevista-table">
+            <thead>
+              <tr>
+                <th class="text-secondary"><i class="fa fa-hashtag"></i></th>
+                <th>Evento</th>
+                <th>Entrevistador</th>
+                <th>Entrevistado</th>
+                <th>Status</th>
+                <th>Criada em</th>
+                <th><a class="float-right text-secondary mr-1" (click)="obterListagem(true)"><i class="fa fa-sync-alt"></i></a></th>
+              </tr>
+            </thead>
+            <tbody *ngIf="carregando">
+              <tr>
+                <td colspan="7" class="text-center">
+                  <i>Carregando entrevistas...</i>
+                </td>
+              </tr>
+            </tbody>
+            <tbody>
+              <tr *ngFor="let entrevista of listagem.conteudo; let i = index;">
+                <td class="table-index text-secondary"><small>{{i+1}}</small></td>
+                <td title="{{entrevista.evento}}">{{entrevista.evento | truncate:[10]}}</td>
+                <td title="{{entrevista.usuario}}">{{entrevista.usuario | truncate:[20]}}</td>
+                <td title="{{entrevista.nome}}">{{entrevista.nome | truncate:[30]}}</td>
+                <td>{{entrevista.concluida ? 'Concluída' : 'Em andamento'}}</td>
+                <td>{{formatDate(entrevista.createdAt)}}</td>
+                <td>
+                  <button class="btn btn-outline-secondary float-right ml-1" (click)="confirmarExclusao(entrevista)">
+                    Excluir
+                  </button>
+                  <button class="btn btn-outline-secondary float-right ml-1" (click)="visualizar(entrevista)">
+                    Visualizar
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="6">
+                  <small class="text-secondary">Exibindo {{listagem.conteudo.length}} de {{listagem.total}}</small>
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
       </div>
     </div>
     <div class="row wrap-btn-more-data" [hidden]="listagem.conteudo.length >= listagem.total">
@@ -216,7 +315,8 @@
 
           <div class="loader-bar" [ngClass]="{'loading': salvando}"></div>
           <div class="modal-footer">
-            <button class="btn btn-primary" (click)="excluir()">Sim, excluir</button>
+            <button *ngIf="!entrevistaExclusaoOffline" class="btn btn-primary" (click)="excluir()">Sim, excluir</button>
+            <button *ngIf="entrevistaExclusaoOffline" class="btn btn-primary" (click)="excluirOffline()">Sim, excluir</button>
             <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" (click)="entrevistaExclusao = null">Cancelar</button>
           </div>
         </div>

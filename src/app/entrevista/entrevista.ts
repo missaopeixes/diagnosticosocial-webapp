@@ -11,6 +11,7 @@ export class QuestionarioRespondido {
   idQuestionario: number;
   respostas: Resposta[];
   observacoes?: string;
+  idEntrevistaOffline?: number;
 
   constructor(obj?: IQuestionarioRespondido) {
     if (!!obj) {
@@ -30,6 +31,10 @@ export interface IEntrevista {
   concluida?: boolean;
   offline?: boolean;
 
+  usuario?: string;
+  evento?: string;
+  questionariosRespondidos?: QuestionarioRespondido[];
+
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -44,6 +49,10 @@ export class Entrevista implements IEntrevista {
   observacoes: string;
   concluida: boolean;
   offline: boolean;
+
+  usuario?: string;
+  evento?: string;
+  questionariosRespondidos?: QuestionarioRespondido[];
 
   createdAt?: Date;
   updatedAt?: Date;

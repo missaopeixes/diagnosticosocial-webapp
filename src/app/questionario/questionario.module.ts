@@ -15,6 +15,7 @@ import { PerguntaModule } from '@app/pergunta/pergunta.module';
 import { QuestionarioRoutingModule } from './questionario-routing.module';
 import { QuestionarioService } from './questionario.service';
 import { PerguntaService } from '@app/pergunta/pergunta.service';
+import { QuestionarioStorage } from './questionario.storage';
 
 @NgModule({
   imports: [
@@ -38,6 +39,7 @@ import { PerguntaService } from '@app/pergunta/pergunta.service';
     NgbModal,
     NgbActiveModal,
     NgbTypeahead,
+    QuestionarioStorage,
     QuestionarioService,
     PerguntaService
   ]

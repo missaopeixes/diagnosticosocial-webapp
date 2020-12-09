@@ -1,5 +1,5 @@
 <div class="container">
-    <div class="row">
+    <div class="row mb-3">
       <div class="col-md-6">
         <h3>
           <span [hidden]="!entrevista.id">Entrevista com <u class="d-none d-md-inline-block">{{entrevista.nome}}</u></span>
@@ -8,6 +8,13 @@
         <h3 class="d-md-none">
           <u>{{entrevista.nome}}</u>
         </h3>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col-md-12">
+        <button class="btn btn-outline-secondary btn-sm" routerLink="/entrevistas">
+          Voltar
+        </button>
       </div>
     </div>
 
@@ -84,7 +91,7 @@
       <div class="col-lg-7 col-md-12">
         <h6>Questionários respondidos:</h6>
         <!-- MODO MOBILE -->
-        <div id="ds-questionario-respondido-list" *ngIf="modoMobile">
+        <div id="ds-questionario-respondido-list" class="d-lg-none">
           <div class="row card-questionario-respondido" *ngFor="let qRespondido of questionariosRespondidos; let i = index;">
             <div class="col-12">
               <div class="row">
@@ -120,36 +127,40 @@
           </div>
         </div>
         <!-- DESKTOP -->
-        <table *ngIf="!modoMobile" class="table table-responsive-sm table-hover" id="ds-questionarios-respondidos-table">
-          <thead>
-            <tr>
-              <th class="text-secondary"><i class="fa fa-hashtag"></i></th>
-              <th>Questionário</th>
-              <th>Obs.</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngIf="carregando">
-              <td colspan="4" class="text-center">
-                <i>Carregando questionários respondidos...</i>
-              </td>
-            </tr>
-            <tr *ngFor="let qRespondido of questionariosRespondidos; let i = index;">
-              <td class="table-index text-secondary"><small>{{i+1}}</small></td>
-              <td><span title="{{nomeQuestionario(qRespondido.idQuestionario)}}">{{nomeQuestionario(qRespondido.idQuestionario) | truncate}}</span></td>
-              <td><span title="{{qRespondido.observacoes}}">{{(!!qRespondido.observacoes ? qRespondido.observacoes : '-') | truncate}}</span></td>
-              <td>
-                <button class="btn btn-outline-secondary float-right ml-1" (click)="removerQuestionarioRespondido(qRespondido.id)" data-toggle="tooltip" title="Remover">
-                  Excluir
-                </button>
-                <button class="btn btn-outline-secondary float-right ml-1" (click)="editarQuestionario(qRespondido)" title="Editar">
-                  Editar
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="row d-none d-lg-block">
+          <div class="col-12">
+            <table class="table table-responsive-sm table-hover" id="ds-questionarios-respondidos-table">
+              <thead>
+                <tr>
+                  <th class="text-secondary"><i class="fa fa-hashtag"></i></th>
+                  <th>Questionário</th>
+                  <th>Obs.</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngIf="carregando">
+                  <td colspan="4" class="text-center">
+                    <i>Carregando questionários respondidos...</i>
+                  </td>
+                </tr>
+                <tr *ngFor="let qRespondido of questionariosRespondidos; let i = index;">
+                  <td class="table-index text-secondary"><small>{{i+1}}</small></td>
+                  <td><span title="{{nomeQuestionario(qRespondido.idQuestionario)}}">{{nomeQuestionario(qRespondido.idQuestionario) | truncate}}</span></td>
+                  <td><span title="{{qRespondido.observacoes}}">{{(!!qRespondido.observacoes ? qRespondido.observacoes : '-') | truncate}}</span></td>
+                  <td>
+                    <button class="btn btn-outline-secondary float-right ml-1" (click)="removerQuestionarioRespondido(qRespondido.id)" data-toggle="tooltip" title="Remover">
+                      Excluir
+                    </button>
+                    <button class="btn btn-outline-secondary float-right ml-1" (click)="editarQuestionario(qRespondido)" title="Editar">
+                      Editar
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
 
         <div class="row mt-4">
           
@@ -281,8 +292,13 @@
           <p>Tem certeza que deseja cancelar este questionário?</p>
           <p><b>As respostas realizadas serão perdidas.</b></p>
         </div>
-
-        <div class="modal-footer">
+        <div class="modal-footer" class="d-lg-none"><!-- Mobile -->
+          <div class="row pb-3 justify-content-center">
+            <button type="button" class="btn btn-primary btn-sm mx-1" (click)="confirmarCancelamentoQuestionario()">Sim, cancelar</button>
+            <button type="button" class="btn btn-outline-secondary btn-sm mx-1" data-dismiss="modal" (click)="cancelarCancelamentoQuestionario()">Não, voltar ao questionário</button>
+          </div>
+        </div>
+        <div class="modal-footer d-none d-lg-block"><!-- Desktop -->
           <button class="btn btn-primary" (click)="confirmarCancelamentoQuestionario()">Sim, cancelar</button>
           <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" (click)="cancelarCancelamentoQuestionario()">Não, voltar ao questionário</button>
         </div>

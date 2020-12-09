@@ -10,8 +10,10 @@ export class EntrevistaStorage {
     private _authService: AuthenticationService,
     private _store: Storage) {}
 
-  private _autoDecrement(list: Object[]) {
-    return (list.length + 1) * -1;
+  private _autoDecrement(list: Entrevista[] | QuestionarioRespondido[]): number {
+    const lastItem = list.slice(-1)[0];
+    const id = lastItem.id - 1;
+    return id;
   }
 
   obter(id: number) : IEntrevista | undefined {
@@ -21,8 +23,7 @@ export class EntrevistaStorage {
       return;
     }
 
-    entrevista.questionariosRespondidos =
-      this._store.questionariosRespondidos.filter(qr => qr.idEntrevistaOffline === id);
+    entrevista.questionariosRespondidos = this._store.questionariosRespondidos.filter(qr => qr.idEntrevistaOffline === id);
 
     return entrevista;
   }
@@ -39,7 +40,8 @@ export class EntrevistaStorage {
     obj.offline = true;
     obj.idUsuario = this._authService.credentials.id;
     obj.usuario = this._authService.credentials.nome;
-    obj.id = this._autoDecrement(entrevistas);
+
+    obj.id = entrevistas.length <= 0 ? -1 : this._autoDecrement(entrevistas);
 
     entrevistas.push(obj);
     this._store.entrevistas = entrevistas;
@@ -48,6 +50,10 @@ export class EntrevistaStorage {
   }
 
   excluir(id: number) {
+    let e = this.obter(id);
+    e.questionariosRespondidos.forEach((qr) => {
+      this.excluirQuestionarioRespondido(id, qr.id);
+    });
     let lista = this._store.entrevistas;
     this._store.entrevistas = lista.filter(e => e.id !== id);
   }
@@ -68,7 +74,7 @@ export class EntrevistaStorage {
   salvarQuestionarioRespondido(obj: QuestionarioRespondido) : QuestionarioRespondido {
     let lista = this._store.questionariosRespondidos;
 
-    obj.id = this._autoDecrement(lista);
+    obj.id = lista.length <= 0 ? -1 : this._autoDecrement(lista);
 
     lista.push(obj);
     this._store.questionariosRespondidos = lista;
@@ -96,5 +102,9 @@ export class EntrevistaStorage {
   excluirQuestionarioRespondido(id: number, idQuestionarioRespondido: number) {
     let lista = this._store.questionariosRespondidos;
     this._store.questionariosRespondidos = lista.filter(qr => !(qr.idEntrevistaOffline === id && qr.id === idQuestionarioRespondido));
+  }
+
+  limparStorage() {
+    this._store.limpar();
   }
 }

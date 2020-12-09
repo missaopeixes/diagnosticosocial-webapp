@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Listagem } from '@app/shared/listagem';
-import { Entrevista } from '@app/entrevista/entrevista';
+import { Entrevista, IEntrevista, QuestionarioRespondido } from '@app/entrevista/entrevista';
 import { ToastrService } from 'ngx-toastr';
 import { ModalService } from '@app/shared/modal/modal.service';
 import { EntrevistaService } from '@app/entrevista/entrevista.service';
@@ -11,6 +11,8 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 import * as moment from 'moment';
 import { AuthenticationService, Credentials } from '@app/core/authentication/authentication.service';
 import { EventoService } from '@app/evento/evento.service';
+import { Observable } from 'rxjs';
+import { EntrevistaStorage } from '../entrevista.storage';
 
 declare var $: any;
 
@@ -27,7 +29,6 @@ export class EntrevistaListagemComponent implements OnInit {
   public listagem: Listagem<Entrevista>;
   public listagemOffline: Entrevista[] = [];
   public carregando: boolean;
-  public modoMobile: boolean;
   public erroListagem: boolean;
   public salvando: boolean;
   public entrevistaExclusao: Entrevista;
@@ -35,6 +36,7 @@ export class EntrevistaListagemComponent implements OnInit {
   public exibeFiltro: boolean;
   public entrevistaExclusaoOffline: boolean;
   public credenciais: Credentials;
+  public progressEntrevistas: number;
 
   constructor(
     private _entrevistaService: EntrevistaService,
@@ -65,17 +67,9 @@ export class EntrevistaListagemComponent implements OnInit {
       nome: [''],
       status: ['']
     });
-    
-    if($(window).width() <= 720){
-      this.modoMobile = true;
-      this.exibeFiltro = false;
-      this.formFiltro.controls['status'].setValue('3');
-    }
-    else{
-      this.formFiltro.controls['status'].setValue('1');
-      this.modoMobile = false;
-      this.exibeFiltro = true;
-    }
+    this.formFiltro.controls['status'].setValue('3');
+
+    this.exibeFiltro = $(window).width() >= 720;
 
     this.obterListagemOffline();
     this.obterListagem();
@@ -119,32 +113,35 @@ export class EntrevistaListagemComponent implements OnInit {
 
   excluirOffline() {
     this._entrevistaService.offline = true;
+    this.salvando = true;
     this._entrevistaService.excluir(this.entrevistaExclusao.id)
     .then(() => {
-      _.remove(this.listagemOffline, (obj) => obj.id === this.entrevistaExclusao.id)
-      this._entrevistaService.offline = false;
+      _.remove(this.listagemOffline, (obj) => obj.id === this.entrevistaExclusao.id);
       this._modalService.close(ID_MODAL_EXCLUSAO);
-    })
-    .catch(() => {
-      this._toastrService.error('Ocorreu um erro ao excluir entrevista não sincronizada.', 'Ops!');
+      this._toastrService.success('Entrevista excluida com sucesso.', 'Ok');
       this._entrevistaService.offline = false;
+      this.salvando = false;
+    })
+    .catch((err) => {
+      this._modalService.close(ID_MODAL_EXCLUSAO);
+      this._toastrService.error('Ocorreu um erro ao excluir entrevista não sincronizada.', 'Ops!');
     });
   }
 
   excluir() {
+    this._entrevistaService.offline = false;
     this.salvando = true;
     this._entrevistaService.excluir(this.entrevistaExclusao.id)
     .then(() => {
-      _.remove(this.listagem.conteudo, (obj) => {
-        return obj.id === this.entrevistaExclusao.id;
-      })
+      _.remove(this.listagem.conteudo, (obj) => obj.id === this.entrevistaExclusao.id);
       this.listagem.total--;
       this._toastrService.success('Entrevista excluida com sucesso.', 'Ok');
       this.salvando = false;
       this._modalService.close(ID_MODAL_EXCLUSAO);
     })
-    .catch(({error}) => {
+    .catch((error) => {
       this._toastrService.error(error, 'Ops!');
+      this._modalService.close(ID_MODAL_EXCLUSAO);
       this.salvando = false;
     });
   }
@@ -168,6 +165,81 @@ export class EntrevistaListagemComponent implements OnInit {
     }
     this._router.navigate([`/entrevistas/${entrevista.id}`], {
       queryParams: params
+    });
+  }
+
+  private sincronizarQuestionariosRespondidos(idEntrevista: number, questionariosRespondidos: QuestionarioRespondido[]) {
+
+    let promises = questionariosRespondidos.map((questionarioRespondido: QuestionarioRespondido) => {
+      return this._entrevistaService.criarQuestionario(idEntrevista, questionarioRespondido).toPromise();
+    });
+
+    return Promise.all(promises);
+  }
+
+  sincronizarEntrevista(entrevista: Entrevista) {
+    return new Promise((res, rej) => {
+
+      this._entrevistaService.offline = true;
+      this._entrevistaService.obterEspecifica(entrevista.id)
+      .pipe(finalize(() => {}))
+      .subscribe((obj: IEntrevista) => {
+        if (!obj) rej();
+        let questionariosRespondidosOffline = obj.questionariosRespondidos;
+
+        this._entrevistaService.offline = false;
+        this._entrevistaService.criar(entrevista).toPromise()
+        .then(resp => {
+
+          _.remove(this.listagemOffline, entrevista);
+          this.sincronizarQuestionariosRespondidos(resp.id, questionariosRespondidosOffline)
+          .then(() => {
+
+            this._entrevistaService.offline = true;
+            this._entrevistaService.excluir(entrevista.id)
+            .then(() => {
+
+              this._entrevistaService.offline = false;
+              this.progressEntrevistas++;
+              res();
+            })
+            .catch((err) => {
+              this._toastrService.error('Ocorreu um erro ao remover as entrevistas não sincronizadas.', 'Ops!');
+              this._entrevistaService.offline = false;
+            });
+          })
+          .catch(rej);
+        })
+        .catch(rej);
+      },(error) => {
+        console.log(error);
+      });
+    });
+  }
+
+  private sincronizarEntrevistas(entrevistas: Entrevista[]) {
+    let promises = entrevistas.map((entrevista: Entrevista) => this.sincronizarEntrevista(entrevista));
+
+    return Promise.all(promises);
+  }
+
+  sincronizar(){
+    this.carregando = true;
+
+    this.sincronizarEntrevistas(this.listagemOffline).then(() => {
+      this.listagem = new Listagem();
+      this.obterListagem();
+      this.carregando = false;
+      
+      this._toastrService.success('Entrevistas sincronizadas.', 'Ok!');
+      this._entrevistaService.limparStorage();
+      this._entrevistaService.offline = false;
+    })
+    .catch((err) => {
+      console.log(err);
+      this._toastrService.error('Ocorreu um erro ao sincronizar as entrevistas.', 'Ops!');
+      this._entrevistaService.offline = false;
+      this.carregando = false;
     });
   }
 

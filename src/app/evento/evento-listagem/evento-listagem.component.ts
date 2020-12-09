@@ -26,7 +26,6 @@ export class EventoListagemComponent implements OnInit {
 
   public listagem: Listagem<Evento>;
   public carregando: boolean;
-  public modoMobile: boolean;
   public erroListagem: boolean;
   public salvando: boolean;
   public eventoExclusao: Evento;
@@ -45,7 +44,6 @@ export class EventoListagemComponent implements OnInit {
   ngOnInit() {
     this.listagem = new Listagem<Evento>();
     this.admSessao = JSON.parse(window.sessionStorage.getItem('adm'));
-    this.modoMobile = $(window).width() <= 720;
 
     this.offline = this._eventoService.obterHabilitadoOffline();
 
@@ -156,7 +154,7 @@ export class EventoListagemComponent implements OnInit {
     }
   }
 
-  eventoHabilitadoOffiline(evento: Evento) {
+  eventoHabilitadoOffline(evento: Evento) {
     const e = this._eventoService.obterHabilitadoOffline()
     return e ? e.id === evento.id : false;
   }
@@ -167,9 +165,12 @@ export class EventoListagemComponent implements OnInit {
     .then(() => {
       this.carregando = false;
       this.offline = this._eventoService.obterHabilitadoOffline();
+
+      this._toastrService.success('Os dados deste evento foram baixados com sucesso! Agora você pode realizar as entrevistas sem precisar de internet.', 'Ok!');
+      this.carregando = false;
     })
     .catch((err) => {
-      this._toastrService.error(err, 'Ocorreu um erro ao buscar salvar dados dos questionarios.');
+      this._toastrService.error('Ocorreu um erro ao buscar dados deste evento.', 'Ops!');
       this.carregando = false;
     });
   }

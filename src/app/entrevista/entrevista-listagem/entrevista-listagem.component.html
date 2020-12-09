@@ -23,9 +23,9 @@
       <div class="col-12">
         <div id="ds-entrevista-list">
           <div class="row mb-3 mx-3">
-            <!-- Descktop -->
+            <!-- Desktop -->
             <div class="col-12" class="d-none d-lg-block">
-              <button class="btn btn-outline-primary mr-3">
+              <button class="btn btn-outline-primary mr-3" (click)="sincronizar()">
                 <i class="fas fa-sync"></i> &nbsp;Sincronizar
               </button>
               <span class="text-warning">
@@ -39,7 +39,7 @@
                 <i class="fas fa-exclamation-triangle"></i>
                 &nbsp;{{listagemOffline.length}} etrevistas não sincronizadas. <span *ngIf="entrevistasOfflineEmAndamento() > 0" class="text-danger">({{entrevistasOfflineEmAndamento()}} em andamento)</span>
               </p>
-              <button class="btn btn-outline-primary col-12">
+              <button class="btn btn-outline-primary col-12" (click)="sincronizar()">
                 <i class="fas fa-sync"></i> &nbsp;Sincronizar
               </button>
             </div>
@@ -180,7 +180,7 @@
     <div class="row">
       <div class="col-md-12 mt-auto">
         <!-- MODO MOBILE -->
-        <div id="ds-entrevista-list" class="d-lg-none" >
+        <div id="ds-entrevista-list" class="d-lg-none">
           <div class="row">
             <div class="col-12">
               <a class="float-right text-secondary mr-1" (click)="obterListagem(true)"><i class="fa fa-sync-alt"></i></a>

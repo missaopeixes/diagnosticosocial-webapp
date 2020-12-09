@@ -73,4 +73,14 @@ export class Storage {
       localStorage.setItem(LOCAL.validadeEventoOffline, JSON.stringify(moment().add(0, 'day').format('DD/MM/YYYY')));
     }
   }
+
+  limpar(): void {
+    localStorage.removeItem(LOCAL.entrevistas);
+    localStorage.removeItem(LOCAL.eventoOffline);
+    localStorage.removeItem(LOCAL.eventos);
+    localStorage.removeItem(LOCAL.questionarios);
+    localStorage.removeItem(LOCAL.questionariosRespondidos);
+    localStorage.removeItem(LOCAL.validadeEventoOffline);
+    return;
+  }
 }

@@ -234,6 +234,7 @@ export class EntrevistaListagemComponent implements OnInit {
       this._toastrService.success('Entrevistas sincronizadas.', 'Ok!');
       this._entrevistaService.limparStorage();
       this._entrevistaService.offline = false;
+      this.erroListagem = false;
     })
     .catch((err) => {
       console.log(err);

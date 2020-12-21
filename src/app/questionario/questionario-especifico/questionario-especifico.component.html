@@ -1,103 +1,117 @@
 <div class="container">
 
-    <div class="row mb-4">
-      <div class="col-md-12">
-        <h3 [hidden]="!questionario.id">Questionário <u>{{questionario.nome}}</u></h3>
-        <h3 [hidden]="questionario.id">Novo Questionário</h3>
-      </div>
+  <div class="row barra-navegacao">
+    <div class="col-md-12">
+      <button class="btn btn-link btn-sm text-primary" routerLink="/questionarios">
+        questionários
+      </button>
+      /
+      <span [hidden]="questionario.id" class="text-secondary">
+        novo
+      </span>
+      <span [hidden]="!questionario.id" class="text-secondary">
+        {{questionario.nome}}
+      </span>
     </div>
+  </div>
+  <div class="row mb-4">
+    <div class="col-md-12">
+      <h3 [hidden]="!questionario.id">Questionário <u>{{questionario.nome}}</u></h3>
+      <h3 [hidden]="questionario.id">Novo Questionário</h3>
+    </div>
+  </div>
 
-    <form [formGroup]="form">
-      <div class="row">
-        <div class="col-lg-6 col-md-6 form-group">
-          <label for="nome">Nome</label>
-          <input class="form-control" type="text" name="nome" formControlName="nome" autofocus/>
-          <small class="text-danger" *ngIf="form.controls.nome.errors?.required && form.controls.nome.touched">O nome é obrigatório.</small>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-lg-10 col-md-9 form-group">
-          <label>Incluir pergunta</label>
-          <input type="text" class="form-control"
-            formControlName="pergunta"
-            (selectItem)="incluirPergunta($event.item)"
-            [ngbTypeahead]="typeaheadPerguntas.search"
-            [inputFormatter]="typeaheadPerguntas.formatter"
-            [resultFormatter]="typeaheadPerguntas.formatter"/>
-          <div class="loader-bar" [ngClass]="{'loading': pesquisando}"></div>
-        </div>
-        <div class="col-lg-2 col-md-3 form-inline">
-          <button type="button" class="btn btn-outline-secondary mt-3 col-md-12" (click)="novaPergunta()">Nova pergunta</button>
-        </div>
-      </div>
-    </form>
-        
-        <div class="row mb-2" *ngIf="erroPerguntas" role="alert">
-          <div class="col-md-12">
-            <p class="alert alert-danger">
-              <b>Ops!</b> Ocorreu um erro ao buscar as perguntas do questionário.
-              <a class="alert-link float-right" (click)="erroPerguntas = false"><i class="fa fa-times"></i></a>
-            </p>
-          </div>
-        </div>
-        
-        <div class="row">
-          <div class="col-md-12">
-            <h6>Perguntas:</h6>
-          </div>
-        </div>
-    <div class="loader-bar" [ngClass]="{'loading': carregando || salvando}"></div>
+  <form [formGroup]="form">
     <div class="row">
-      <div class="col-md-12 mt-auto">
-        <table class="table table-responsive-sm table-hover" id="ds-questionario-perguntas-table">
-          <thead>
-            <tr>
-              <th class="text-secondary"><i class="fa fa-hashtag"></i></th>
-              <th>Descrição</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngIf="carregando">
-              <td colspan="4" class="text-center">
-                <i>Carregando perguntas...</i>
-              </td>
-            </tr>
-            <tr *ngFor="let pergunta of questionario.perguntas; let i = index;">
-              <td class="table-index text-secondary"><small>{{i+1}}</small></td>
-              <td>
-                <span>{{pergunta.descricao}}</span>&nbsp;&nbsp;
-                <i class="far fa-dot-circle text-secondary" *ngIf="pergunta.tipoResposta == 1" title="Mútipla escolha"></i>
-                <i class="fas fa-quote-right text-secondary" *ngIf="pergunta.tipoResposta == 2" title="Texto"></i>
-                <i class="ico-number text-secondary" *ngIf="pergunta.tipoResposta == 3" title="Número">123</i>
-                <i class="far fa-check-square text-secondary" *ngIf="pergunta.tipoResposta == 4" title="Múltipla seleção"></i>
-              </td>
-              <td>
-                <button class="btn btn-outline-secondary float-right ml-1" (click)="removerPergunta(pergunta)" data-toggle="tooltip" title="Remover">
-                  <i class="fa fa-ban"></i>
-                </button>
-                <button class="btn btn-outline-secondary float-right ml-1" (click)="moverPergunta(pergunta, true)" data-toggle="tooltip" title="Mover para cima">
-                  <i class="fa fa-arrow-up"></i>
-                </button>
-                <button class="btn btn-outline-secondary float-right ml-1" (click)="moverPergunta(pergunta, false)" data-toggle="tooltip" title="Mover para baixo">
-                  <i class="fa fa-arrow-down"></i>
-                </button>
-                <button class="btn btn-outline-secondary float-right ml-1" (click)="viausalizarPergunta(pergunta)">
-                  Visualizar
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+      <div class="col-lg-6 col-md-6 form-group">
+        <label for="nome">Nome</label>
+        <input class="form-control" type="text" name="nome" formControlName="nome" autofocus/>
+        <small class="text-danger" *ngIf="form.controls.nome.errors?.required && form.controls.nome.touched">O nome é obrigatório.</small>
       </div>
-      <div class="container-fluid">
-        <div class="row mt-3">
-          <div class="col-md-12">
-              <button class="btn btn-primary float-right" type="button" [disabled]="!form.valid" (click)="salvar()">Salvar questionário</button>
-          </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-10 col-md-9 form-group">
+        <label>Incluir pergunta</label>
+        <input type="text" class="form-control"
+          formControlName="pergunta"
+          (selectItem)="incluirPergunta($event.item)"
+          [ngbTypeahead]="typeaheadPerguntas.search"
+          [inputFormatter]="typeaheadPerguntas.formatter"
+          [resultFormatter]="typeaheadPerguntas.formatter"/>
+        <div class="loader-bar" [ngClass]="{'loading': pesquisando}"></div>
+      </div>
+      <div class="col-lg-2 col-md-3 form-inline">
+        <button type="button" class="btn btn-outline-secondary mt-3 col-md-12" (click)="novaPergunta()">Nova pergunta</button>
+      </div>
+    </div>
+  </form>
+      
+      <div class="row mb-2" *ngIf="erroPerguntas" role="alert">
+        <div class="col-md-12">
+          <p class="alert alert-danger">
+            <b>Ops!</b> Ocorreu um erro ao buscar as perguntas do questionário.
+            <a class="alert-link float-right" (click)="erroPerguntas = false"><i class="fa fa-times"></i></a>
+          </p>
+        </div>
+      </div>
+      
+      <div class="row">
+        <div class="col-md-12">
+          <h6>Perguntas:</h6>
+        </div>
+      </div>
+  <div class="loader-bar" [ngClass]="{'loading': carregando || salvando}"></div>
+  <div class="row">
+    <div class="col-md-12 mt-auto">
+      <table class="table table-responsive-sm table-hover" id="ds-questionario-perguntas-table">
+        <thead>
+          <tr>
+            <th class="text-secondary"><i class="fa fa-hashtag"></i></th>
+            <th>Descrição</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="carregando">
+            <td colspan="4" class="text-center">
+              <i>Carregando perguntas...</i>
+            </td>
+          </tr>
+          <tr *ngFor="let pergunta of questionario.perguntas; let i = index;">
+            <td class="table-index text-secondary"><small>{{i+1}}</small></td>
+            <td>
+              <span>{{pergunta.descricao}}</span>&nbsp;&nbsp;
+              <i class="far fa-dot-circle text-secondary" *ngIf="pergunta.tipoResposta == 1" title="Mútipla escolha"></i>
+              <i class="fas fa-quote-right text-secondary" *ngIf="pergunta.tipoResposta == 2" title="Texto"></i>
+              <i class="ico-number text-secondary" *ngIf="pergunta.tipoResposta == 3" title="Número">123</i>
+              <i class="far fa-check-square text-secondary" *ngIf="pergunta.tipoResposta == 4" title="Múltipla seleção"></i>
+            </td>
+            <td>
+              <button class="btn btn-outline-secondary float-right ml-1" (click)="removerPergunta(pergunta)" data-toggle="tooltip" title="Remover">
+                <i class="fa fa-ban"></i>
+              </button>
+              <button class="btn btn-outline-secondary float-right ml-1" (click)="moverPergunta(pergunta, true)" data-toggle="tooltip" title="Mover para cima">
+                <i class="fa fa-arrow-up"></i>
+              </button>
+              <button class="btn btn-outline-secondary float-right ml-1" (click)="moverPergunta(pergunta, false)" data-toggle="tooltip" title="Mover para baixo">
+                <i class="fa fa-arrow-down"></i>
+              </button>
+              <button class="btn btn-outline-secondary float-right ml-1" (click)="viausalizarPergunta(pergunta)">
+                Visualizar
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="container-fluid">
+      <div class="row mt-3">
+        <div class="col-md-12">
+            <button class="btn btn-primary float-right" type="button" [disabled]="!form.valid" (click)="salvar()">Salvar questionário</button>
         </div>
       </div>
     </div>
+  </div>
 </div>
 
 <app-pergunta-especifica (concluido)="perguntaConcluida($event)"></app-pergunta-especifica>

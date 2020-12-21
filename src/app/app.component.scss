@@ -74,6 +74,26 @@ $height-loader-bar: 2px;
     to {left: 100%;}
 }
 
+.barra-navegacao{
+  border-bottom: #eee solid 2px;
+  margin-bottom: 25px;
+  padding-bottom: 5px;
+  margin-top: -10px;
+
+  .col-md-12{
+    padding: 0;
+
+    button, span{
+      text-transform: lowercase;
+    }
+
+    span {
+      padding: .25rem .5rem;
+      font-size: .875rem;
+    }
+  }
+}
+
 .loader-bar {
   height: $height-loader-bar;
   width: 100%;

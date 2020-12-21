@@ -178,7 +178,7 @@ export class EntrevistaListagemComponent implements OnInit {
   }
 
   sincronizarEntrevista(entrevista: Entrevista) {
-    return new Promise((res, rej) => {
+    return new Promise<void>((res, rej) => {
 
       this._entrevistaService.offline = true;
       this._entrevistaService.obterEspecifica(entrevista.id)

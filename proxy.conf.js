@@ -12,7 +12,8 @@ const proxyConfig = [
   {
     context: '/api',
     pathRewrite: { '^/api': '' },
-    target: 'http://localhost:3000/api/v1', //Prod API URL
+    target: 'http://localhost:3000/api/v1', //Development API URL
+    //target: 'http://api-diagnostico.missaopeixes.org/api/v1', //Production API URL
     changeOrigin: true,
     secure: false
   }

@@ -1,17 +1,21 @@
 <div class="container">
 
-  <div class="row mb-3">
+  <div class="row barra-navegacao">
     <div class="col-md-12">
-      <h3>Diagnóstico <u>{{evento ? evento.nome: ''}}</u></h3>
+      <button class="btn btn-link btn-sm text-primary" routerLink="/eventos">
+        Eventos
+      </button>
+      /
+      <span class="text-secondary">
+        Diagnóstico
+      </span>
     </div>
-    <div class="loader-bar" [ngClass]="{'loading': carregandoEvento}"></div>
   </div>
   <div class="row mb-3">
     <div class="col-md-12">
-      <button class="btn btn-outline-secondary btn-sm" routerLink="/eventos">
-        Voltar
-      </button>
+      <h3><u>{{evento ? evento.nome: ''}}</u></h3>
     </div>
+    <div class="loader-bar" [ngClass]="{'loading': carregandoEvento}"></div>
   </div>
 
   <div class="row mb-2">

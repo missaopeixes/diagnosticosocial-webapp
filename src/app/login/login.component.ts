@@ -8,8 +8,11 @@ import { finalize } from 'rxjs/operators';
 import { environment } from '@env/environment';
 import { Logger, I18nService, AuthenticationService } from '@app/core';
 import { Usuario } from '@app/usuario/usuario';
+import { ModalService } from '@app/shared/modal/modal.service';
 
 const log = new Logger('Login');
+
+const ID_MODAL_SOBRE = '#ds-login-modal-sobre';
 
 @Component({
   selector: 'app-login',
@@ -28,7 +31,8 @@ export class LoginComponent implements OnInit {
               private i18nService: I18nService,
               private authenticationService: AuthenticationService,
               private _usuarioService: UsuarioService,
-              private _toastrService: ToastrService) {
+              private _toastrService: ToastrService,
+              private _modalService: ModalService) {
     this.createForm();
   }
 
@@ -82,6 +86,10 @@ export class LoginComponent implements OnInit {
       password: ['', Validators.required],
       remember: false
     });
+  }
+
+  verSobre() {
+    this._modalService.open(ID_MODAL_SOBRE);
   }
 
 }

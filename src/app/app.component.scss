@@ -120,6 +120,34 @@ $height-loader-bar: 2px;
   width: 100%;
 }
 
+.footerMb{
+  position: absolute;
+  bottom: -35px;
+  left: 0;
+  width: inherit;
+  padding: 5px;
+  background-color: #eee;
+  
+  .row{
+    margin: 0;
+    width: inherit;
+  }
+}
+
+.footer{
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: inherit;
+  padding: 5px;
+  background-color: #eee;
+  
+  .row{
+    margin: 0;
+    width: inherit;
+  }
+}
+
 // ============================================
 @-webkit-keyframes splash-success {
   0%{background: transparent}

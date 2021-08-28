@@ -9,27 +9,11 @@ import { AnimationHelper } from '@app/shared/helpers/animation-helper';
 import { ToastrService } from 'ngx-toastr';
 import * as _ from 'lodash';
 import { embeddedViewStart } from '@angular/core/src/render3/instructions';
+import { confirmarSenha } from '@app/shared/confirmarSenha';
 
 const ID_MODAL = '#ds-usuario-modal';
 const ID_TABLE = '#ds-usuario-table';
 const ID_MODAL_EXCLUSAO = '#ds-usuario-modal-exclusao';
-
-const confirmarSenha = (formularioSenha: FormGroup) => {
-  const senha = formularioSenha.controls.senha.value;
-  const confirmacao = formularioSenha.controls.confirmacao.value;
-
-  if (!confirmacao || confirmacao.length <= 0) {
-    return null;
-  }
-
-  if (confirmacao !== senha) {
-    return {
-      confirmacaoInvalida: true
-    };
-  }
-
-  return null;
-}
 
 @Component({
   selector: 'app-usuario',

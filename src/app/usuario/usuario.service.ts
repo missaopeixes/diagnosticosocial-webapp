@@ -7,6 +7,7 @@ import { Usuario } from '@app/usuario/usuario';
 const routes = {
   listar: (pagina: number, itensPorPagina?: number) => `/usuarios/?${ListagemHelper.paginacao.queryParams(pagina, itensPorPagina)}`,
   criar: () => `/usuarios/`,
+  cadastrar: () => `/usuarios/cadastro/`,
   especifico: (id: number) => `/usuarios/${id}`,
   perfil: () => `/usuarios/perfil`,
   senha: () => `/usuarios/senha`
@@ -25,6 +26,11 @@ export class UsuarioService {
   criar(usuario: Usuario) : Observable<Usuario> {
 
     return this.httpClient.post<Usuario>(routes.criar(), usuario);
+  }
+
+  cadastrar(usuario: Usuario) : Observable<Usuario> {
+
+    return this.httpClient.post<Usuario>(routes.cadastrar(), usuario);
   }
 
   atualizar(usuario: Usuario) : Observable<Usuario> {

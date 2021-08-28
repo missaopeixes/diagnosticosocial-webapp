@@ -29,7 +29,7 @@ export class AppComponent implements OnInit {
       Logger.enableProductionMode();
     }
 
-    log.debug('init');
+    //log.debug('init');
 
     // Setup translations
     this.i18nService.init(environment.defaultLanguage, environment.supportedLanguages);

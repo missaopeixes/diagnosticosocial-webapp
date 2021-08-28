@@ -9,7 +9,7 @@ import { QuestionarioStorage } from './questionario.storage';
 const routes = {
   listar: (pagina: number, itensPorPagina?: number) => `/questionarios/?${ListagemHelper.paginacao.queryParams(pagina, itensPorPagina)}`,
   listarTodos: () => `/questionarios/todos`,
-  escpecifico: (id: number) => `/questionarios/${id}`,
+  especifico: (id: number) => `/questionarios/${id}`,
   criar: () => `/questionarios/`,
   perguntas: (id: number) => `/questionarios/${id}/perguntas`,
   pergunta: (id: number, idPergunta: number) => `/questionarios/${id}/perguntas/${idPergunta}/validacao-desvinculo`
@@ -40,7 +40,7 @@ export class QuestionarioService {
   }
 
   obterEspecifico(id: number) : Observable<IQuestionario> {
-    return this._httpClient.get<IQuestionario>(routes.escpecifico(id));
+    return this._httpClient.get<IQuestionario>(routes.especifico(id));
   }
 
   criar(questionario: Questionario) : Observable<IQuestionario> {
@@ -48,11 +48,11 @@ export class QuestionarioService {
   }
 
   atualizar(id: number, questionario: Questionario) : Observable<Questionario> {
-    return this._httpClient.put<Questionario>(routes.escpecifico(id), questionario);
+    return this._httpClient.put<Questionario>(routes.especifico(id), questionario);
   }
 
   excluir(id: number) : Promise<any> {
-    return this._httpClient.delete(routes.escpecifico(id)).toPromise();
+    return this._httpClient.delete(routes.especifico(id)).toPromise();
   }
 
   obterPerguntas(id: number) : Observable<IPergunta[]> {

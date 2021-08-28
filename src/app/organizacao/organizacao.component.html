@@ -1,0 +1,104 @@
+<div class="login-container bg-light">
+  <div class="login-box">
+    <div class="container">
+      <div class="card col-md-10 mt-3 mx-auto">
+        <div class="card-body">
+          <h4 class="card-title text-left">
+            Primeiro, diga o nome da Organização!
+          </h4>
+          <form (ngSubmit)="cadastrar()" [formGroup]="formCadastro" novalidate>
+            <div class="form-group col-md-6 pl-0">
+              <input class="form-control" type="text" name="nomeOrganizacao" placeholder="Ex: Missão Peixes" formControlName="nomeOrganizacao" autofocus/>
+              <small class="text-danger" *ngIf="formCadastro.controls.nomeOrganizacao.errors?.required  && exibirValidacao">Campo obrigatório</small>
+            </div>
+            <h4 class="card-title text-left">
+              Agora, cadastre seu Usuário!
+            </h4>
+            <div class="form-group col-md-6 pl-0">
+              <input class="form-control" type="text" name="nome" placeholder="Nome" formControlName="nome" autofocus/>
+              <small class="text-danger" *ngIf="formCadastro.controls.nome.errors?.required && exibirValidacao">Campo obrigatório</small>
+            </div>
+            <div class="row">
+              <div class="form-group col-md-6">
+                <input class="form-control" type="text" name="username" placeholder="Usuário" formControlName="username"/>
+                <small class="text-danger" *ngIf="formCadastro.controls.username.errors?.required && exibirValidacao">Campo obrigatório</small>
+              </div>
+              <div class="form-group col-md-6">
+                <input class="form-control" type="email" name="email" placeholder="E-mail" formControlName="email"/>
+                <small class="text-danger" *ngIf="formCadastro.controls.email.errors?.required && exibirValidacao">Campo obrigatório</small>
+                <small class="text-danger" *ngIf="formCadastro.controls.email.errors?.email && exibirValidacao">Endereço de e-mail inválido</small>
+              </div>
+            </div>
+
+            <div [formGroup]="formSenha" class="row border-0">
+              <div class="col-md-6 form-group">
+                <input class="form-control" type="password" name="senha" placeholder="Senha" formControlName="senha">
+                <small class="text-danger" *ngIf="formSenha.controls.senha.errors?.required && exibirValidacao">Campo obrigatório</small>
+              </div>
+
+              <div class="col-md-6 form-group">
+                  <input class="form-control" type="password" name="confirmacao" placeholder="Confirme a Senha" formControlName="confirmacao">
+                  <small class="text-danger" *ngIf="formSenha.controls.confirmacao.errors?.required && exibirValidacao">Campo obrigatório</small>
+                  <small class="text-danger" *ngIf="formSenha.errors?.confirmacaoInvalida">Confirmação e senha não conferem</small>
+              </div>
+            </div>
+
+            <div class="row d-flex justify-content-center my-3">
+                <button class="btn btn-primary" type="submit">Cadastrar</button>
+            </div>
+
+          </form>
+        </div>
+      </div>
+      <br>
+      <h1 class="text-center">
+        <img src="assets/logo-missao.png"/>
+      </h1>
+      <!-- Desktop -->
+      <footer class="footer d-none d-lg-block">
+        <div class="row align-items-center">
+          <div class="col-sm text-left">
+            <button class="btn btn-link pl-0" (click)="verSobre()">O que é o Diagnóstico Social?</button>
+          </div>
+          <div class="col-sm text-center text-secondary">
+            <small>Saiba mais sobre a missão em <a target="_blank" href="https://missaopeixes.org/">missaopeixes.org</a>.</small>
+          </div>
+          <div class="col-sm  text-right text-secondary">
+            <small>Versão 1.1</small>
+          </div>
+        </div>
+      </footer>
+      <!-- Mobile -->
+      <footer class="footerMb d-lg-none">
+        <div class="row">
+          <div class="col align-self-center text-center text-secondary">
+            <button class="btn btn-link" (click)="verSobre()">O que é o Diagnóstico Social?</button><br>
+            <small>Saiba mais sobre a missão em <a target="_blank" href="https://missaopeixes.org/">missaopeixes.org</a>.</small><br>
+            <small>Versão 1.1</small>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </div>
+</div>
+
+<div id="ds-login-modal-sobre" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Sobre</h5>
+      </div>
+      <div class="modal-body">
+        O <b>Diagnóstico Social</b> é uma iniciativa Missão Peixes 🐟 para automatização de diagnósticos sociais em comunidades de vulnerabilidade social.
+        <br><br>
+        O objetivo desse projeto é auxiliar ONGs, projetos sociais e agências missionárias a coletar dados e gerar relatórios para realizar diagnósticos sociais das comunidades de atuação.
+        <br><br>
+        Sinta-se a vontade para contribuir com esse projeto. Ele é feito pela comunidade e para a comunidade! 😆 Acesse <a target="_blank" href="https://github.com/missaopeixes">github.com/missaopeixes</a>!
+        <br>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Ok</button>
+      </div>
+    </div>
+  </div>
+</div>

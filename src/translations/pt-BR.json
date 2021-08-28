@@ -8,8 +8,10 @@
   "Logout": "Sair",
   "Password": "Senha",
   "Password is required": "O campo senha é obrigatório",
+  "Name is required": "O campo nome é obrigatório",
   "Username": "Usuário",
   "Username is required": "O campo usuário é obrigatório",
+  "Organization is required": "O campo organização é obrigatório",
   "Username or password incorrect.": "Usuário ou senha inválidos.",
   "Remember me": "Manter conectado",
   "Version": "Versão"

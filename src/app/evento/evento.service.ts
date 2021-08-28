@@ -10,7 +10,7 @@ import { EventoStorage } from './evento.storage';
 
 const routes = {
   listar: (pagina: number, itensPorPagina?: number) => `/eventos/?${ListagemHelper.paginacao.queryParams(pagina, itensPorPagina)}`,
-  escpecifico: (id: number) => `/eventos/${id}`,
+  especifico: (id: number) => `/eventos/${id}`,
   criar: () => `/eventos/`,
   todos: () => `/eventos/todos/`,
   questionarios: (id: number) => `/eventos/${id}/questionarios/`,
@@ -64,7 +64,7 @@ export class EventoService {
   }
 
   obter(id: number) : Observable<IEvento> {
-    return this._httpClient.get<IEvento>(routes.escpecifico(id));
+    return this._httpClient.get<IEvento>(routes.especifico(id));
   }
 
   criar(evento: Evento) : Observable<IEvento> {
@@ -76,11 +76,11 @@ export class EventoService {
   }
 
   atualizar(id: number, evento: Evento) : Observable<Evento> {
-    return this._httpClient.put<Evento>(routes.escpecifico(id), evento);
+    return this._httpClient.put<Evento>(routes.especifico(id), evento);
   }
 
   excluir(id: number) : Promise<any> {
-    return this._httpClient.delete(routes.escpecifico(id)).toPromise();
+    return this._httpClient.delete(routes.especifico(id)).toPromise();
   }
 
   relatorio(id: number, idPergunta?: number) : Observable<Object[]>{

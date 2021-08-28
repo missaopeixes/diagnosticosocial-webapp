@@ -15,6 +15,7 @@ import { AboutModule } from './about/about.module';
 import { UsuarioModule } from './usuario/usuario.module';
 import { QuestionarioModule } from './questionario/questionario.module';
 import { LoginModule } from './login/login.module';
+import { OrganizacaoModule } from './organizacao/organizacao.module';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { ToastrModule } from 'ngx-toastr';
@@ -39,6 +40,7 @@ import { RecuperacaoModule } from './recuperacao/recuperacao.module';
     CountoModule,
 
     LoginModule,
+    OrganizacaoModule,
     RecuperacaoModule,
     HomeModule,
     AboutModule,

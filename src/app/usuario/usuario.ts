@@ -6,6 +6,7 @@ export interface IUsuario {
   email: string;
   senha?: string;
   administrador: boolean;
+  idOrganizacao?: number;
 
   createdAt?: Date;
   updatedAt?: Date;
@@ -18,6 +19,7 @@ export class Usuario implements IUsuario {
   email: string;
   senha?: string;
   administrador: boolean;
+  idOrganizacao?: number;
 
   createdAt?: Date;
   updatedAt?: Date;

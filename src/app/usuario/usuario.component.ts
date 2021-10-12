@@ -10,6 +10,7 @@ import { ToastrService } from 'ngx-toastr';
 import * as _ from 'lodash';
 import { embeddedViewStart } from '@angular/core/src/render3/instructions';
 import { confirmarSenha } from '@app/shared/confirmarSenha';
+import { CREDENTIALS_KEY } from '@app/core/authentication/authentication.service';
 
 const ID_MODAL = '#ds-usuario-modal';
 const ID_TABLE = '#ds-usuario-table';
@@ -31,12 +32,15 @@ export class UsuarioComponent implements OnInit {
   public form: FormGroup;
   public formSenha: FormGroup;
   public exibirValidacao: boolean;
+  public idOrganizacao: number;
 
   constructor(
     private _usuarioService: UsuarioService,
     private _formBuilder: FormBuilder,
     private _toastrService: ToastrService,
     private _modalService: ModalService) {
+
+    this.idOrganizacao = JSON.parse(sessionStorage.getItem(CREDENTIALS_KEY)).organizacao.id;
   }
 
   private _initForm(edicao = false) {
@@ -98,7 +102,8 @@ export class UsuarioComponent implements OnInit {
       login: this.form.value.login,
       email: this.form.value.email,
       senha: this.form.value.formSenha.senha,
-      administrador: this.form.value.administrador
+      administrador: this.form.value.administrador,
+      idOrganizacao: this.idOrganizacao
     });
 
     this.salvando = true;
@@ -121,7 +126,8 @@ export class UsuarioComponent implements OnInit {
       nome: this.form.value.nome,
       login: this.form.value.login,
       email: this.form.value.email,
-      administrador: this.form.value.administrador
+      administrador: this.form.value.administrador,
+      idOrganizacao: this.idOrganizacao
     });
 
     this.salvando = true;

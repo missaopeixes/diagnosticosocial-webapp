@@ -7,6 +7,8 @@ export interface IQuestionario {
 
   perguntas: Pergunta[];
 
+  idOrganizacao: number;
+
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -27,6 +29,7 @@ export class Questionario implements IQuestionario {
   id?: number;
   nome: string;
   perguntas: Pergunta[];
+  idOrganizacao: number;
   createdAt?: Date;
   updatedAt?: Date;
 

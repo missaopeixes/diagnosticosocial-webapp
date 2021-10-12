@@ -12,6 +12,7 @@ export interface IPergunta {
   descricao: string;
   tipoResposta: TipoResposta;
   opcoesResposta: OpcaoResposta[];
+  idOrganizacao: number;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -21,6 +22,7 @@ export class Pergunta implements IPergunta {
   descricao: string;
   tipoResposta: TipoResposta;
   opcoesResposta: OpcaoResposta[];
+  idOrganizacao: number;
   createdAt?: Date;
   updatedAt?: Date;
 

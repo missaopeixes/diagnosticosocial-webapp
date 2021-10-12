@@ -45,6 +45,12 @@
         </div>
       </div>
       <div class="navbar-nav ml-auto">
+        <div class="nav-item">
+          <a id="user-dropdown" (click)="verOrganizacao()" class="nav-link org-link">
+            <i class="fas fa-users"></i>
+            <span>{{organizationName}}</span>
+          </a>
+        </div>
         <div class="nav-item" ngbDropdown placement="bottom-right">
           <a id="user-dropdown" class="nav-link" ngbDropdownToggle>
             <i class="fas fa-user-circle"></i>
@@ -61,3 +67,27 @@
     </div>
   </nav>
 </header>
+
+
+<div id="ds-organizacao-modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form>
+        <div class="modal-header">
+          <span class="org-title">
+            <i class="fas fa-users"></i>
+            Organização
+          </span>
+        </div>
+        <div class="modal-body">
+          <h1 class="text-primary">{{organizationName}}</h1>
+          <span class="text-secondary">Criada em {{organizationCreateDate}}.</span>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Ok</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

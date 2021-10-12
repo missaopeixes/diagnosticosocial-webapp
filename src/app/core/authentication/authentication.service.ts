@@ -5,11 +5,19 @@ import { map, catchError, tap } from 'rxjs/operators';
 
 export const CREDENTIALS_KEY = 'DS_ACCESS_JWT';
 
+interface Organizacao {
+  id: number;
+  nome: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export interface Credentials {
   // Customize received credentials here
   id: number;
   administrador: boolean;
   login: string;
+  organizacao: Organizacao;
   token: string;
   validade?: string;
   nome?: string;
@@ -103,6 +111,10 @@ export class AuthenticationService {
       sessionStorage.removeItem(CREDENTIALS_KEY);
       localStorage.removeItem(CREDENTIALS_KEY);
     }
+  }
+
+  getIdOrganizacao(): number {
+    return parseInt(JSON.parse(sessionStorage.getItem(CREDENTIALS_KEY)).organizacao.id);
   }
 
 }

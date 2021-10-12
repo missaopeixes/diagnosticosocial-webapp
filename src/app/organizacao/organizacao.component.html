@@ -14,7 +14,7 @@
             <h4 class="card-title text-left">
               Agora, cadastre seu Usuário!
             </h4>
-            <div class="form-group col-md-6 pl-0">
+            <div class="form-group input-nome col-md-6 pl-0">
               <input class="form-control" type="text" name="nome" placeholder="Nome" formControlName="nome" autofocus/>
               <small class="text-danger" *ngIf="formCadastro.controls.nome.errors?.required && exibirValidacao">Campo obrigatório</small>
             </div>
@@ -43,7 +43,8 @@
               </div>
             </div>
 
-            <div class="row d-flex justify-content-center my-3">
+            <div class="row d-flex justify-content-left my-3 mx-1">
+                <a class="btn btn-outline-secondary mr-3" routerLink="/login" routerLinkActive="active">Voltar</a>
                 <button class="btn btn-primary" type="submit">Cadastrar</button>
             </div>
 
@@ -51,7 +52,7 @@
         </div>
       </div>
       <br>
-      <h1 class="text-center">
+      <h1 class="logo text-center">
         <img src="assets/logo-missao.png"/>
       </h1>
       <!-- Desktop -->

@@ -47,6 +47,8 @@ export interface IEvento {
 
   questionarios: QuestionarioDoEvento[];
 
+  idOrganizacao: number;
+
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -55,6 +57,7 @@ export class Evento implements IEvento {
   id?: number;
   nome: string;
   questionarios: QuestionarioDoEvento[];
+  idOrganizacao: number;
   createdAt?: Date;
   updatedAt?: Date;
 

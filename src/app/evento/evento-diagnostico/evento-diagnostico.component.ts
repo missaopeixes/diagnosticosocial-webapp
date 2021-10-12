@@ -10,6 +10,7 @@ import { QuestionarioDaEntrevista } from '@app/questionario/questionario';
 import { QuestionarioService } from '@app/questionario/questionario.service';
 import { Pergunta } from '@app/pergunta/pergunta';
 import { EventoRespostasHelperOptions, EventoRespostasHelper } from '../evento-respostas/evento-respostas.helper';
+import { CREDENTIALS_KEY } from '@app/core/authentication/authentication.service';
 
 @Component({
   selector: 'app-evento-diagnostico',
@@ -26,6 +27,7 @@ export class EventoDiagnosticoComponent implements OnInit {
   public qtdEntrevistasInt: number;
   public questionarios: QuestionarioDaEntrevista[];
   public questionario: QuestionarioDaEntrevista;
+  public idOrganizacao: number;
 
   public graphOptions = {
     view: [500, 220],
@@ -49,6 +51,8 @@ export class EventoDiagnosticoComponent implements OnInit {
     private _questionarioService: QuestionarioService,
     private _eventoRespostasHelper: EventoRespostasHelper,
     private _modalService: ModalService) {
+
+    this.idOrganizacao = JSON.parse(sessionStorage.getItem(CREDENTIALS_KEY)).organizacao.id;
   }
 
   ngOnInit() {
@@ -129,7 +133,8 @@ export class EventoDiagnosticoComponent implements OnInit {
           id: pZero.idPergunta,
           descricao: pZero.pergunta,
           tipoResposta: pZero.tipoResposta,
-          opcoesResposta: dados
+          opcoesResposta: dados,
+          idOrganizacao: this.idOrganizacao
         });
       });
 

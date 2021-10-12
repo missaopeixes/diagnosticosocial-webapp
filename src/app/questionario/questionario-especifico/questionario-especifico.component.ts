@@ -13,6 +13,7 @@ import { AnimationHelper } from '@app/shared/helpers/animation-helper';
 import * as _ from 'lodash';
 import { ModalService } from '@app/shared/modal/modal.service';
 import { PerguntaEspecificaHelper } from '@app/pergunta/pergunta-especifica/pergunta-especifica.helper';
+import { AuthenticationService } from '@app/core/authentication/authentication.service';
 
 const ID_TABLE = '#ds-questionario-perguntas-table';
 const ID_MODAL_PERGUNTA = '#ds-questionario-pergunta-especifica-modal';
@@ -41,6 +42,7 @@ export class QuestionarioEspecificoComponent implements OnInit {
     private _activatedRoute: ActivatedRoute,
     private _perguntaEspecificaHelper: PerguntaEspecificaHelper,
     private _router: Router,
+    private _authentication: AuthenticationService,
     private _formBuilder: FormBuilder) {
   }
 
@@ -204,7 +206,8 @@ export class QuestionarioEspecificoComponent implements OnInit {
       pergunta: new Pergunta({
         descricao: this.form.value.pergunta,
         tipoResposta: TipoResposta.MultiplaEscolha,
-        opcoesResposta: []
+        opcoesResposta: [],
+        idOrganizacao: this._authentication.getIdOrganizacao()
       }),
       completeFn: (obj: Pergunta) => this.incluirPergunta(obj)
     });

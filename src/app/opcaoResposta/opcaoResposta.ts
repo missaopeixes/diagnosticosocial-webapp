@@ -2,6 +2,7 @@
 export interface IOpcaoResposta {
   id?: number;
   descricao: string;
+  idOrganizacao: number;
 
   createdAt?: Date;
   updatedAt?: Date;
@@ -10,6 +11,7 @@ export interface IOpcaoResposta {
 export class OpcaoResposta implements IOpcaoResposta {
   id?: number;
   descricao: string;
+  idOrganizacao: number;
   createdAt?: Date;
   updatedAt?: Date;
 

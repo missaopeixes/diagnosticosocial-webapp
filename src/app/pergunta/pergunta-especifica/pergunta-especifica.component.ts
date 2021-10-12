@@ -101,7 +101,7 @@ export class PerguntaEspecificaComponent implements OnInit {
         this.salvando = false
       ))
       .subscribe(() => {
-        res();
+        res(null);
       }, ({error}) => {
         const msg = typeof error === 'string' ? error : 'Ocorreu um erro ao salvar questionário.'
         this._toastrService.error(msg, 'Ops!');
@@ -121,7 +121,7 @@ export class PerguntaEspecificaComponent implements OnInit {
       ))
       .subscribe((obj: IPergunta) => {
         this.pergunta = new Pergunta(obj);
-        res();
+        res(null);
       }, ({error}) => {
         const msg = typeof error === 'string' ? error : 'Ocorreu um erro ao sincronizar pergunta.'
         this._toastrService.error(msg, 'Ops!');
